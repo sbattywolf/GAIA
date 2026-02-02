@@ -14,13 +14,15 @@ if (-not (Test-Path $envFile)) {
 
 Write-Host "Loading .env from $envFile"
 Get-Content $envFile | ForEach-Object {
-    if ($_ -match '^[ \t]*#') { return }
-    if ($_ -match '^[ \t]*$') { return }
-    $pair = $_ -split '='
-    if ($pair.Count -lt 2) { return }
-    $key = $pair[0].Trim()
-    $val = ($pair[1..($pair.Count-1)] -join '=').Trim()
-    $env:$key = $val
+    $line = $_.Trim()
+    if ($line -match '^[ \t]*#' -or $line -match '^[ \t]*$') { return }
+    $idx = $line.IndexOf('=')
+    if ($idx -lt 0) { return }
+    $key = $line.Substring(0, $idx).Trim()
+    $val = $line.Substring($idx + 1).Trim()
+    if ($key) {
+        Set-Item -Path ("Env:$key") -Value $val
+    }
 }
 
 if ($env:PATH_APPEND) {
