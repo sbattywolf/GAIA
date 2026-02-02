@@ -3,3 +3,28 @@ __pycache__/
 *.pyc
 events.ndjson
 .env
+.env.*
+
+# Virtual envs and Python artifacts
+.venv/
+dist/
+build/
+*.egg-info/
+
+# Databases and runtime artifacts
+gaia.db
+*.db
+*.sqlite
+
+# Logs and temporary files
+*.log
+.pytest_cache/
+coverage/
+
+# Editor directories
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+.DS_Store
