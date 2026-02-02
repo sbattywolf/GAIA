@@ -1,0 +1,18 @@
+name: Rotate Logs (dry-run)
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # daily at 03:00 UTC
+  workflow_dispatch: {}
+
+jobs:
+  rotate-logs-dryrun:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PowerShell
+        uses: PowerShell/PowerShell@v2
+      - name: Run rotate_logs.ps1 (dry-run)
+        shell: pwsh
+        run: |
+          pwsh -NoProfile -Command "./scripts/rotate_logs.ps1 -Keep 3 -ArchiveAfterDays 7 -DryRun"
