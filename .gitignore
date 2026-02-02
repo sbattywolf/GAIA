@@ -11,6 +11,22 @@ dist/
 build/
 *.egg-info/
 
+# Imported external repo: ignore heavy or env files under AILocalModelLibrary
+AILocalModelLibrary/.venv/
+AILocalModelLibrary/.pytest_cache/
+AILocalModelLibrary/dist/
+AILocalModelLibrary/.tmp/
+AILocalModelLibrary/.tmp_*/
+AILocalModelLibrary/tmp_*/
+AILocalModelLibrary/*.tar.gz
+AILocalModelLibrary/monitoring_prototype_snapshot_*.tar.gz
+AILocalModelLibrary/.vscode/
+AILocalModelLibrary/.pytest-temp/
+AILocalModelLibrary/.pytest_tmp/
+AILocalModelLibrary/.tmp_test_installs/
+AILocalModelLibrary/backups/
+AILocalModelLibrary/.continue/
+
 # Databases and runtime artifacts
 gaia.db
 *.db
@@ -28,3 +44,6 @@ coverage/
 # OS files
 Thumbs.db
 .DS_Store
+
+# Temporarily ignore renamed imported repo directory marked for deletion
+TOBEDELETE__AILocalModelLibrary/
