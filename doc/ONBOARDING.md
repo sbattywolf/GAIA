@@ -4,6 +4,17 @@ Purpose
 -------
 This document lists the generic, reusable utilities and procedures onboarded into this `GAIA` repo from the larger workspace. It focuses on non-agent functionality needed to run, resume, and maintain sessions locally.
 
+Repository location note
+------------------------
+
+This GAIA repository has been moved to a standalone location outside the monorepo. The canonical local path for the GAIA working tree is:
+
+```
+E:\Workspaces\Git\GAIA
+```
+
+If you are reading onboarding instructions in another repository copy (for example, `AILocalModelLibrary/GAIA`), prefer the canonical location above for running sessions and updating docs. You may safely delete the GAIA copy from the original repository once you have confirmed everything is migrated.
+
 Included tools
 --------------
 
