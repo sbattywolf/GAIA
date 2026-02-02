@@ -33,13 +33,13 @@ Use this as the canonical "session handbook" for GAIA and related local developm
 
 ```powershell
 & .\.venv\Scripts\Activate.ps1
-cd E:\Workspaces\Git\AILocalModelLibrary
+cd E:\Workspaces\Git\GAIA
 ```
 
 2. Read the last session summary quickly:
 
 - Open `Gaia/doc/session_notes.md` and skim the most recent heading.
-- Open `GAIA/events.ndjson` tail (or `tail -n 50 GAIA/events.ndjson`) to see recent events.
+- Open `GAIA/events.ndjson` tail (or `Get-Content GAIA\events.ndjson -Tail 50`) to see recent events.
 
 3. Update the todo list following this order (automated or manual):
 
