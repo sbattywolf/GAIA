@@ -22,5 +22,24 @@ Add-Content -Path $noteFile -Value ("## Session: $ts")
 Add-Content -Path $noteFile -Value ("- Checkpoint: WIP commit created")
 Add-Content -Path $noteFile -Value ""
 Write-Host "Session note appended to $noteFile"
+Write-Host "Running end-of-session maintenance: prune closed todos..."
+
+# Run prune script to keep last 7 closed todos and archive older ones
+try {
+    if ($env:PROTOTYPE_USE_LOCAL_EVENTS -eq '1') {
+        Write-Host "Skipping prune (PROTOTYPE_USE_LOCAL_EVENTS=1)"
+    } else {
+        $py = "python"
+        $script = Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Definition) "prune_closed_todos.py"
+        if (Test-Path $script) {
+            & $py $script --ndjson "Gaia/doc/todo-archive.ndjson" --keep 7 --older-out "Gaia/doc/todo-archive-older.ndjson"
+            Write-Host "Prune script executed."
+        } else {
+            Write-Host "Prune script not found: $script"
+        }
+    }
+} catch {
+    Write-Host "Prune script failed: $_"
+}
 
 Write-Host "End-of-session routine complete. You can now safely close the machine." 

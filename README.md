@@ -25,6 +25,51 @@ pip install -r requirements.txt
 
 Start a development session (loads `.env`, activates venv):
 
+Free-software install sequence (recommended)
+-------------------------------------------
+
+The project prefers only free/open-source software. If a required tool is
+non-free, a proposal will be raised before using it.
+
+Recommended install order (Windows PowerShell):
+
+1. Install Git (free, open-source): https://git-scm.com/
+2. Install Python 3.10+ (free, open-source): https://www.python.org/
+3. Create and activate a virtualenv:
+
+```powershell
+python -m venv .venv
+& .\.venv\Scripts\Activate.ps1
+```
+
+4. Install runtime deps:
+
+```powershell
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+5. Install developer tools (free):
+
+```powershell
+pip install -r requirements-dev.txt
+```
+
+6. Install GitHub CLI (free) if you want `gh` integration:
+
+Windows MSI: https://github.com/cli/cli/releases
+
+7. (Optional) Install Docker (free) for reproducible runs: https://www.docker.com/
+
+Environment setup:
+
+```powershell
+copy .env.example .env
+# edit .env to add API tokens (only when needed)
+```
+
+If any step requires non-free software, the project will surface a short
+proposal describing the need and alternative free options.
 ```powershell
 .\scripts\start_session.ps1
 ```
@@ -94,3 +139,40 @@ Files of interest:
 - `events.ndjson` — event log appended by agents.
 
 License: MIT (add if desired)
+
+## Development & Testing
+
+Quick dev setup (Windows PowerShell):
+
+```powershell
+python -m venv .venv
+& .\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+```
+
+Run tests:
+
+```powershell
+pytest -q
+```
+
+Run a single agent in dry-run mode to avoid side effects:
+
+```powershell
+set PROTOTYPE_USE_LOCAL_EVENTS=1
+python agents/backlog_agent.py --title "Test" --body "dry" --dry-run
+python agents/alby_agent.py --cmd "echo hi" --concurrency 2 --dry-run
+```
+
+Use `.env` (see `.env.example`) for operator-provided secrets; prefer `ALBY_INTERNET_TOKEN` or project-specific `CI_TOKEN` names. Do not commit secrets.
+
+Secrets testing and unhappy-paths
+--------------------------------
+
+The repository includes guidance and templates for testing secret-related failure modes locally. See `doc/SECRETS_TESTING.md` for recommended workflows (invalid/revoked tokens, wrong chat id, network outages). Use `.tmp/test_secrets/invalid_tokens.env.template` as a starting point for reproducible demos.
+
+Telegram improvements trace
+--------------------------
+
+For a full trace of the Telegram integration work (enqueue/approval/inline buttons/monitor UI), see `doc/TELEGRAM_IMPROVEMENTS.md`.
