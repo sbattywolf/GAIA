@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Implement login screen",
+    "description": "Create responsive login screen with validation and remember-me option.",
+    "priority": "high",
+    "tags": ["ui","auth"],
+    "estimate": "2d"
+  },
+  {
+    "title": "API: user profile endpoint",
+    "description": "Add /api/profile to return user metadata and preferences.",
+    "priority": "medium",
+    "tags": ["api","backend"],
+    "estimate": "1d"
+  },
+  {
+    "title": "Write onboarding docs",
+    "description": "Draft quickstart and troubleshooting for new contributors.",
+    "priority": "low",
+    "tags": ["docs"],
+    "estimate": "1d"
+  }
+]

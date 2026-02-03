@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>GAIA Monitor — Sequences</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Arial;margin:20px}
+    pre{background:#f6f6f8;padding:10px;border-radius:6px}
+    .todo{margin:6px 0;padding:8px;border:1px solid #ddd;border-radius:6px}
+    .done{background:#e6ffed}
+  </style>
+</head>
+<body>
+  <h1>Active Sequence</h1>
+  <div id="active">Loading...</div>
+
+  <h2>Todos</h2>
+  <div id="todos">Loading...</div>
+
+  <h2>Proposals</h2>
+  <pre id="proposals">Loading...</pre>
+
+<script>
+const activeEl = document.getElementById('active')
+const todosEl = document.getElementById('todos')
+const proposalsEl = document.getElementById('proposals')
+
+function renderActive(a){
+  if(!a || !a.active){ activeEl.innerText = 'No active sequence'; return }
+  const p = a.payload
+  activeEl.innerHTML = `<b>${p.active_sequence}</b> (created: ${p.created || 'n/a'})`
+}
+
+function renderTodos(obj){
+  todosEl.innerHTML = ''
+  const keys = Object.keys(obj || {})
+    if(!keys || keys.length === 0){ todosEl.innerText = 'No todos' ; return }
+  keys.sort()
+  for(const k of keys){
+    const t = obj[k]
+    const d = document.createElement('div')
+    d.className = 'todo '+(t.status==='done'?'done':'')
+    d.innerHTML = `<b>${t.id}</b> — ${t.title} <div style="font-size:12px;color:#666">${t.detail||''}</div>`
+    todosEl.appendChild(d)
+      var btnClaim = document.createElement('button');
+      btnClaim.textContent = 'Claim';
+      btnClaim.style.marginLeft = '8px';
+      btnClaim.onclick = function(){
+          var actor = prompt('Assign to (name or id):', 'me');
+          if(!actor) return;
+          fetch('/api/controller/claim', {
+              method: 'POST', headers: {'Content-Type':'application/json'},
+              body: JSON.stringify({id: k, actor: actor})
+          }).then(r=>r.json()).then(j=>{ if(j.ok){ d.innerHTML = `<b>${j.todo.id}</b> — ${j.todo.title} <div style="font-size:12px;color:#666">${j.todo.detail||''}</div>`; } else { alert('Claim failed'); }});
+      };
+      d.appendChild(btnClaim);
+
+      var btnDone = document.createElement('button');
+      btnDone.textContent = 'Done';
+      btnDone.style.marginLeft = '6px';
+      btnDone.onclick = function(){
+          var actor = prompt('Completed by (name):', 'me');
+          if(!actor) return;
+          var notes = prompt('Optional notes:', '');
+          fetch('/api/controller/complete', {
+              method: 'POST', headers: {'Content-Type':'application/json'},
+              body: JSON.stringify({id: k, actor: actor, notes: notes})
+          }).then(r=>r.json()).then(j=>{ if(j.ok){ d.innerHTML = `<b>${(j.todo && j.todo.title ? j.todo.title : t.title)}</b> — done`; } else { alert('Complete failed'); }});
+      };
+      d.appendChild(btnDone);
+  }
+}
+
+function fetchAll(){
+  fetch('/api/sequences/active').then(r=>r.json()).then(renderActive)
+  fetch('/api/sequences/todos').then(r=>r.json()).then(j=>renderTodos(j.todos))
+  fetch('/api/sequences/proposals').then(r=>r.json()).then(j=>proposalsEl.innerText = j.proposals || '')
+}
+
+fetchAll()
+
+// SSE updates
+const es = new EventSource('/api/sequences/stream')
+es.addEventListener('todos', e=>{
+  try{ renderTodos(JSON.parse(e.data)) }catch(e){}
+})
+es.addEventListener('active', e=>{
+  try{ renderActive({active:true,payload:JSON.parse(e.data)}) }catch(e){}
+})
+</script>
+</body>
+</html>

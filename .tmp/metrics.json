@@ -1,0 +1,6 @@
+{
+  "telegram.retry.attempt.start": 4,
+  "telegram.retry.succeeded": 2,
+  "telegram.retry.attempt.error": 8,
+  "telegram.retry.moved_permanent": 2
+}

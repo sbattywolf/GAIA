@@ -1,0 +1,38 @@
+{
+  "found": true,
+  "path": "E:\\Workspaces\\Git\\GAIA\\.tmp\\agents_pids.json",
+  "pids": {
+    "alby_online_dryrun": {
+      "err": "E:\\Workspaces\\Git\\GAIA\\.\\\\.tmp\\\\logs\\alby_online_dryrun.20260203_001155.err.log",
+      "out": "E:\\Workspaces\\Git\\GAIA\\.\\\\.tmp\\\\logs\\alby_online_dryrun.20260203_001155.out.log",
+      "pid": 19336
+    },
+    "reclaimer": {
+      "err": "E:\\Workspaces\\Git\\GAIA\\.\\\\.tmp\\\\logs\\reclaimer.20260203_001154.err.log",
+      "out": "E:\\Workspaces\\Git\\GAIA\\.\\\\.tmp\\\\logs\\reclaimer.20260203_001154.out.log",
+      "pid": 28572
+    },
+    "worker": {
+      "err": "E:\\Workspaces\\Git\\GAIA\\.\\\\.tmp\\\\logs\\worker.20260203_001153.err.log",
+      "out": "E:\\Workspaces\\Git\\GAIA\\.\\\\.tmp\\\\logs\\worker.20260203_001153.out.log",
+      "pid": 28440
+    }
+  },
+  "status": {
+    "alby_online_dryrun": {
+      "alive": true,
+      "fallback": false,
+      "pid": 19336
+    },
+    "reclaimer": {
+      "alive": true,
+      "fallback": false,
+      "pid": 28572
+    },
+    "worker": {
+      "alive": true,
+      "fallback": false,
+      "pid": 28440
+    }
+  }
+}
