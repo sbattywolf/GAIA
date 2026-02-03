@@ -178,21 +178,21 @@
             "story_key": "STR_TestGise.part1",
             "agent": "Gise",
             "tasks": [
-              { "id": "t1", "title": "Initial smoke test: verify agent environment and connectivity", "description": "Confirm dependencies, environment variables and basic connectivity for agent Gise.", "status": "todo", "priority": "medium" },
-              { "id": "g1", "title": "Verify agent can read .tmp/telegram.env and secrets (dry-run)", "description": "Dry-run to confirm agent can safely load environment and secret values without performing actions.", "status": "todo", "priority": "high" },
-              { "id": "gd1", "title": "Add verbose logging around claim acquisition for debug", "description": "Temporarily increase logging for claim acquisition to aid debugging in CI and local runs.", "status": "todo", "priority": "medium" },
-              { "id": "gd2", "title": "Add small helper to export chat history to .tmp/exports", "description": "Create a utility to export chat history to .tmp/exports for offline analysis and audits.", "status": "todo", "priority": "medium" }
+              { "id": "t1", "title": "Initial smoke test: verify agent environment and connectivity", "description": "Confirm dependencies, environment variables and basic connectivity for agent Gise.", "status": "todo", "priority": "medium", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" },
+              { "id": "g1", "title": "Verify agent can read .tmp/telegram.env and secrets (dry-run)", "description": "Dry-run to confirm agent can safely load environment and secret values without performing actions.", "status": "todo", "priority": "high", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" },
+              { "id": "gd1", "title": "Add verbose logging around claim acquisition for debug", "description": "Temporarily increase logging for claim acquisition to aid debugging in CI and local runs.", "status": "todo", "priority": "medium", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" },
+              { "id": "gd2", "title": "Add small helper to export chat history to .tmp/exports", "description": "Create a utility to export chat history to .tmp/exports for offline analysis and audits.", "status": "todo", "priority": "medium", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" }
             ]
           },
           {
             "story_key": "STR_TestGise.part2",
             "agent": "Gise",
             "tasks": [
-              { "id": "t2", "title": "Run acceptance scenario: create claim → approve → archive event", "description": "Execute a full acceptance scenario and verify gaia.db records and events.ndjson entries.", "status": "todo", "priority": "high" },
-              { "id": "d1", "title": "Add regression case: claim takeover when TTL expired", "description": "Create a regression test that simulates TTL expiry and verifying takeover semantics and recovery.", "status": "todo", "priority": "high" },
-              { "id": "d2", "title": "Document expected chat-history lookup steps for audit", "description": "Outline the steps and scripts used to extract chat history for audit and attach to gaia.db traces.", "status": "todo", "priority": "medium" },
-              { "id": "g2", "title": "Run a full acceptance flow and record timestamps in gaia.db", "description": "Execute acceptance flow and validate timestamps and audit traces are correctly persisted in gaia.db.", "status": "todo", "priority": "high" },
-              { "id": "t_final", "title": "MANDATORY: Check history of the chat and all docs; record findings and close story", "description": "Collect chat history and document findings, attach evidence and mark story closed following governance.", "status": "todo", "priority": "critical" }
+              { "id": "t2", "title": "Run acceptance scenario: create claim → approve → archive event", "description": "Execute a full acceptance scenario and verify gaia.db records and events.ndjson entries.", "status": "todo", "priority": "high", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" },
+              { "id": "d1", "title": "Add regression case: claim takeover when TTL expired", "description": "Create a regression test that simulates TTL expiry and verifying takeover semantics and recovery.", "status": "todo", "priority": "high", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" },
+              { "id": "d2", "title": "Document expected chat-history lookup steps for audit", "description": "Outline the steps and scripts used to extract chat history for audit and attach to gaia.db traces.", "status": "todo", "priority": "medium", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" },
+              { "id": "g2", "title": "Run a full acceptance flow and record timestamps in gaia.db", "description": "Execute acceptance flow and validate timestamps and audit traces are correctly persisted in gaia.db.", "status": "todo", "priority": "high", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" },
+              { "id": "t_final", "title": "MANDATORY: Check history of the chat and all docs; record findings and close story", "description": "Collect chat history and document findings, attach evidence and mark story closed following governance.", "status": "todo", "priority": "critical", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" }
             ]
           }
         ]
