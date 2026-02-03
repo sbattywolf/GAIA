@@ -1,0 +1,27 @@
+[Unit]
+Description=GAIA Session Progress Runner
+After=network.target
+
+[Service]
+# Replace /path/to/GAIA with the repository path on your NAS
+WorkingDirectory=/path/to/GAIA
+Environment=PYTHONPATH=/path/to/GAIA
+# Load simple KEY=VALUE env from the repo .tmp/telegram.env
+EnvironmentFile=/path/to/GAIA/.tmp/telegram.env
+# ExecStart: use system python3; adjust path if needed
+ExecStart=/usr/bin/env python3 /path/to/GAIA/scripts/session_progress_runner.py --interval 600 --duration 3600
+Restart=on-failure
+RestartSec=10
+# Optional: write logs to system journal; or configure StandardOutput/StandardError
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+
+# Installation:
+# 1. Copy this file to /etc/systemd/system/gaia_session.service
+# 2. Edit WorkingDirectory and EnvironmentFile to match your GAIA path
+# 3. Run: sudo systemctl daemon-reload
+# 4. Enable: sudo systemctl enable --now gaia_session.service
+# 5. Check logs: sudo journalctl -u gaia_session.service -f

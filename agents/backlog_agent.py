@@ -2,17 +2,17 @@
 """GAIA BacklogAgent (prototype).
 
 Usage:
-  python agents/backlog_agent.py --title "Issue title" --body "Issue body"
+  python agents/backlog_agent.py --title "Issue title" --body "Issue body" [--dry-run]
 
-This script calls the `gh` (GitHub CLI) if available to create an issue, and
-appends an NDJSON event to `events.ndjson` in the repo root.
+Pattern: build an event, optionally call `gh`, then append event to `events.ndjson`.
 """
 import subprocess
-import json
 import argparse
 import os
 import uuid
 from datetime import datetime
+
+from .agent_utils import build_event, append_event_atomic, is_dry_run
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 EVENTS_PATH = os.path.join(ROOT, 'events.ndjson')
@@ -23,7 +23,6 @@ def gh_create_issue(title, body):
     try:
         cmd = ['gh', 'issue', 'create', '--title', title, '--body', body]
         proc = subprocess.run(cmd, capture_output=True, text=True, check=True)
-        # gh prints URL on success
         output = proc.stdout.strip()
         return output
     except Exception as e:
@@ -31,34 +30,30 @@ def gh_create_issue(title, body):
         return None
 
 
-def append_event(event):
-    with open(EVENTS_PATH, 'a', encoding='utf-8') as f:
-        f.write(json.dumps(event, ensure_ascii=False) + '\n')
-
-
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('--title', required=True)
     p.add_argument('--body', default='')
+    p.add_argument('--dry-run', action='store_true', help='Do not call external CLIs')
     args = p.parse_args()
 
-    issue_url = gh_create_issue(args.title, args.body)
+    dry = args.dry_run or is_dry_run()
 
-    event = {
-        'type': 'issue.create',
-        'source': 'backlog_agent',
-        'target': os.path.basename(os.getcwd()),
-        'task_id': None,
-        'payload': {
-            'title': args.title,
-            'body': args.body,
-            'issue_url': issue_url,
-        },
-        'timestamp': datetime.utcnow().isoformat() + 'Z',
-        'trace_id': str(uuid.uuid4()),
+    issue_url = None
+    if not dry:
+        issue_url = gh_create_issue(args.title, args.body)
+    else:
+        print('dry run: skipping gh issue creation')
+
+    payload = {
+        'title': args.title,
+        'body': args.body,
+        'issue_url': issue_url,
     }
 
-    append_event(event)
+    event = build_event('issue.create', 'backlog_agent', payload)
+
+    append_event_atomic(EVENTS_PATH, event)
     print('event appended to', EVENTS_PATH)
 
 
