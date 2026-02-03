@@ -1,0 +1,5 @@
+[
+  {"service":"monitor","action":"start","start_immediately":false},
+  {"service":"telegram_bridge","action":"start","start_immediately":false},
+  {"service":"approval_listener","action":"start","start_immediately":false}
+]

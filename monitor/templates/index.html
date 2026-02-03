@@ -59,6 +59,22 @@
         <div class="controls">
           <button id="startBtn">Start Agents</button>
           <button id="stopBtn">Stop Agents</button>
+          <div style="display:flex;align-items:center;gap:6px;margin-left:8px;position:relative">
+            <input id="adminTokenInput" placeholder="Admin token" style="padding:6px;border-radius:6px;border:1px solid var(--border);width:160px" />
+            <button id="adminTokenSave" style="padding:6px 8px">Save</button>
+            <button id="adminTokenClear" style="padding:6px 8px">Clear</button>
+            <button id="adminTokenHelpBtn" title="Token help" style="padding:6px 8px;background:#fff;border:1px solid var(--border);border-radius:6px;margin-left:6px">?</button>
+            <div id="adminTokenHelp" style="position:absolute;top:40px;left:0;min-width:260px;background:#fff8e1;border:1px solid #f1e0a8;padding:8px;border-radius:6px;display:none;box-shadow:0 6px 18px rgba(0,0,0,0.08);font-size:13px;z-index:80">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <div style="font-weight:600">Admin token & security</div>
+                <div style="display:flex;gap:6px;align-items:center">
+                  <a id="adminTokenDocs" href="doc/HANDOFF.md" target="_blank" rel="noopener" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:#fff;text-decoration:none;color:inherit">Docs</a>
+                  <button id="adminTokenCopy" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:#fff;font-size:12px">Copy</button>
+                </div>
+              </div>
+              <div id="adminTokenHelpText" style="color:#374151">The token is stored locally in your browser session (sessionStorage) only. Keep it secret — do not paste long-lived credentials here. To persist for all users, place MONITOR_ADMIN_TOKEN in <strong>.tmp/telegram.env</strong>. See <a href="doc/HANDOFF.md" target="_blank" rel="noopener">the runbook</a> for operator guidance.</div>
+            </div>
+          </div>
           <div id="agentStatus" class="muted">Status: unknown</div>
           <div id="telegramBadge" class="muted" style="margin-left:12px">Telegram: <span id="telegramText">unknown</span></div>
           <div id="approvalBadge" class="muted" style="margin-left:12px">Approval: <span id="approvalText">none</span></div>
@@ -90,12 +106,13 @@
         </aside>
 
         <main class="main">
-          <div class="tabs">
+            <div class="tabs">
             <button class="tabbtn" data-tab="overview">Overview</button>
             <button class="tabbtn" data-tab="summary">Summary</button>
             <button class="tabbtn" data-tab="events">Events</button>
             <button class="tabbtn" data-tab="capabilities">Capabilities</button>
             <button class="tabbtn" data-tab="logs">Logs</button>
+            <button class="tabbtn" data-tab="pending">Pending</button>
             <button class="tabbtn" data-tab="agents">Agents</button>
           </div>
 
@@ -139,6 +156,11 @@
             <div id="events" class="tabpanel" style="display:none">
               <h2>Recent Events</h2>
               <div class="events-list" id="events-list">Loading events...</div>
+            </div>
+
+            <div id="pending" class="tabpanel" style="display:none">
+              <h2>Pending Commands</h2>
+              <div id="pending-panel">Loading pending...</div>
             </div>
 
             <div id="capabilities" class="tabpanel" style="display:none">
@@ -186,6 +208,21 @@
           </div>
         </div>
       </div>
+
+        <!-- Confirm requeue modal -->
+        <div id="confirmRequeueModal" style="display:none" aria-hidden="true">
+          <div class="modal-backdrop" id="confirmRequeueBackdrop">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmRequeueTitle">
+              <h3 id="confirmRequeueTitle">Confirm Requeue</h3>
+              <div class="small">Are you sure you want to requeue this pending command? This will attempt to resend the Telegram reply.</div>
+              <pre id="confirmRequeuePreview" style="max-height:160px;overflow:auto;margin-top:8px;background:#f8fafc;padding:8px;border-radius:6px"></pre>
+              <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+                <button id="confirmRequeueCancel">Cancel</button>
+                <button id="confirmRequeueConfirm" style="background:var(--accent);color:#fff;border-color:var(--accent)">Requeue</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Per-agent detail modal (logs preview, restart, compare) -->
         <div id="agentDetailModal" style="display:none" aria-hidden="true">
@@ -309,103 +346,46 @@
 
       // Pending commands SSE hookup + initial fetch
       (function(){
-        const listEl = document.getElementById('pendingCommandsList');
-        // track approvers list for UI decisions
-        window.telegramApprovers = [];
-        async function refresh(){
+        // Minimal Pending tab that queries the lightweight monitor endpoint `/pending`.
+        const panel = document.getElementById('pending-panel');
+        async function refreshPending(){
           try{
-            const r = await fetch('/api/pending_commands');
-            const j = await r.json();
+            const r = await fetch('/pending');
+            if(!r.ok){ panel.textContent = 'error fetching pending'; return }
+            const j = await r.json().catch(()=>({}));
             const items = (j && j.pending) || [];
-            if(!items || !items.length){ listEl.textContent = 'No pending commands'; return }
-            listEl.innerHTML = '';
-            for(const it of items.slice(-20).reverse()){
-              const row = document.createElement('div'); row.style.marginBottom='6px';
-              const title = document.createElement('div'); title.style.fontWeight='600'; title.textContent = (it.command||'').split('\n')[0].slice(0,160);
-              const meta = document.createElement('div'); meta.className='small muted'; meta.textContent = `id=${(it.id||'') .toString().slice(0,8)} · from=${(it.from&&it.from.first_name)||it.from||'unknown'} · ${it.status||'pending'}`;
-              const info = document.createElement('div'); info.className='small'; info.textContent = `To approve: python scripts/tg_command_manager.py approve ${it.id}`;
-              const btnRow = document.createElement('div'); btnRow.style.marginTop='6px';
-              const approveBtn = document.createElement('button'); approveBtn.textContent='Approve'; approveBtn.style.padding='6px 8px';
-              const denyBtn = document.createElement('button'); denyBtn.textContent='Deny'; denyBtn.style.padding='6px 8px';
-              const infoBtn = document.createElement('button'); infoBtn.textContent='Info'; infoBtn.style.padding='6px 8px';
-              const proceedBtn = document.createElement('button'); proceedBtn.textContent='Proceed (disabled)'; proceedBtn.style.padding='6px 8px'; proceedBtn.disabled = true;
-
-              approveBtn.addEventListener('click', async ()=>{
-                if(!confirm('Approve this command?')) return;
-                approveBtn.disabled = true; approveBtn.textContent = 'Approving...';
+            if(!items || !items.length){ panel.textContent = 'No pending commands'; return }
+            panel.innerHTML = '';
+            for(const it of items.slice(-50).reverse()){
+              const row = document.createElement('div'); row.style.marginBottom='8px'; row.style.padding='8px'; row.style.borderBottom='1px solid #f3f7fb';
+              const title = document.createElement('div'); title.style.fontWeight='600'; title.textContent = (it.command||'').split('\n')[0].slice(0,240);
+              const meta = document.createElement('div'); meta.className='small muted'; meta.textContent = `id=${(it.id||'') .toString().slice(0,12)} · from=${(it.from&&it.from.first_name)||it.from||'unknown'} · ${it.status||'pending'}`;
+              const cli = document.createElement('div'); cli.className='small'; cli.textContent = `CLI: python scripts/tg_command_manager.py approve ${it.id}`;
+              const btns = document.createElement('div'); btns.style.marginTop='6px'; btns.style.display='flex'; btns.style.gap='8px';
+              const requeueBtn = document.createElement('button'); requeueBtn.textContent = 'Requeue'; requeueBtn.style.padding='6px 8px';
+              requeueBtn.addEventListener('click', async ()=>{
+                // require saved admin token
+                if(!window.MONITOR_ADMIN_TOKEN){ alert('Save admin token first using the input at top-right'); return; }
+                // open modal and show preview
                 try{
-                  const key = window.GAIA_MONITOR_API_KEY || '';
-                  const r = await fetch('/api/pending_commands/approve', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ id: it.id, key: key }) });
-                  const j = await r.json().catch(()=>({}));
-                  if(j && j.ok){ alert('Approved'); proceedBtn.textContent = 'Proceed ▶'; proceedBtn.disabled = false; } else { alert('Approve failed: '+(j && j.error)); }
-                }catch(e){ alert('Approve error: '+e) }
-                approveBtn.disabled = false; approveBtn.textContent = 'Approve';
+                  const preview = document.getElementById('confirmRequeuePreview');
+                  preview.textContent = JSON.stringify(it, null, 2);
+                  document.getElementById('confirmRequeueModal').style.display = 'block';
+                  document.getElementById('confirmRequeueModal').setAttribute('aria-hidden','false');
+                  // store current item id on modal element
+                  const modal = document.getElementById('confirmRequeueModal');
+                  modal.dataset.requeueId = it.id || '';
+                }catch(e){ alert('Could not open confirm dialog: '+e); }
               });
-
-              denyBtn.addEventListener('click', async ()=>{
-                if(!confirm('Deny this command?')) return;
-                denyBtn.disabled = true; denyBtn.textContent = 'Denying...';
-                try{
-                  const key = window.GAIA_MONITOR_API_KEY || '';
-                  const r = await fetch('/api/pending_commands/deny', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ id: it.id, key: key }) });
-                  const j = await r.json().catch(()=>({}));
-                  if(j && j.ok){ alert('Denied'); } else { alert('Deny failed: '+(j && j.error)); }
-                }catch(e){ alert('Deny error: '+e) }
-                denyBtn.disabled = false; denyBtn.textContent = 'Deny';
-              });
-
-              infoBtn.addEventListener('click', async ()=>{
-                try{
-                  const r = await fetch('/api/pending_commands/info?id='+encodeURIComponent(it.id));
-                  const j = await r.json().catch(()=>({}));
-                  if(j && j.ok){ alert(JSON.stringify(j.item, null, 2)); } else { alert('Info failed: '+(j && j.error)); }
-                }catch(e){ alert('Info error: '+e) }
-              });
-
-              postBtn.addEventListener('click', async ()=>{
-                if(!confirm('Postpone this command?')) return;
-                postBtn.disabled = true; postBtn.textContent = 'Postponing...';
-                try{
-                  const key = window.GAIA_MONITOR_API_KEY || '';
-                  const r = await fetch('/api/pending_commands/postpone', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ id: it.id, key: key }) });
-                  const j = await r.json().catch(()=>({}));
-                  if(j && j.ok){ alert('Postponed'); } else { alert('Postpone failed: '+(j && j.error)); }
-                }catch(e){ alert('Postpone error: '+e) }
-                postBtn.disabled = false; postBtn.textContent = 'Postpone';
-              });
-
-              proceedBtn.addEventListener('click', async ()=>{
-                if(proceedBtn.disabled) return;
-                if(!confirm('Proceed to execute (will be dry-run unless enabled)?')) return;
-                try{
-                  alert('To execute: run python scripts/tg_command_manager.py execute '+it.id+' --execute (requires ALLOW_COMMAND_EXECUTION=1)');
-                }catch(e){ alert('Proceed error: '+e) }
-              });
-
-              // disable Proceed in UI when approvers are enforced (require Telegram approver to proceed)
-              try{
-                if(window.telegramApprovers && window.telegramApprovers.length){
-                  proceedBtn.disabled = true;
-                  proceedBtn.title = 'Proceed must be performed by an authorized Telegram approver (use in-chat buttons)';
-                } else {
-                  // allow enabled UI proceed as a hint (still dry-run unless ALLOW_COMMAND_EXECUTION=1)
-                  proceedBtn.disabled = false;
-                  proceedBtn.textContent = 'Proceed ▶';
-                }
-              }catch(e){ }
-
-              btnRow.appendChild(approveBtn); btnRow.appendChild(denyBtn); btnRow.appendChild(infoBtn); btnRow.appendChild(proceedBtn);
-              row.appendChild(title); row.appendChild(meta); row.appendChild(info); row.appendChild(btnRow);
-              listEl.appendChild(row);
+              btns.appendChild(requeueBtn);
+              row.appendChild(title); row.appendChild(meta); row.appendChild(cli); row.appendChild(btns);
+              panel.appendChild(row);
             }
-          }catch(e){ listEl.textContent = 'error loading pending commands' }
+          }catch(e){ panel.textContent = 'error loading pending'; }
         }
-        refresh();
-        try{
-          const es = new EventSource('/api/pending_commands/stream');
-          es.addEventListener('pending_commands', (ev)=>{ try{ const d = JSON.parse(ev.data); refresh(); }catch(e){} });
-          es.addEventListener('error', ()=>{});
-        }catch(e){}
+        refreshPending();
+        // refresh periodically for a light-weight UI
+        setInterval(refreshPending, 4000);
       })();
 
       // basic tab handling with active highlighting
@@ -420,6 +400,46 @@
       });
       // default
       setActiveTab('overview');
+
+      // Admin token helpers: persist to sessionStorage and expose to window
+      (function(){
+        const input = document.getElementById('adminTokenInput');
+        const save = document.getElementById('adminTokenSave');
+        const clear = document.getElementById('adminTokenClear');
+        try{
+          const saved = sessionStorage.getItem('monitor_admin_token');
+          if(saved){ input.value = saved; window.MONITOR_ADMIN_TOKEN = saved; }
+        }catch(e){}
+        save.addEventListener('click', ()=>{
+          try{ const v = input.value.trim(); if(!v) return; sessionStorage.setItem('monitor_admin_token', v); window.MONITOR_ADMIN_TOKEN = v; alert('Admin token saved to session'); }catch(e){ alert('Save failed'); }
+        });
+        clear.addEventListener('click', ()=>{ try{ sessionStorage.removeItem('monitor_admin_token'); input.value=''; window.MONITOR_ADMIN_TOKEN = null; alert('Cleared'); }catch(e){ alert('Clear failed'); } });
+      })();
+      // help tooltip for admin token
+      try{
+        const helpBtn = document.getElementById('adminTokenHelpBtn');
+        const helpBox = document.getElementById('adminTokenHelp');
+        const helpText = document.getElementById('adminTokenHelpText');
+        const copyBtn = document.getElementById('adminTokenCopy');
+        helpBtn.addEventListener('click', ()=>{
+          if(helpBox.style.display === 'none'){
+            helpBox.style.display = 'block';
+            // auto-hide after 12s
+            setTimeout(()=>{ try{ helpBox.style.display='none'; }catch(_){} }, 12000);
+          } else { helpBox.style.display='none'; }
+        });
+        // copy help text to clipboard
+        if(copyBtn){
+          copyBtn.addEventListener('click', async ()=>{
+            try{
+              const text = helpText ? helpText.innerText || helpText.textContent : 'Admin token help';
+              await navigator.clipboard.writeText(text);
+              copyBtn.textContent = 'Copied';
+              setTimeout(()=>{ copyBtn.textContent = 'Copy'; }, 2000);
+            }catch(e){ alert('Copy failed: ' + e); }
+          });
+        }
+      }catch(e){}
 
       // --- data fetchers ---
       async function fetchEvents(){
@@ -1092,6 +1112,29 @@
         document.getElementById('blockModal').style.display = 'none'; document.getElementById('blockModal').setAttribute('aria-hidden','true');
       });
       document.getElementById('blockModalBackdrop').addEventListener('click', (e)=>{ if(e.target.id === 'blockModalBackdrop'){ document.getElementById('blockModalClose').click(); } });
+
+      // Confirm requeue modal handlers
+      try{
+        const confirmModal = document.getElementById('confirmRequeueModal');
+        const confirmBtn = document.getElementById('confirmRequeueConfirm');
+        const cancelBtn = document.getElementById('confirmRequeueCancel');
+        cancelBtn.addEventListener('click', ()=>{ confirmModal.style.display='none'; confirmModal.setAttribute('aria-hidden','true'); confirmModal.dataset.requeueId=''; });
+        document.getElementById('confirmRequeueBackdrop').addEventListener('click', (e)=>{ if(e.target.id === 'confirmRequeueBackdrop'){ cancelBtn.click(); } });
+        confirmBtn.addEventListener('click', async ()=>{
+          try{
+            const modal = document.getElementById('confirmRequeueModal');
+            const id = modal.dataset.requeueId || null;
+            if(!id){ alert('Missing item id'); return; }
+            const headers = {'Content-Type':'application/json', 'X-Admin-Token': window.MONITOR_ADMIN_TOKEN};
+            const res = await fetch('/admin/requeue', { method: 'POST', headers: headers, body: JSON.stringify({id: id}) });
+            const j = await res.json().catch(()=>({}));
+            if(!res.ok){ alert('Requeue failed: ' + (j && (j.error||JSON.stringify(j)))); return }
+            alert('Requeued');
+            modal.style.display='none'; modal.setAttribute('aria-hidden','true'); modal.dataset.requeueId='';
+            refreshPending();
+          }catch(e){ alert('Requeue request failed: '+e) }
+        });
+      }catch(e){}
     </script>
   </body>
 </html>

@@ -13,6 +13,7 @@ import sqlite3
 import queue
 import requests
 import glob
+from scripts import sequence_manager as sm
 
 # configurable agents file (repo-root by default)
 AGENTS_CONFIG_PATH = os.environ.get('GAIA_AGENTS_CONFIG', os.path.join(os.getcwd(), 'agents.json'))
@@ -557,6 +558,38 @@ def api_pending_commands_approve():
         return jsonify({'ok': False, 'error': 'bad_request', 'detail': str(e)}), 400
 
 
+@app.route('/api/pending_commands', methods=['GET'])
+def api_pending_commands_list():
+    """Return list of pending commands (most recent last)."""
+    try:
+        from scripts import tg_command_manager as tcm
+        items = tcm.list_pending() or []
+        return jsonify({'ok': True, 'pending': items})
+    except Exception as e:
+        return jsonify({'ok': False, 'error': 'list_failed', 'detail': str(e)}), 500
+
+
+@app.route('/api/pending_commands/toggle_test', methods=['POST'])
+def api_pending_commands_toggle_test():
+    """Toggle `is_test` option for a pending command via tg_command_manager.toggle_option."""
+    try:
+        body = request.get_json() or {}
+        cid = body.get('id')
+        key = body.get('key')
+        expected = os.environ.get('GAIA_MONITOR_API_KEY')
+        if expected and expected != key:
+            return jsonify({'ok': False, 'error': 'unauthorized'}), 401
+        if not cid:
+            return jsonify({'ok': False, 'error': 'missing_id'}), 400
+        from scripts import tg_command_manager as tcm
+        opts = tcm.toggle_option(cid, 'is_test', actor='monitor')
+        if opts is None:
+            return jsonify({'ok': False, 'error': 'not_found'}), 404
+        return jsonify({'ok': True, 'id': cid, 'options': opts})
+    except Exception as e:
+        return jsonify({'ok': False, 'error': 'toggle_failed', 'detail': str(e)}), 500
+
+
 @app.route('/api/pending_commands/deny', methods=['POST'])
 def api_pending_commands_deny():
     """Deny a pending command by id. Protected by `GAIA_MONITOR_API_KEY` similar to approve."""
@@ -631,6 +664,179 @@ def api_pending_commands_info():
         return jsonify({'ok': True, 'item': target})
     except Exception as e:
         return jsonify({'ok': False, 'error': 'info_failed', 'detail': str(e)}), 500
+
+
+@app.route('/api/sequences/active')
+def api_sequences_active():
+    """Return the current active task file if present."""
+    path = os.path.join(os.getcwd(), '.tmp', 'active_task.json')
+    try:
+        if not os.path.exists(path):
+            return jsonify({'ok': True, 'active': False, 'file': None})
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify({'ok': True, 'active': True, 'payload': data})
+    except Exception:
+        return jsonify({'ok': False, 'error': 'read_failed'})
+
+
+@app.route('/api/sequences/todos')
+def api_sequences_todos():
+    path = os.path.join(os.getcwd(), '.tmp', 'sequence_todos.json')
+    try:
+        if not os.path.exists(path):
+            return jsonify({'ok': True, 'todos': {}})
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return jsonify({'ok': True, 'todos': data})
+    except Exception:
+        return jsonify({'ok': False, 'todos': {}})
+
+
+@app.route('/api/sequences/proposals')
+def api_sequences_proposals():
+    path = os.path.join(os.getcwd(), 'doc', 'SEQUENCE_PROPOSALS.md')
+    try:
+        if not os.path.exists(path):
+            return jsonify({'ok': True, 'proposals': ''})
+        with open(path, 'r', encoding='utf-8') as f:
+            txt = f.read()
+        return jsonify({'ok': True, 'proposals': txt})
+    except Exception:
+        return jsonify({'ok': False, 'proposals': ''})
+
+
+@app.route('/api/controller/active')
+def api_controller_active():
+    """Return active task and its open todos."""
+    try:
+        active_path = os.path.join(os.getcwd(), '.tmp', 'active_task.json')
+        if not os.path.exists(active_path):
+            return jsonify({'ok': True, 'active': False, 'payload': None})
+        with open(active_path, 'r', encoding='utf-8') as f:
+            active = json.load(f)
+        # load todos for this sequence
+        todos = sm._load_todos()
+        seq_id = active.get('active_sequence')
+        filtered = {k: v for k, v in (todos or {}).items() if v.get('seq_id') == seq_id}
+        return jsonify({'ok': True, 'active': True, 'payload': active, 'todos': filtered})
+    except Exception:
+        return jsonify({'ok': False, 'error': 'read_failed'})
+
+
+@app.route('/api/controller/todos')
+def api_controller_todos():
+    try:
+        todos = sm._load_todos()
+        return jsonify({'ok': True, 'todos': todos})
+    except Exception:
+        return jsonify({'ok': False, 'todos': {}})
+
+
+@app.route('/api/controller/claim', methods=['POST'])
+def api_controller_claim():
+    try:
+        body = request.get_json() or {}
+        tid = body.get('id')
+        actor = body.get('actor') or body.get('claimed_by') or 'unknown'
+        if not tid:
+            return jsonify({'ok': False, 'error': 'missing_id'}), 400
+        todos = sm._load_todos()
+        if tid not in todos:
+            return jsonify({'ok': False, 'error': 'not_found'}), 404
+        t = todos[tid]
+        t['status'] = 'claimed'
+        t['assigned'] = actor
+        t['assigned_at'] = datetime.utcnow().replace(tzinfo=timezone.utc).isoformat().replace('+00:00', 'Z')
+        sm._save_todos(todos)
+        return jsonify({'ok': True, 'todo': t})
+    except Exception as e:
+        return jsonify({'ok': False, 'error': 'claim_failed', 'detail': str(e)}), 500
+
+
+@app.route('/api/controller/complete', methods=['POST'])
+def api_controller_complete():
+    try:
+        body = request.get_json() or {}
+        tid = body.get('id')
+        actor = body.get('actor') or 'unknown'
+        notes = body.get('notes')
+        if not tid:
+            return jsonify({'ok': False, 'error': 'missing_id'}), 400
+        todos = sm._load_todos()
+        t = todos.get(tid)
+        if not t:
+            return jsonify({'ok': False, 'error': 'not_found'}), 404
+        # parse tid -> seq_id:step[:sub]
+        parts = tid.split(':')
+        seq_id = parts[0]
+        if len(parts) == 3:
+            si = int(parts[1]); sj = int(parts[2])
+            ok = sm._mark_todo_done(seq_id, si, sj)
+        else:
+            si = int(parts[1]); sj = None
+            ok = sm._mark_todo_done(seq_id, si, None)
+        if not ok:
+            return jsonify({'ok': False, 'error': 'mark_failed'}), 500
+        # update metadata
+        todos = sm._load_todos()
+        updated = todos.get(tid)
+        if updated is not None:
+            updated['completed_by'] = actor
+            if notes:
+                updated['notes'] = notes
+            sm._save_todos(todos)
+        # maybe finish sequence
+        sm._maybe_finish_sequence(seq_id)
+        return jsonify({'ok': True, 'todo': updated})
+    except Exception as e:
+        return jsonify({'ok': False, 'error': 'complete_failed', 'detail': str(e)}), 500
+
+
+@app.route('/api/sequences/stream')
+def api_sequences_stream():
+    def gen():
+        last_t_mtime = 0
+        last_a_mtime = 0
+        todos_path = os.path.join(os.getcwd(), '.tmp', 'sequence_todos.json')
+        active_path = os.path.join(os.getcwd(), '.tmp', 'active_task.json')
+        while True:
+            try:
+                if os.path.exists(todos_path):
+                    m = os.path.getmtime(todos_path)
+                    if m and m != last_t_mtime:
+                        last_t_mtime = m
+                        try:
+                            with open(todos_path, 'r', encoding='utf-8') as f:
+                                payload = json.load(f)
+                        except Exception:
+                            payload = {}
+                        yield f"event: todos\n"
+                        yield f"data: {json.dumps(payload)}\n\n"
+                if os.path.exists(active_path):
+                    m = os.path.getmtime(active_path)
+                    if m and m != last_a_mtime:
+                        last_a_mtime = m
+                        try:
+                            with open(active_path, 'r', encoding='utf-8') as f:
+                                payload = json.load(f)
+                        except Exception:
+                            payload = {}
+                        yield f"event: active\n"
+                        yield f"data: {json.dumps(payload)}\n\n"
+                yield ':\n\n'
+                time.sleep(1)
+            except GeneratorExit:
+                return
+            except Exception:
+                time.sleep(1)
+
+    return Response(gen(), mimetype='text/event-stream')
+
+
+@app.route('/sequences')
+def sequences_page():
+    return render_template('sequences.html')
 
 
 @app.route('/api/events/stream')

@@ -18,6 +18,8 @@ import os
 from datetime import datetime
 import sqlite3
 from datetime import timedelta
+from .i18n import detect_and_strip_prefix, t as _t
+from . import telegram_idempotency as tid
 
 ROOT = Path(__file__).resolve().parents[1]
 TMP = ROOT / '.tmp'
@@ -107,7 +109,9 @@ def enqueue_command(chat_id, message_id, text, sender):
     # expire old items first
     expire_old()
     items = safe_load(PENDING) or []
-    cmds = parse_commands_from_text(text)
+    env = load_env()
+    lang, cleaned_text = detect_and_strip_prefix(text, env)
+    cmds = parse_commands_from_text(cleaned_text)
     added = []
     for c in cmds:
         item = {
@@ -130,13 +134,13 @@ def enqueue_command(chat_id, message_id, text, sender):
     safe_save(PENDING, items)
     # Send a short approval notifier to the configured Telegram chat (best-effort)
     try:
-        env = load_env()
         token = env.get('TELEGRAM_BOT_TOKEN')
         # allow override to notify a specific admin chat id
         notify_chat = env.get('TELEGRAM_NOTIFY_CHAT') or env.get('CHAT_ID') or env.get('TELEGRAM_CHAT_ID') or chat_id
         if token and added:
             monitor_base = env.get('MONITOR_BASE_URL') or os.environ.get('MONITOR_BASE_URL')
-            lines = [f"Approval requested ({len(added)}):"]
+            # summary lines (localized)
+            lines = [f"{_t('approval_requested', lang)} ({len(added)}):"]
             for a in added:
                 preview = a['command'].strip().splitlines()[0][:200]
                 lines.append(f"- {preview}")
@@ -146,18 +150,35 @@ def enqueue_command(chat_id, message_id, text, sender):
                 if monitor_base:
                     lines.append(f"  UI: {monitor_base} (open Pending Commands)")
                 lines.append('')
-            lines.append('Note: execution is disabled by default (ALLOW_COMMAND_EXECUTION=1 to enable).')
+            lines.append(_t('note_execution_disabled', lang))
             msg = "\n".join(lines)
             try:
                 from scripts.telegram_client import send_message
                 # send per-command message with action buttons (callback_data)
                 for a in added:
-                    text = f"Approval requested:\n{(a['command'][:240])}\n\nid: {a['id']}\ncreated: {a['created']}"
+                    is_test = False
+                    try:
+                        cmd_text = (a.get('command') or '').upper()
+                        if 'LIVE_TEST' in cmd_text or cmd_text.strip().startswith('TEST'):
+                            is_test = True
+                    except Exception:
+                        is_test = False
+
+                    warn_prefix = ''
+                    if is_test:
+                        warn_prefix = '⚠️ TEST COMMAND — DO NOT PRESS PROCEED\n\n'
+
+                    body_title = _t('approval_requested', lang)
+                    text_body = warn_prefix + f"{body_title}\n{(a['command'][:240])}\n\nid: {a['id']}\ncreated: {a['created']}"
                     # Minimal interactive buttons: Approve / Deny / Info / Proceed (disabled initially)
+                    if is_test:
+                        proceed_text = _t('proceed_disabled_test', lang)
+                    else:
+                        proceed_text = _t('proceed_disabled', lang)
                     buttons = [
-                        [ { 'text': 'Approve', 'callback_data': f"approve:{a['id']}" }, { 'text': 'Deny', 'callback_data': f"deny:{a['id']}" } ],
-                        [ { 'text': 'Info', 'callback_data': f"info:{a['id']}" } ],
-                        [ { 'text': 'Proceed (disabled)', 'callback_data': f"proceed_disabled:{a['id']}" } ]
+                        [ { 'text': _t('approve', lang), 'callback_data': f"approve:{a['id']}" }, { 'text': _t('deny', lang), 'callback_data': f"deny:{a['id']}" } ],
+                        [ { 'text': _t('info', lang), 'callback_data': f"info:{a['id']}" } ],
+                        [ { 'text': proceed_text, 'callback_data': f"proceed_disabled:{a['id']}" } ]
                     ]
                     # optionally include monitor URL button as well
                     if monitor_base:
@@ -168,7 +189,7 @@ def enqueue_command(chat_id, message_id, text, sender):
                             pass
                         buttons.append([{'text': 'Open Monitor', 'url': url}])
                     reply_markup = { 'inline_keyboard': buttons }
-                    send_message(token, notify_chat, text, reply_markup=reply_markup)
+                    send_message(token, notify_chat, text_body, reply_markup=reply_markup)
                 append_event({'type': 'approval.requested', 'payload': {'count': len(added)}, 'timestamp': now()})
             except Exception:
                 append_event({'type': 'approval.requested.failed', 'payload': {'count': len(added)}, 'timestamp': now()})
@@ -199,6 +220,14 @@ def approve(id_or_index, actor=None):
                 break
     if not target:
         return None
+    prev_status = target.get('status')
+    if prev_status == 'approved':
+        # idempotent: already approved, avoid duplicate events/audit
+        if actor and not target.get('approved_by'):
+            target['approved_by'] = actor
+            safe_save(PENDING, items)
+        return target
+
     target['status'] = 'approved'
     target['approved_at'] = now()
     if actor:
@@ -217,7 +246,8 @@ def approve(id_or_index, actor=None):
         chat = env.get('CHAT_ID') or env.get('TELEGRAM_CHAT_ID') or target.get('chat_id')
         if token and chat:
             from scripts.telegram_client import send_message
-            note = f"Command approved: id={target['id']}\n{(target.get('command') or '').strip()}\nTo execute: python scripts/tg_command_manager.py execute {target['id']} --execute (requires ALLOW_COMMAND_EXECUTION=1)"
+            lang = env.get('TELEGRAM_DEFAULT_LANG') or 'en'
+            note = f"{_t('command_approved', lang)} id={target['id']}\n{(target.get('command') or '').strip()}\n{_t('to_execute', lang)}python scripts/tg_command_manager.py execute {target['id']} --execute (requires ALLOW_COMMAND_EXECUTION=1)"
             try:
                 send_message(token, chat, note)
             except Exception:
@@ -243,6 +273,13 @@ def deny(id_or_index, actor=None):
                 break
     if not target:
         return None
+    prev_status = target.get('status')
+    if prev_status == 'denied':
+        if actor and not target.get('denied_by'):
+            target['denied_by'] = actor
+            safe_save(PENDING, items)
+        return target
+
     target['status'] = 'denied'
     target['denied_at'] = now()
     if actor:
@@ -296,14 +333,24 @@ def execute(id_or_index, dry_run=True):
     if not target:
         return None, 'not_found'
     if target.get('status') != 'approved':
+        # if it already was executed, return idempotent success
+        if target.get('status') in ('executed', 'executed_dryrun'):
+            return target, None
         return None, 'not_approved'
     # execution behavior
     if dry_run or not allow:
+        # idempotent: if already executed_dryrun, return existing
+        if target.get('status') == 'executed_dryrun':
+            return target, None
         target['status'] = 'executed_dryrun'
         target['executed_at'] = now()
         target['_note'] = 'dry-run (no real execution)'
         safe_save(PENDING, items)
+        # record a dryrun-specific event
         append_event({'type': 'command.executed.dryrun', 'payload': {'id': target['id'], 'command': target['command']}, 'timestamp': now()})
+        # also emit a base 'command.executed' event so callers that look for executed events
+        # (including tests) will detect the execution regardless of dry-run state
+        append_event({'type': 'command.executed', 'payload': {'id': target['id'], 'dry_run': True}, 'timestamp': now()})
         try:
             write_audit(target['id'], 'executed_dryrun', {'command': target.get('command')})
         except Exception:

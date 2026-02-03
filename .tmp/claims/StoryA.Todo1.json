@@ -1,0 +1,8 @@
+{
+  "owner": "ownerA",
+  "agent_id": "agentA",
+  "fingerprint": "fpA",
+  "claimed_at": "2026-02-03T19:31:30.586893+00:00",
+  "ttl_seconds": 60,
+  "version": 1
+}

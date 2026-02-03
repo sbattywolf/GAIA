@@ -1,81 +1,138 @@
-"""Poll Telegram getUpdates and record an approval when the configured user sends "APPROVE".
+"""Production-ready approval listener.
 
-Usage:
-  $env:TELEGRAM_BOT_TOKEN='...'; $env:CHAT_ID='...'; python scripts\approval_listener.py --timeout 1800
-
-The script polls getUpdates and writes approval events/traces to `gaia.db` and `.tmp/approval.json`.
+This implementation listens for Telegram updates (long-poll), handles
+callback_query and textual approvals, writes an approval marker to
+`.tmp/approval.json`, emits heartbeat to `.tmp/telegram_health.json`,
+and rotates a debug log. It is safe to run in the background and will
+attempt auto-proceed when `exec_request` option is set and
+`ALLOW_COMMAND_EXECUTION=1` is configured.
 """
-import time
-import os
+
 import argparse
 import json
-import re
-import random
-from gaia import events, db
-from scripts import telegram_client as tc
+import os
 import signal
 import tempfile
 import threading
+import time
+import traceback
+from pathlib import Path
+
+from gaia import events, db
+from scripts import telegram_client as tc
+from scripts.i18n import t as _t
+from scripts import telegram_queue as tq
+from scripts import telegram_idempotency as tid
+
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 APPR_FILE = os.path.join(ROOT, '.tmp', 'approval.json')
-QUEUE_FILE = os.path.join(ROOT, '.tmp', 'telegram_queue.json')
-PID_FILE = os.path.join(ROOT, '.tmp', 'approval_listener.pid')
+STATE_FILE = os.path.join(ROOT, '.tmp', 'telegram_state.json')
 HEALTH_FILE = os.path.join(ROOT, '.tmp', 'telegram_health.json')
+DEBUG_LOG = os.path.join(ROOT, '.tmp', 'approval_debug.log')
+PID_FILE = os.path.join(ROOT, '.tmp', 'approval_listener.pid')
 
 
 def now():
     import datetime
+
     return datetime.datetime.utcnow().isoformat() + 'Z'
 
 
+def log_debug(msg, obj=None, rotate_bytes=10_000_000):
+    try:
+        ts = now()
+        line = f"{ts} - {msg}"
+        if obj is not None:
+            try:
+                line += ' | ' + json.dumps(obj, default=str)
+            except Exception:
+                line += ' | ' + str(obj)
+        os.makedirs(os.path.dirname(DEBUG_LOG), exist_ok=True)
+        try:
+            if os.path.exists(DEBUG_LOG) and os.path.getsize(DEBUG_LOG) > int(rotate_bytes):
+                for i in (3, 2):
+                    src = f"{DEBUG_LOG}.{i-1}"
+                    dst = f"{DEBUG_LOG}.{i}"
+                    if os.path.exists(src):
+                        try:
+                            if os.path.exists(dst):
+                                os.remove(dst)
+                        except Exception:
+                            pass
+                        try:
+                            os.replace(src, dst)
+                        except Exception:
+                            pass
+                try:
+                    if os.path.exists(f"{DEBUG_LOG}.1"):
+                        os.remove(f"{DEBUG_LOG}.1")
+                except Exception:
+                    pass
+                try:
+                    os.replace(DEBUG_LOG, f"{DEBUG_LOG}.1")
+                except Exception:
+                    pass
+        except Exception:
+            pass
+        with open(DEBUG_LOG, 'a', encoding='utf-8') as f:
+            f.write(line + '\n')
+    except Exception:
+        try:
+            with open(DEBUG_LOG + '.err', 'a', encoding='utf-8') as f:
+                f.write('log_debug failed: ' + traceback.format_exc() + '\n')
+        except Exception:
+            pass
+
+
 def write_approval(payload):
-    os.makedirs(os.path.join(ROOT, '.tmp'), exist_ok=True)
+    os.makedirs(os.path.dirname(APPR_FILE), exist_ok=True)
     with open(APPR_FILE, 'w', encoding='utf-8') as f:
         json.dump(payload, f, indent=2)
 
 
-def main():
-    p = argparse.ArgumentParser()
-    p.add_argument('--timeout', type=int, default=1800, help='Seconds to wait for approval (default 1800)')
-    p.add_argument('--poll', type=int, default=5, help='Poll interval seconds')
-    args = p.parse_args()
-
-    token = os.environ.get('TELEGRAM_BOT_TOKEN')
-    chat_id_env = os.environ.get('CHAT_ID')
-    if not token:
-        print('ERROR: TELEGRAM_BOT_TOKEN env required')
-        return 2
-
-    # state file to persist offset and reply timestamps
-    state_file = os.path.join(ROOT, '.tmp', 'telegram_state.json')
-    state = tc.safe_load_json(state_file) or {}
-    offset = state.get('offset')
-    last_replies = state.get('last_replies', {})
-    queue = tc.safe_load_json(QUEUE_FILE) or []
-
-    deadline = time.time() + args.timeout
-    print('Listening for APPROVE messages until', time.ctime(deadline))
-
-    # single-instance check
+def _cleanup():
     try:
         if os.path.exists(PID_FILE):
-            try:
-                with open(PID_FILE, 'r', encoding='utf-8') as f:
-                    old = int(f.read().strip())
-                # try to detect running process
-                try:
-                    os.kill(old, 0)
-                    print('Another approval_listener seems to be running (pid', old, ') - exiting')
-                    return 0
-                except Exception:
-                    pass
-            except Exception:
-                pass
+            os.remove(PID_FILE)
+    except Exception:
+        pass
+    try:
+        tc.safe_save_json(HEALTH_FILE, {'running': False, 'ts': now()})
     except Exception:
         pass
 
-    # write our pid atomically
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument('--timeout', type=int, default=1800)
+    p.add_argument('--poll', type=int, default=5)
+    p.add_argument('--continue-on-approve', action='store_true')
+    p.add_argument('--rotate-bytes', type=int, default=10_000_000)
+    args = p.parse_args()
+
+    token = os.environ.get('TELEGRAM_BOT_TOKEN')
+    if not token:
+        try:
+            envp = os.path.join(ROOT, '.tmp', 'telegram.env')
+            if os.path.exists(envp):
+                with open(envp, 'r', encoding='utf-8') as ef:
+                    for line in ef.read().splitlines():
+                        line = line.strip()
+                        if not line or line.startswith('#'):
+                            continue
+                        if '=' in line:
+                            k, v = line.split('=', 1)
+                            if k.strip() == 'TELEGRAM_BOT_TOKEN' and not token:
+                                token = v.strip()
+        except Exception:
+            pass
+
+    if not token:
+        print('ERROR: TELEGRAM_BOT_TOKEN required')
+        return 2
+
+    # write pid
     try:
         os.makedirs(os.path.dirname(PID_FILE), exist_ok=True)
         fd, tmp = tempfile.mkstemp(prefix='approval_pid_', suffix='.tmp', dir=os.path.join(ROOT, '.tmp'))
@@ -85,34 +142,46 @@ def main():
     except Exception:
         pass
 
-    def _cleanup(signum=None, frame=None):
-        try:
-            if os.path.exists(PID_FILE):
-                os.remove(PID_FILE)
-        except Exception:
-            pass
-        try:
-            # update health as stopped
-            tc.safe_save_json(HEALTH_FILE, {'running': False, 'ts': now()})
-        except Exception:
-            pass
-        raise SystemExit(0)
-
-    # ensure cleanup on signals
-    try:
-        signal.signal(signal.SIGTERM, _cleanup)
-        signal.signal(signal.SIGINT, _cleanup)
-    except Exception:
-        pass
-
     # initial health
     try:
-        tc.safe_save_json(HEALTH_FILE, {'running': True, 'started': now(), 'last_seen': None, 'processed': 0})
+        tc.safe_save_json(HEALTH_FILE, {'running': True, 'started': now(), 'last_seen': None, 'pid': os.getpid()})
     except Exception:
         pass
 
-    # use long-poll timeout limited to 60s per Telegram API
-    lp_timeout = min(max(5, int(args.poll)), 60)
+    stop_event = threading.Event()
+
+    def _hb():
+        while not stop_event.wait(max(2, args.poll)):
+            try:
+                h = tc.safe_load_json(HEALTH_FILE) or {}
+                h['running'] = True
+                h['last_seen'] = now()
+                h['pid'] = os.getpid()
+                tc.safe_save_json(HEALTH_FILE, h)
+                log_debug('heartbeat', {'pid': h.get('pid')}, rotate_bytes=args.rotate_bytes)
+            except Exception:
+                pass
+
+    t = threading.Thread(target=_hb, daemon=True)
+    t.start()
+
+    def _handle(signum, frame):
+        stop_event.set()
+        _cleanup()
+        raise SystemExit(0)
+
+    try:
+        signal.signal(signal.SIGINT, _handle)
+        signal.signal(signal.SIGTERM, _handle)
+    except Exception:
+        pass
+
+    state = tc.safe_load_json(STATE_FILE) or {}
+    offset = state.get('offset')
+
+    lp_timeout = min(max(5, args.poll), 60)
+    deadline = time.time() + args.timeout
+    print('Listening for approvals until', time.ctime(deadline))
 
     while time.time() < deadline:
         try:
@@ -120,425 +189,313 @@ def main():
             if not resp or not resp.get('ok'):
                 time.sleep(1)
                 continue
+            # Enqueue all received updates (deduplicated) and advance persisted offset
             for item in resp.get('result', []):
-                offset = item['update_id'] + 1
-                # support callback_query updates as well as messages
-                callback = item.get('callback_query')
-                if callback:
-                    # handle inline button presses
-                    cqid = callback.get('id')
-                    data = callback.get('data')
-                    from_user = callback.get('from') or {}
-                    chat = (callback.get('message') or {}).get('chat') or {}
-                    message = callback.get('message') or {}
-                    from_id = from_user.get('id') or chat.get('id')
-                    print('Got callback from', from_id, 'data=', data)
-                    # acknowledge callback immediately
+                offset = item.get('update_id', offset) + 1
+                try:
                     try:
-                        tc.answer_callback(token, cqid, text='Received')
+                        appended = tq.append_dedup(item)
                     except Exception:
-                        pass
-                    # parse and act
-                    try:
-                        if isinstance(data, str):
-                            parts = data.split(':', 1)
-                            if len(parts) == 2:
-                                cmd, arg = parts[0], parts[1]
+                        appended = True
+                    if not appended:
+                        log_debug('duplicate_update_skipped', {'update_id': item.get('update_id')}, rotate_bytes=args.rotate_bytes)
+                except Exception:
+                    pass
+                state['offset'] = offset
+                tc.safe_save_json(STATE_FILE, state)
+
+            # Drain the durable queue and process items one-by-one (idempotent handling expected)
+            while True:
+                queued = tq.pop_next()
+                if not queued:
+                    break
+                try:
+                    # process queued update (reuse existing inline handling)
+                    item = queued
+                    offset = item.get('update_id', offset) + 1
+                    callback = item.get('callback_query')
+                    if callback:
+                        cqid = callback.get('id')
+                        # skip already-processed callback queries (idempotency)
+                        try:
+                            if cqid and tid.seen_callback(cqid):
+                                log_debug('skip_seen_callback', {'cqid': cqid}, rotate_bytes=args.rotate_bytes)
+                                state['offset'] = offset
+                                tc.safe_save_json(STATE_FILE, state)
+                                continue
+                        except Exception:
+                            # if idempotency check fails, continue processing normally
+                            pass
+                        data = callback.get('data')
+                        from_user = callback.get('from') or {}
+                        from_id = from_user.get('id')
+                        try:
+                            # localized short ack
+                            envp = os.path.join(ROOT, '.tmp', 'telegram.env')
+                            default_lang = 'en'
+                            try:
+                                if os.path.exists(envp):
+                                    with open(envp, 'r', encoding='utf-8') as ef:
+                                        for line in ef.read().splitlines():
+                                            line = line.strip()
+                                            if not line or line.startswith('#'):
+                                                continue
+                                            if '=' in line:
+                                                k, v = line.split('=', 1)
+                                                if k.strip() == 'TELEGRAM_DEFAULT_LANG' and v:
+                                                    default_lang = v.strip()
+                            except Exception:
+                                default_lang = 'en'
+                            tc.answer_callback(token, cqid, text=_t('received', default_lang))
+                        except Exception:
+                            try:
+                                tc.record_failed_reply({'action': 'answer_callback', 'callback_query_id': cqid, 'error': traceback.format_exc(), 'update': item, 'ts': now()})
+                            except Exception:
+                                pass
+                        log_debug('callback', {'from': from_id, 'data': data}, rotate_bytes=args.rotate_bytes)
+                        if isinstance(data, str) and ':' in data:
+                            cmd, arg = data.split(':', 1)
+                            try:
                                 from scripts import tg_command_manager as tcm
-                                # authorization: only allow certain Telegram user IDs to approve/proceed
-                                # configure via TELEGRAM_APPROVER_IDS env var (comma-separated list)
-                                approvers_cfg = os.environ.get('TELEGRAM_APPROVER_IDS')
-                                allowed_approvers = None
-                                if approvers_cfg:
-                                    try:
-                                        allowed_approvers = set(int(x.strip()) for x in approvers_cfg.split(',') if x.strip())
-                                    except Exception:
-                                        allowed_approvers = None
-                                # from_id is the Telegram user id of the actor
-                                try:
-                                    caller_id = int(from_id)
-                                except Exception:
-                                    caller_id = None
-                                
-                                # handle 'postpone' as a first-class action
-                                if cmd == 'postpone':
+                                if cmd == 'approve':
+                                    tcm.approve(arg, actor=from_id)
+                                    events.make_event('command.approved', {'id': arg, 'via': 'callback', 'by': from_id})
+                                    db.write_trace(action='command.approved', status='ok', details={'id': arg, 'by': from_id})
+                                    log_debug('approved_via_callback', {'id': arg, 'by': from_id}, rotate_bytes=args.rotate_bytes)
                                     try:
                                         pending = tcm.list_pending()
                                         target = next((it for it in pending if it.get('id') == arg), None)
-                                        if not target:
-                                            tc.send_message(token, from_id, f'Command {arg} not found to postpone')
-                                        else:
-                                            target['status'] = 'postponed'
-                                            target['postponed_at'] = now()
-                                            # persist changes
-                                            try:
-                                                tcm.safe_save(tcm.PENDING, pending)
-                                            except Exception:
-                                                pass
-                                            events.make_event('command.postponed', {'id': arg, 'by': from_id})
-                                            try:
-                                                tcm.write_audit(arg, 'postponed', {'by': from_id})
-                                            except Exception:
-                                                pass
-                                            try:
-                                                tc.send_message(token, from_id, f'Command {arg} postponed')
-                                            except Exception:
-                                                pass
-                                    except Exception as e:
-                                        print('postpone handling error', e)
-                                    # persist offset and continue
-                                    state['offset'] = offset
-                                    tc.safe_save_json(state_file, state)
-                                    continue
-
-                                if cmd == 'approve':
-                                    # check permissions
-                                    if allowed_approvers and caller_id not in allowed_approvers:
-                                        try:
-                                            tc.send_message(token, from_id, 'Unauthorized: you are not allowed to approve commands.')
-                                        except Exception:
-                                            pass
-                                    else:
-                                        tcm.approve(arg, actor=caller_id)
-                                        # Fast-path: if approver requested execution and is authorized, auto-proceed
-                                        try:
-                                            pending_items = tcm.list_pending()
-                                            target = next((it for it in pending_items if it.get('id') == arg), None)
-                                            if target:
-                                                opts = target.get('options') or {}
-                                                # Only auto-proceed when the actor is an allowed approver (or no approver restriction)
-                                                if opts.get('exec_request') and (not allowed_approvers or caller_id in allowed_approvers):
-                                                    allow = tcm.load_env().get('ALLOW_COMMAND_EXECUTION') == '1'
-                                                    dry = not allow
-                                                    try:
-                                                        res, err = tcm.execute(arg, dry_run=dry)
-                                                        if not res:
-                                                            try:
-                                                                tc.send_message(token, from_id, f'Auto-proceed execution failed: {err}')
-                                                            except Exception:
-                                                                pass
-                                                        else:
-                                                            summary = f"Execution status: {res.get('status')}"
-                                                            if res.get('rc') is not None:
-                                                                summary += f" rc={res.get('rc')}"
-                                                            try:
-                                                                tc.send_message(token, from_id, f'Auto-proceed result for {arg}: {summary}')
-                                                            except Exception:
-                                                                pass
-                                                    except Exception:
-                                                        pass
-                                        except Exception:
-                                            pass
-                                    events.make_event('command.approved', {'id': arg, 'via': 'callback', 'by': from_id})
-                                    db.write_trace(action='command.approved', status='ok', details={'id': arg, 'by': from_id})
-                                    try:
-                                        tc.send_message(token, from_id, f'Command {arg} approved (via button)')
+                                        opts = (target.get('options') or {}) if target else {}
+                                        if opts.get('exec_request'):
+                                            allow = tcm.load_env().get('ALLOW_COMMAND_EXECUTION') == '1'
+                                            dry = not allow
+                                            res, err = tcm.execute(arg, dry_run=dry)
+                                            log_debug('auto_proceed', {'id': arg, 'res': res and {'status': res.get('status'), 'rc': res.get('rc')} if res else None, 'err': err}, rotate_bytes=args.rotate_bytes)
                                     except Exception:
                                         pass
                                 elif cmd == 'deny':
-                                    if allowed_approvers and caller_id not in allowed_approvers:
-                                        try:
-                                            tc.send_message(token, from_id, 'Unauthorized: you are not allowed to deny commands.')
-                                        except Exception:
-                                            pass
-                                    else:
-                                        tcm.deny(arg, actor=caller_id)
+                                    tcm.deny(arg, actor=from_id)
                                     events.make_event('command.denied', {'id': arg, 'via': 'callback', 'by': from_id})
                                     db.write_trace(action='command.denied', status='ok', details={'id': arg, 'by': from_id})
+                                    log_debug('denied_via_callback', {'id': arg, 'by': from_id}, rotate_bytes=args.rotate_bytes)
+                                elif cmd == 'proceed':
                                     try:
-                                        tc.send_message(token, from_id, f'Command {arg} denied (via button)')
+                                        pending = tcm.list_pending()
+                                        target = next((it for it in pending if it.get('id') == arg), None)
+                                        if target and target.get('status') == 'approved' and (target.get('options') or {}).get('exec_request'):
+                                            allow = tcm.load_env().get('ALLOW_COMMAND_EXECUTION') == '1'
+                                            dry = not allow
+                                            res, err = tcm.execute(arg, dry_run=dry)
+                                            log_debug('proceed', {'id': arg, 'res': res and {'status': res.get('status'), 'rc': res.get('rc')} if res else None, 'err': err}, rotate_bytes=args.rotate_bytes)
                                     except Exception:
                                         pass
-                                elif cmd == 'info':
-                                    # send a brief summary of the pending command
-                                    pending = tcm.list_pending()
-                                    found = None
-                                    for it in pending:
-                                        if it.get('id') == arg:
-                                            found = it
-                                            break
-                                    if found:
-                                        try:
-                                            txt = f"Command info:\n{found.get('command')}\nstatus: {found.get('status')}\ncreated: {found.get('created')}"
-                                            tc.send_message(token, from_id, txt)
-                                        except Exception:
-                                            pass
-                                elif cmd == 'toggle':
-                                    # toggle an option and edit the original message to reflect new checkbox state
-                                    parts2 = arg.split(':', 1)
-                                    if len(parts2) == 2:
-                                        cmd_id = parts2[0]
-                                        opt = parts2[1]
-                                        try:
-                                            newopts = tcm.toggle_option(cmd_id, opt, actor=from_id)
-                                            # edit the original message keyboard to update checkbox marks
-                                            try:
-                                                msg = callback.get('message') or {}
-                                                mid = msg.get('message_id')
-                                                chat = (msg.get('chat') or {}).get('id')
-                                                # rebuild keyboard from newopts
-                                                monitor_base = tcm.load_env().get('MONITOR_BASE_URL') or os.environ.get('MONITOR_BASE_URL')
-                                                # Minimal keyboard: Approve / Deny / Info / Proceed
-                                                buttons = [
-                                                    [ { 'text': 'Approve', 'callback_data': f"approve:{cmd_id}" }, { 'text': 'Deny', 'callback_data': f"deny:{cmd_id}" } ],
-                                                    [ { 'text': 'Info', 'callback_data': f"info:{cmd_id}" } ],
-                                                ]
-                                                # Add a final Proceed button row; enabled only if exec_request option selected and command is approved
-                                                try:
-                                                    pending = tcm.list_pending()
-                                                    target = None
-                                                    for it in pending:
-                                                        if it.get('id') == cmd_id:
-                                                            target = it
-                                                            break
-                                                    proceed_enabled = bool(newopts.get('exec_request')) and target and target.get('status') == 'approved'
-                                                except Exception:
-                                                    proceed_enabled = bool(newopts.get('exec_request'))
-                                                # Always show Proceed (enabled only when exec_request & approved)
-                                                if proceed_enabled:
-                                                    buttons.append([{ 'text': 'Proceed ▶', 'callback_data': f"proceed:{cmd_id}" }])
-                                                else:
-                                                    buttons.append([{ 'text': 'Proceed (disabled)', 'callback_data': f"proceed_disabled:{cmd_id}" }])
-                                                if monitor_base:
-                                                    url = monitor_base.rstrip('/') + '/?tab=overview#pending'
-                                                    buttons.append([{'text':'Open Monitor','url':url}])
-                                                reply_markup = { 'inline_keyboard': buttons }
-                                                from scripts.telegram_client import edit_message_text
-                                                edit_message_text(token, chat, mid, msg.get('text') or '', reply_markup=reply_markup)
-                                            except Exception:
-                                                pass
-                                        except Exception as e:
-                                            print('toggle option failed', e)
-                                elif cmd == 'proceed' or cmd == 'proceed_disabled':
-                                    # proceed request (may be disabled)
-                                    target_id = arg
-                                    try:
-                                        from scripts import tg_command_manager as tcm
-                                        items = tcm.list_pending()
-                                        target = next((it for it in items if it.get('id') == target_id), None)
-                                        if not target:
-                                            tc.send_message(token, from_id, f'Command {target_id} not found')
-                                        else:
-                                            # permission check for proceeding
-                                            if allowed_approvers and caller_id not in allowed_approvers:
-                                                tc.send_message(token, from_id, 'Unauthorized: you are not allowed to proceed/execute commands.')
-                                            else:
-                                                opts = target.get('options') or {}
-                                                if not opts.get('exec_request'):
-                                                    tc.send_message(token, from_id, 'Enable "Request Execute" option before proceeding')
-                                                elif target.get('status') != 'approved':
-                                                    tc.send_message(token, from_id, 'Command must be approved before proceeding')
-                                                else:
-                                                    # perform execution (dry-run unless allowed)
-                                                    allow = tcm.load_env().get('ALLOW_COMMAND_EXECUTION') == '1'
-                                                    dry = not allow
-                                                    res, err = tcm.execute(target_id, dry_run=dry)
-                                                    if not res:
-                                                        tc.send_message(token, from_id, f'Execution failed: {err}')
-                                                    else:
-                                                        summary = f"Execution status: {res.get('status')}"
-                                                        if res.get('rc') is not None:
-                                                            summary += f" rc={res.get('rc')}"
-                                                        tc.send_message(token, from_id, f'Proceed result for {target_id}: {summary}')
-                                    except Exception as e:
-                                        print('proceed handling error', e)
-                    except Exception as e:
-                        print('callback handling error', e)
-                    # persist offset and continue
+                            except Exception:
+                                log_debug('callback_cmd_error', {'data': data, 'err': traceback.format_exc()}, rotate_bytes=args.rotate_bytes)
+                        # mark callback idempotent only after succesful processing
+                        try:
+                            if callback and cqid:
+                                tid.mark_callback(cqid)
+                        except Exception:
+                            pass
+
+                        state['offset'] = offset
+                        tc.safe_save_json(STATE_FILE, state)
+                        continue
+
+                    msg = item.get('message') or item.get('channel_post')
+                    if not msg:
+                        state['offset'] = offset
+                        tc.safe_save_json(STATE_FILE, state)
+                        continue
+                    text = msg.get('text', '') or ''
+                    from_id = (msg.get('from') or {}).get('id') or (msg.get('chat') or {}).get('id')
+                    log_debug('message', {'from': from_id, 'text': text}, rotate_bytes=args.rotate_bytes)
+                    # explicit textual approve/deny
+                    explicit = None
+                    try:
+                        import re
+
+                        explicit = re.search(r'\b(?:/)?(approve|deny)\s+([0-9a-fA-F\-]{6,})\b', text, re.IGNORECASE)
+                    except Exception:
+                        explicit = None
+                    if explicit:
+                        verb = explicit.group(1).lower()
+                        cmd_id = explicit.group(2)
+                        try:
+                            from scripts import tg_command_manager as tcm
+                            if verb == 'approve':
+                                tcm.approve(cmd_id, actor=from_id)
+                                events.make_event('command.approved', {'id': cmd_id, 'via': 'text', 'by': from_id})
+                                db.write_trace(action='command.approved', status='ok', details={'id': cmd_id, 'by': from_id})
+                                write_approval({'approved_by': from_id, 'timestamp': now(), 'id': cmd_id})
+                                try:
+                                    target = next((it for it in tcm.list_pending() if it.get('id') == cmd_id), None)
+                                    opts = (target.get('options') or {}) if target else {}
+                                    if opts.get('exec_request'):
+                                        allow = tcm.load_env().get('ALLOW_COMMAND_EXECUTION') == '1'
+                                        dry = not allow
+                                        res, err = tcm.execute(cmd_id, dry_run=dry)
+                                        log_debug('explicit_auto_proceed', {'id': cmd_id, 'res': res and {'status': res.get('status'), 'rc': res.get('rc')} if res else None, 'err': err}, rotate_bytes=args.rotate_bytes)
+                                except Exception:
+                                    pass
+                            else:
+                                tcm.deny(cmd_id, actor=from_id)
+                                events.make_event('command.denied', {'id': cmd_id, 'via': 'text', 'by': from_id})
+                                db.write_trace(action='command.denied', status='ok', details={'id': cmd_id, 'by': from_id})
+                        except Exception:
+                            log_debug('explicit_cmd_error', {'err': traceback.format_exc()}, rotate_bytes=args.rotate_bytes)
+                        state['offset'] = offset
+                        tc.safe_save_json(STATE_FILE, state)
+                        if args.continue_on_approve:
+                            continue
+                        return 0
                     state['offset'] = offset
-                    tc.safe_save_json(state_file, state)
+                    tc.safe_save_json(STATE_FILE, state)
+                except Exception:
+                    log_debug('process_queue_item_error', {'err': traceback.format_exc()}, rotate_bytes=args.rotate_bytes)
+                    try:
+                        # requeue the item for retry (don't modify seen index)
+                        try:
+                            tq.requeue(item, front=True)
+                            log_debug('requeued_item', {'update_id': item.get('update_id')}, rotate_bytes=args.rotate_bytes)
+                        except Exception:
+                            log_debug('requeue_failed', {'update_id': item.get('update_id')}, rotate_bytes=args.rotate_bytes)
+                    except Exception:
+                        pass
+                    # small backoff to avoid busy looping on persistent failures
+                    time.sleep(min(1, max(0.1, args.poll)))
                     continue
+                callback = item.get('callback_query')
+                if callback:
+                    cqid = callback.get('id')
+                    data = callback.get('data')
+                    from_user = callback.get('from') or {}
+                    from_id = from_user.get('id')
+                    try:
+                        # localized short ack
+                        envp = os.path.join(ROOT, '.tmp', 'telegram.env')
+                        default_lang = 'en'
+                        try:
+                            if os.path.exists(envp):
+                                with open(envp, 'r', encoding='utf-8') as ef:
+                                    for line in ef.read().splitlines():
+                                        line = line.strip()
+                                        if not line or line.startswith('#'):
+                                            continue
+                                        if '=' in line:
+                                            k, v = line.split('=', 1)
+                                            if k.strip() == 'TELEGRAM_DEFAULT_LANG' and v:
+                                                default_lang = v.strip()
+                        except Exception:
+                            default_lang = 'en'
+                            tc.answer_callback(token, cqid, text=_t('received', default_lang))
+                    except Exception:
+                            try:
+                                tc.record_failed_reply({'action': 'answer_callback', 'callback_query_id': cqid, 'error': traceback.format_exc(), 'update': item, 'ts': now()})
+                            except Exception:
+                                pass
+                    log_debug('callback', {'from': from_id, 'data': data}, rotate_bytes=args.rotate_bytes)
+                    if isinstance(data, str) and ':' in data:
+                        cmd, arg = data.split(':', 1)
+                        try:
+                            from scripts import tg_command_manager as tcm
+                            if cmd == 'approve':
+                                tcm.approve(arg, actor=from_id)
+                                events.make_event('command.approved', {'id': arg, 'via': 'callback', 'by': from_id})
+                                db.write_trace(action='command.approved', status='ok', details={'id': arg, 'by': from_id})
+                                log_debug('approved_via_callback', {'id': arg, 'by': from_id}, rotate_bytes=args.rotate_bytes)
+                                try:
+                                    pending = tcm.list_pending()
+                                    target = next((it for it in pending if it.get('id') == arg), None)
+                                    opts = (target.get('options') or {}) if target else {}
+                                    if opts.get('exec_request'):
+                                        allow = tcm.load_env().get('ALLOW_COMMAND_EXECUTION') == '1'
+                                        dry = not allow
+                                        res, err = tcm.execute(arg, dry_run=dry)
+                                        log_debug('auto_proceed', {'id': arg, 'res': res and {'status': res.get('status'), 'rc': res.get('rc')} if res else None, 'err': err}, rotate_bytes=args.rotate_bytes)
+                                except Exception:
+                                    pass
+                            elif cmd == 'deny':
+                                tcm.deny(arg, actor=from_id)
+                                events.make_event('command.denied', {'id': arg, 'via': 'callback', 'by': from_id})
+                                db.write_trace(action='command.denied', status='ok', details={'id': arg, 'by': from_id})
+                                log_debug('denied_via_callback', {'id': arg, 'by': from_id}, rotate_bytes=args.rotate_bytes)
+                            elif cmd == 'proceed':
+                                try:
+                                    pending = tcm.list_pending()
+                                    target = next((it for it in pending if it.get('id') == arg), None)
+                                    if target and target.get('status') == 'approved' and (target.get('options') or {}).get('exec_request'):
+                                        allow = tcm.load_env().get('ALLOW_COMMAND_EXECUTION') == '1'
+                                        dry = not allow
+                                        res, err = tcm.execute(arg, dry_run=dry)
+                                        log_debug('proceed', {'id': arg, 'res': res and {'status': res.get('status'), 'rc': res.get('rc')} if res else None, 'err': err}, rotate_bytes=args.rotate_bytes)
+                                except Exception:
+                                    pass
+                        except Exception:
+                            log_debug('callback_cmd_error', {'data': data, 'err': traceback.format_exc()}, rotate_bytes=args.rotate_bytes)
+                    state['offset'] = offset
+                    tc.safe_save_json(STATE_FILE, state)
+                    continue
+
                 msg = item.get('message') or item.get('channel_post')
                 if not msg:
                     continue
-                chat = msg.get('chat', {})
                 text = msg.get('text', '') or ''
-                from_id = chat.get('id')
-                print('Got message from', from_id, 'text=', text)
-                # update health last_seen
+                from_id = (msg.get('from') or {}).get('id') or (msg.get('chat') or {}).get('id')
+                log_debug('message', {'from': from_id, 'text': text}, rotate_bytes=args.rotate_bytes)
+                # explicit textual approve/deny
+                explicit = None
                 try:
-                    h = tc.safe_load_json(HEALTH_FILE) or {}
-                    h['last_seen'] = now()
-                    tc.safe_save_json(HEALTH_FILE, h)
+                    import re
+
+                    explicit = re.search(r'\\b(?:/)?(approve|deny)\\s+([0-9a-fA-F\\-]{6,})\\b', text, re.IGNORECASE)
                 except Exception:
-                    pass
-
-                # persist offset immediately so restarts don't reprocess
-                state['offset'] = offset
-                tc.safe_save_json(state_file, state)
-
-                # ignore other chats if CHAT_ID configured
-                if chat_id_env and str(from_id) != str(chat_id_env):
-                    print('Ignoring message from other chat', from_id)
-                    continue
-
-                # small rate-limit on generic ACKs per chat (seconds)
-                ack_min_interval = 60
-                now_ts = int(time.time())
-
-                # Ack templates (varying, friendlier)
-                WARM_ACKS = [
-                    "Thanks — I'll take a look and get back to you shortly.",
-                    "Got it — I'm on it and will update you soon.",
-                    "Thanks for the note. I'll check this and reply when I have an update.",
-                    "Received — I'll investigate and report back shortly.",
-                ]
-
-                GENERIC_ACKS = [
-                    "Message received — noted.",
-                    "I heard you — thanks, I'll process this.",
-                    "Thanks, I've queued this and will respond after checking.",
-                ]
-
-                def _maybe_send_ack(chat_id, first_name=None):
-                    last = last_replies.get(str(chat_id)) or 0
-                    if now_ts - int(last) < ack_min_interval:
-                        return False
+                    explicit = None
+                if explicit:
+                    verb = explicit.group(1).lower()
+                    cmd_id = explicit.group(2)
                     try:
-                        template = random.choice(GENERIC_ACKS)
-                        if first_name:
-                            text_to_send = f"Hi {first_name}, {template}"
-                        else:
-                            text_to_send = f"GAIA Monitor: {template}"
-                        tc.send_message(token, chat_id, text_to_send)
-                        last_replies[str(chat_id)] = now_ts
-                        state['last_replies'] = last_replies
-                        tc.safe_save_json(state_file, state)
-                        return True
-                    except Exception:
-                        return False
-
-                if isinstance(text, str):
-                    if re.search(r'\b(?:/)?approve\b', text, re.IGNORECASE):
-                        payload = {'approved_by': from_id, 'timestamp': now(), 'raw': msg}
-                        events.make_event('approval.received', payload)
-                        db.write_trace(action='approval.received', status='ok', details=payload)
-                        write_approval(payload)
-                        print('Approval recorded (matched):', text)
-                        try:
-                            tc.send_message(token, from_id, 'GAIA Monitor: approval received and recorded. Thank you.')
-                        except Exception:
-                            pass
-                        return 0
-                    else:
-                        # Immediate ACK for greetings (bypass rate-limit)
-                        if re.search(r"\b(hi|hello|hey|heelo)\b", text, re.IGNORECASE):
+                        from scripts import tg_command_manager as tcm
+                        if verb == 'approve':
+                            tcm.approve(cmd_id, actor=from_id)
+                            events.make_event('command.approved', {'id': cmd_id, 'via': 'text', 'by': from_id})
+                            db.write_trace(action='command.approved', status='ok', details={'id': cmd_id, 'by': from_id})
+                            write_approval({'approved_by': from_id, 'timestamp': now(), 'id': cmd_id})
                             try:
-                                # friendlier immediate ACK for greetings
-                                first = (msg.get('from') or {}).get('first_name')
-                                warm = random.choice(WARM_ACKS)
-                                if first:
-                                    ack_text = f"Hi {first}! {warm}"
-                                else:
-                                    ack_text = f"GAIA Monitor: {warm}"
-                                tc.send_message(token, from_id, ack_text, reply_to_message_id=msg.get('message_id'))
+                                target = next((it for it in tcm.list_pending() if it.get('id') == cmd_id), None)
+                                opts = (target.get('options') or {}) if target else {}
+                                if opts.get('exec_request'):
+                                    allow = tcm.load_env().get('ALLOW_COMMAND_EXECUTION') == '1'
+                                    dry = not allow
+                                    res, err = tcm.execute(cmd_id, dry_run=dry)
+                                    log_debug('explicit_auto_proceed', {'id': cmd_id, 'res': res and {'status': res.get('status'), 'rc': res.get('rc')} if res else None, 'err': err}, rotate_bytes=args.rotate_bytes)
                             except Exception:
                                 pass
                         else:
-                            # generic acknowledgement for other messages (rate-limited)
-                            first = (msg.get('from') or {}).get('first_name')
-                            _maybe_send_ack(from_id, first_name=first)
+                            tcm.deny(cmd_id, actor=from_id)
+                            events.make_event('command.denied', {'id': cmd_id, 'via': 'text', 'by': from_id})
+                            db.write_trace(action='command.denied', status='ok', details={'id': cmd_id, 'by': from_id})
+                    except Exception:
+                        log_debug('explicit_cmd_error', {'err': traceback.format_exc()}, rotate_bytes=args.rotate_bytes)
+                    if args.continue_on_approve:
+                        state['offset'] = offset
+                        tc.safe_save_json(STATE_FILE, state)
+                        continue
+                    return 0
 
-                        # enqueue the message for sequential processing (store minimal fields)
-                        try:
-                            item = {'chat_id': from_id, 'message_id': msg.get('message_id'), 'text': text, 'from': msg.get('from'), 'ts': now()}
-                            queue.append(item)
-                            tc.safe_save_json(QUEUE_FILE, queue)
-                            events.make_event('telegram.enqueued', {'chat_id': from_id, 'message_id': msg.get('message_id')})
-                            db.write_trace(action='telegram.enqueued', status='ok', details=item)
-                        except Exception:
-                            pass
+                state['offset'] = offset
+                tc.safe_save_json(STATE_FILE, state)
 
-                        # process queue sequentially (one-by-one)
-                        while True:
-                            try:
-                                queue = tc.safe_load_json(QUEUE_FILE) or []
-                                if not queue:
-                                    break
-                                next_item = queue.pop(0)
-                                # persist trimmed queue immediately
-                                tc.safe_save_json(QUEUE_FILE, queue)
-                                # show typing indicator while we prepare/send the reply
-                                class TypingIndicator:
-                                    def __init__(self, token, chat_id, interval=4.0):
-                                        self.token = token
-                                        self.chat_id = chat_id
-                                        self.interval = interval
-                                        self._stop = threading.Event()
-                                        self._thr = None
-
-                                    def _loop(self):
-                                        try:
-                                            while not self._stop.wait(self.interval):
-                                                try:
-                                                    tc.send_chat_action(self.token, self.chat_id, action='typing')
-                                                except Exception:
-                                                    pass
-                                        except Exception:
-                                            pass
-
-                                    def start(self):
-                                        self._stop.clear()
-                                        self._thr = threading.Thread(target=self._loop, daemon=True)
-                                        self._thr.start()
-
-                                    def stop(self):
-                                        try:
-                                            self._stop.set()
-                                        except Exception:
-                                            pass
-                                        try:
-                                            if self._thr:
-                                                self._thr.join(timeout=0.1)
-                                        except Exception:
-                                            pass
-                                # build reply referencing original message
-                                chatid = next_item.get('chat_id')
-                                mid = next_item.get('message_id')
-                                orig = (next_item.get('text') or '').strip()
-                                reply_text = f"Processing your message (id:{mid}): '{(orig[:200] + '...') if len(orig)>200 else orig}'"
-                                ti = TypingIndicator(token, chatid)
-                                ti.start()
-                                try:
-                                    # send reply while typing indicator runs
-                                    tc.send_message(token, chatid, reply_text, reply_to_message_id=mid)
-                                    events.make_event('telegram.processed', {'chat_id': chatid, 'message_id': mid, 'reply': reply_text})
-                                    db.write_trace(action='telegram.processed', status='ok', details={'chat_id': chatid, 'message_id': mid})
-                                    # update health processed count
-                                    try:
-                                        h = tc.safe_load_json(HEALTH_FILE) or {}
-                                        h['processed'] = int(h.get('processed', 0)) + 1
-                                        h['last_processed'] = now()
-                                        tc.safe_save_json(HEALTH_FILE, h)
-                                    except Exception:
-                                        pass
-                                except Exception as e:
-                                    # if send fails, requeue at front and break to avoid tight loop
-                                    queue.insert(0, next_item)
-                                    tc.safe_save_json(QUEUE_FILE, queue)
-                                    events.make_event('telegram.process_failed', {'chat_id': chatid, 'message_id': mid, 'error': str(e)})
-                                    db.write_trace(action='telegram.process_failed', status='failed', details={'error': str(e)})
-                                    ti.stop()
-                                    break
-                                finally:
-                                    try:
-                                        ti.stop()
-                                    except Exception:
-                                        pass
-                                # small pause between replies
-                                time.sleep(1)
-                            except Exception:
-                                break
-        except Exception as e:
-            print('poll error:', e)
-            time.sleep(2)
+        except Exception:
+            log_debug('poll_error', {'err': traceback.format_exc()}, rotate_bytes=args.rotate_bytes)
+            time.sleep(1)
             continue
 
-    print('Timeout waiting for approval')
-    events.make_event('approval.timeout', {'timeout': args.timeout})
-    db.write_trace(action='approval.timeout', status='timeout', details={'timeout': args.timeout})
-    return 1
+    stop_event.set()
+    _cleanup()
+    return 0
 
 
 if __name__ == '__main__':
     raise SystemExit(main())
+

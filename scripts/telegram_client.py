@@ -6,16 +6,41 @@ Designed to be small, dependency-free (requests used), and robust with retries.
 import time
 import requests
 import json
+import os
 
 
-def _with_retries(fn, attempts=3, backoff=0.5):
+def _with_retries(fn, attempts=None, backoff=None):
+    """Run `fn()` with retries and exponential backoff.
+
+    If `attempts` or `backoff` are None the values are read from
+    environment variables: `TELEGRAM_RETRIES` (int) and
+    `TELEGRAM_BACKOFF_MS` (milliseconds, int). Defaults: 3 attempts,
+    500ms backoff.
+    """
+    # env-configurable defaults
+    try:
+        if attempts is None:
+            attempts = int(os.environ.get('TELEGRAM_RETRIES', '3'))
+    except Exception:
+        attempts = 3
+    try:
+        if backoff is None:
+            ms = int(os.environ.get('TELEGRAM_BACKOFF_MS', '500'))
+            backoff = max(0.01, ms / 1000.0)
+    except Exception:
+        backoff = 0.5
+
     last = None
-    for n in range(1, attempts + 1):
+    for n in range(1, max(1, int(attempts)) + 1):
         try:
             return fn()
         except Exception as e:
             last = e
-            time.sleep(backoff * (2 ** (n - 1)))
+            # exponential factor
+            try:
+                time.sleep(backoff * (2 ** (n - 1)))
+            except Exception:
+                pass
     raise last
 
 
@@ -39,7 +64,7 @@ def send_message(token: str, chat_id, text: str, parse_mode=None, timeout=6, rep
         r.raise_for_status()
         return r.json()
 
-    return _with_retries(call, attempts=3, backoff=0.5)
+    return _with_retries(call)
 
 
 def get_updates(token: str, offset=None, timeout=60):
@@ -57,7 +82,7 @@ def get_updates(token: str, offset=None, timeout=60):
         r.raise_for_status()
         return r.json()
 
-    return _with_retries(call, attempts=3, backoff=1.0)
+    return _with_retries(call)
 
 
 def safe_load_json(path):
@@ -90,7 +115,7 @@ def answer_callback(token: str, callback_query_id: str, text: str = None, show_a
         r.raise_for_status()
         return r.json()
 
-    return _with_retries(call, attempts=3, backoff=0.5)
+    return _with_retries(call)
 
 
 def send_chat_action(token: str, chat_id, action: str = 'typing', timeout=6):
@@ -106,7 +131,7 @@ def send_chat_action(token: str, chat_id, action: str = 'typing', timeout=6):
         r.raise_for_status()
         return r.json()
 
-    return _with_retries(call, attempts=2, backoff=0.5)
+    return _with_retries(call)
 
 
 def edit_message_text(token: str, chat_id, message_id, text: str, parse_mode=None, reply_markup=None, timeout=6):
@@ -123,4 +148,24 @@ def edit_message_text(token: str, chat_id, message_id, text: str, parse_mode=Non
         r.raise_for_status()
         return r.json()
 
-    return _with_retries(call, attempts=3, backoff=0.5)
+    return _with_retries(call)
+
+
+# record failed outbound replies for operator inspection/retry
+FAILED_PATH = os.path.join(os.path.dirname(__file__), '..', '.tmp', 'telegram_queue_failed.json')
+
+
+def record_failed_reply(obj: dict):
+    try:
+        os.makedirs(os.path.dirname(FAILED_PATH), exist_ok=True)
+        arr = []
+        try:
+            with open(FAILED_PATH, 'r', encoding='utf-8') as f:
+                arr = json.load(f) or []
+        except Exception:
+            arr = []
+        arr.append(obj)
+        with open(FAILED_PATH, 'w', encoding='utf-8') as f:
+            json.dump(arr, f, indent=2)
+    except Exception:
+        pass

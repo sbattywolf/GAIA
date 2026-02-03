@@ -226,3 +226,11 @@ If you'd like, I can:
 - Implement `scripts/append_todo.py` to atomically append to `Gaia/doc/todo-archive.ndjson`.
 
 Tell me which of these you'd like next.
+
+## Quick Test Record: Fake OnReply Test
+
+- Date: 2026-02-03T13:57Z
+- Test name: `FAKE_ONREPLY_TEST_2026`
+- Pending command id: `fa1cde9e-1234-4bcd-8f1a-0fa1cde00001`
+- Purpose: exercise on-reply approval routing and ensure the monitor/bot preserve the task name when creating or replying to pending items.
+- Notes: The pending command was added to `.tmp/pending_commands.json` with `options.is_test = true` and `options.exec_request = true`. Use the monitor UI or Telegram inline buttons to approve and observe that on-reply handlers use the same task name for telemetry and audit.

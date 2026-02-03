@@ -1,0 +1,8 @@
+{
+  "message": {
+    "message_id": 200,
+    "from": { "id": 321, "first_name": "tester" },
+    "chat": { "id": "test_chat" },
+    "text": "approve abc123"
+  }
+}
