@@ -1,0 +1,197 @@
+{
+  "epic": "EPC_Telegram",
+  "agent": "assistant",
+  "created_at": "2026-02-03T00:00:00Z",
+  "summary": "Normalized epic representing the Telegram approval/control backlog. Features, stories and tasks are canonical here.",
+  "conventions": {
+    "naming": "Epic.Feature.Story.agent.todolist.(current|draft)",
+    "agent_files": "Agent-specific current/draft files under .tmp/todolists are ephemeral; canonical backlog is this `doc/EPC_Telegram.current`",
+    "workflow": "Agents create/update .tmp/todolists entries; maintainers merge into this canonical epic and empty the draft. Use added_tasks for transient records. Finalize with scripts/enforce_todolist_final.py"
+  },
+  "features": [
+    {
+      "id": "F-security-token",
+      "name": "Security & token rotation",
+      "stories": [
+        {
+          "story_key": "stoy_STR",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t11", "title": "Document recommended file permissions and storage for .tmp/telegram.env", "status": "todo", "priority": "medium" },
+            { "id": "t12", "title": "Create .env.template and usage guidance", "status": "todo", "priority": "medium" },
+            { "id": "t13", "title": "Add scripts/rotate_admin_token.py scaffold and CLI", "status": "todo", "priority": "high" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-command-safety",
+      "name": "Command execution safety",
+      "stories": [
+        {
+          "story_key": "stoy1",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t14", "title": "Enforce ALLOW_COMMAND_EXECUTION=0 by default", "status": "todo", "priority": "high" },
+            { "id": "t15", "title": "Add UI confirmation modal and explicit approval step for destructive commands", "status": "todo", "priority": "high" },
+            { "id": "t16", "title": "Add safe-quoting helpers and tests for tg_command_manager.py", "status": "todo", "priority": "medium" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-integration-tests",
+      "name": "Integration tests",
+      "stories": [
+        {
+          "story_key": "stoy1",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t17", "title": "Implement mocked Telegram API harness for CI/local tests", "status": "todo", "priority": "high" },
+            { "id": "t18", "title": "Add integration test exercising approval listener→UI→approve→claim_cli flow", "status": "todo", "priority": "high" },
+            { "id": "t19", "title": "Add idempotency replay assertions for integration tests", "status": "todo", "priority": "high" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-ttl-requeue-policy",
+      "name": "Claim TTL & Requeue Policy",
+      "stories": [
+        {
+          "story_key": "stoy1",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t20", "title": "Finalize CLAIM_DEFAULT_TTL proposal and document tradeoffs", "status": "todo", "priority": "medium" },
+            { "id": "t21", "title": "Add CLAIM_DEFAULT_TTL env var and update scripts/claims.py", "status": "todo", "priority": "medium" },
+            { "id": "t22", "title": "Add automated tests for TTL expiry and takeover semantics", "status": "todo", "priority": "high" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-retryer",
+      "name": "Retryer error classification",
+      "stories": [
+        {
+          "story_key": "stoy_STR",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t23", "title": "Map HTTP error codes for retryer (5xx/429/4xx) and tests", "status": "todo", "priority": "high" },
+            { "id": "t24", "title": "Implement exponential backoff with jitter in retryer", "status": "todo", "priority": "high" },
+            { "id": "t25", "title": "Add tests simulating 429 and 5xx responses", "status": "todo", "priority": "high" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-metrics-alerts",
+      "name": "Metrics & alerts",
+      "stories": [
+        {
+          "story_key": "stoy_STR",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t26", "title": "Add counters and persist metrics to .tmp/metrics.json", "status": "todo", "priority": "medium" },
+            { "id": "t27", "title": "Emit gaia.db traces when thresholds crossed", "status": "todo", "priority": "medium" },
+            { "id": "t28", "title": "Wire scripts/alert_on_metrics.py to read metrics and notify admin chat", "status": "todo", "priority": "medium" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-permanent-failed-ui",
+      "name": "Permanent-failed UI & requeue",
+      "stories": [
+        {
+          "story_key": "stoy_STR",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t29", "title": "Add monitor page to list permanent-failed entries", "status": "todo", "priority": "medium" },
+            { "id": "t30", "title": "Implement one-click requeue action with token protection", "status": "todo", "priority": "high" },
+            { "id": "t31", "title": "Record audit traces for UI-initiated requeues and confirmation modal", "status": "todo", "priority": "medium" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-backup-retention",
+      "name": "Backup & retention",
+      "stories": [
+        {
+          "story_key": "stoy_STR",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t32", "title": "Implement scripts/backup_tmp.py to create timestamped archives", "status": "todo", "priority": "medium" },
+            { "id": "t33", "title": "Add retention policy config and scripts/cleanup_backups.py", "status": "todo", "priority": "medium" },
+            { "id": "t34", "title": "Document backup cadence and include backup in release checklist", "status": "todo", "priority": "low" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-runbook-docs",
+      "name": "Runbook & documentation",
+      "stories": [
+        {
+          "story_key": "stoy1",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t35", "title": "Populate CLI examples in doc/STR_Telegram.current#CLI-Examples", "status": "todo", "priority": "low" },
+            { "id": "t36", "title": "Add example workflows (manual requeue, safe dry-run) to docs", "status": "todo", "priority": "low" },
+            { "id": "t37", "title": "Add release checklist & CI badge guidance to runbook", "status": "todo", "priority": "low" }
+          ]
+        }
+      ]
+    }
+      {
+        "id": "F-helper-gise",
+        "name": "Helper Gise.0.3",
+        "stories": [
+          {
+            "story_key": "stoy_alby_scan",
+            "agent": "assistant",
+            "tasks": [ { "id": "t38", "title": "Scan repository for ALby 0.3 documentation and examples", "status": "todo", "priority": "high" } ]
+          },
+          {
+            "story_key": "stoy_alby_design",
+            "agent": "assistant",
+            "tasks": [ { "id": "t39", "title": "Design small local agent using ALby patterns to automate merges/archives/validation/tests", "status": "todo", "priority": "high" } ]
+          },
+          {
+            "story_key": "stoy_alby_scaffold",
+            "agent": "assistant",
+            "tasks": [ { "id": "t40", "title": "Scaffold scripts/alby_agent.py to run version_docs.py, validate_todolists.py, archive drafts, and run targeted tests", "status": "todo", "priority": "high" } ]
+          },
+          {
+            "story_key": "stoy_alby_prototype",
+            "agent": "assistant",
+            "tasks": [ { "id": "t41", "title": "Run alby_agent prototype in dry-run then execute archive+validate+tests", "status": "todo", "priority": "high" } ]
+          },
+          {
+            "story_key": "stoy_alby_iterate",
+            "agent": "assistant",
+            "tasks": [ { "id": "t42", "title": "Iterate heuristics and update epic report estimates based on prototype results", "status": "todo", "priority": "medium" } ]
+          }
+          ,
+          {
+            "story_key": "STR_TestGise",
+            "agent": "Gise",
+            "tasks": [
+              { "id": "t1", "title": "Initial smoke test: verify agent environment and connectivity", "description": "Confirm dependencies, environment variables and basic connectivity for agent Gise.", "status": "todo", "priority": "medium" },
+              { "id": "t2", "title": "Run acceptance scenario: create claim → approve → archive event", "description": "Execute a full acceptance scenario and verify gaia.db records and events.ndjson entries.", "status": "todo", "priority": "high" },
+              { "id": "d1", "title": "Add regression case: claim takeover when TTL expired", "description": "Create a regression test that simulates TTL expiry and verifying takeover semantics and recovery.", "status": "todo", "priority": "high" },
+              { "id": "d2", "title": "Document expected chat-history lookup steps for audit", "description": "Outline the steps and scripts used to extract chat history for audit and attach to gaia.db traces.", "status": "todo", "priority": "medium" },
+              { "id": "g1", "title": "Verify agent can read .tmp/telegram.env and secrets (dry-run)", "description": "Dry-run to confirm agent can safely load environment and secret values without performing actions.", "status": "todo", "priority": "high" },
+              { "id": "g2", "title": "Run a full acceptance flow and record timestamps in gaia.db", "description": "Execute acceptance flow and validate timestamps and audit traces are correctly persisted in gaia.db.", "status": "todo", "priority": "high" },
+              { "id": "t_final", "title": "MANDATORY: Check history of the chat and all docs; record findings and close story", "description": "Collect chat history and document findings, attach evidence and mark story closed following governance.", "status": "todo", "priority": "critical" },
+              { "id": "gd1", "title": "Add verbose logging around claim acquisition for debug", "description": "Temporarily increase logging for claim acquisition to aid debugging in CI and local runs.", "status": "todo", "priority": "medium" },
+              { "id": "gd2", "title": "Add small helper to export chat history to .tmp/exports", "description": "Create a utility to export chat history to .tmp/exports for offline analysis and audits.", "status": "todo", "priority": "medium" }
+            ]
+          }
+        ]
+      }
+  ],
+  "added_tasks": [],
+  "notes": "This file is the canonical backlog for the EPC_Telegram epic. Use feature/stories/task entries for planning and PRs. Agent work should reference these task ids."
+}
