@@ -175,18 +175,24 @@
           }
           ,
           {
-            "story_key": "STR_TestGise",
+            "story_key": "STR_TestGise.part1",
             "agent": "Gise",
             "tasks": [
               { "id": "t1", "title": "Initial smoke test: verify agent environment and connectivity", "description": "Confirm dependencies, environment variables and basic connectivity for agent Gise.", "status": "todo", "priority": "medium" },
+              { "id": "g1", "title": "Verify agent can read .tmp/telegram.env and secrets (dry-run)", "description": "Dry-run to confirm agent can safely load environment and secret values without performing actions.", "status": "todo", "priority": "high" },
+              { "id": "gd1", "title": "Add verbose logging around claim acquisition for debug", "description": "Temporarily increase logging for claim acquisition to aid debugging in CI and local runs.", "status": "todo", "priority": "medium" },
+              { "id": "gd2", "title": "Add small helper to export chat history to .tmp/exports", "description": "Create a utility to export chat history to .tmp/exports for offline analysis and audits.", "status": "todo", "priority": "medium" }
+            ]
+          },
+          {
+            "story_key": "STR_TestGise.part2",
+            "agent": "Gise",
+            "tasks": [
               { "id": "t2", "title": "Run acceptance scenario: create claim → approve → archive event", "description": "Execute a full acceptance scenario and verify gaia.db records and events.ndjson entries.", "status": "todo", "priority": "high" },
               { "id": "d1", "title": "Add regression case: claim takeover when TTL expired", "description": "Create a regression test that simulates TTL expiry and verifying takeover semantics and recovery.", "status": "todo", "priority": "high" },
               { "id": "d2", "title": "Document expected chat-history lookup steps for audit", "description": "Outline the steps and scripts used to extract chat history for audit and attach to gaia.db traces.", "status": "todo", "priority": "medium" },
-              { "id": "g1", "title": "Verify agent can read .tmp/telegram.env and secrets (dry-run)", "description": "Dry-run to confirm agent can safely load environment and secret values without performing actions.", "status": "todo", "priority": "high" },
               { "id": "g2", "title": "Run a full acceptance flow and record timestamps in gaia.db", "description": "Execute acceptance flow and validate timestamps and audit traces are correctly persisted in gaia.db.", "status": "todo", "priority": "high" },
-              { "id": "t_final", "title": "MANDATORY: Check history of the chat and all docs; record findings and close story", "description": "Collect chat history and document findings, attach evidence and mark story closed following governance.", "status": "todo", "priority": "critical" },
-              { "id": "gd1", "title": "Add verbose logging around claim acquisition for debug", "description": "Temporarily increase logging for claim acquisition to aid debugging in CI and local runs.", "status": "todo", "priority": "medium" },
-              { "id": "gd2", "title": "Add small helper to export chat history to .tmp/exports", "description": "Create a utility to export chat history to .tmp/exports for offline analysis and audits.", "status": "todo", "priority": "medium" }
+              { "id": "t_final", "title": "MANDATORY: Check history of the chat and all docs; record findings and close story", "description": "Collect chat history and document findings, attach evidence and mark story closed following governance.", "status": "todo", "priority": "critical" }
             ]
           }
         ]
@@ -194,4 +200,43 @@
   ],
   "added_tasks": [],
   "notes": "This file is the canonical backlog for the EPC_Telegram epic. Use feature/stories/task entries for planning and PRs. Agent work should reference these task ids."
+  ,
+  "scoring": {
+    "generated_at": "2026-02-04T00:00:00Z",
+    "weights": { "critical": 8, "high": 5, "medium": 3, "low": 1 },
+    "fibonacci": [1,2,3,5,8,13,21,34,55,89],
+    "stories": {
+      "F-security-token.stoy_STR": { "score": 13, "score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"initial Fibonacci mapping from task priorities (critical=8,high=5,medium=3,low=1)"}], "split_candidate": true },
+      "F-command-safety.stoy1": { "score": 13, "score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"initial mapping"}], "split_candidate": true },
+      "F-integration-tests.stoy1": { "score": 13, "score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"initial mapping"}], "split_candidate": true },
+      "F-ttl-requeue-policy.stoy1": { "score": 13, "score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"initial mapping"}], "split_candidate": true },
+      "F-retryer.stoy_STR": { "score": 13, "score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"initial mapping"}], "split_candidate": true },
+      "F-metrics-alerts.stoy_STR": { "score": 8, "score_history": [{"at":"2026-02-04T00:00:00Z","score":8,"reason":"initial mapping"}], "split_candidate": false },
+      "F-permanent-failed-ui.stoy_STR": { "score": 13, "score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"initial mapping"}], "split_candidate": true },
+      "F-backup-retention.stoy_STR": { "score": 8, "score_history": [{"at":"2026-02-04T00:00:00Z","score":8,"reason":"initial mapping"}], "split_candidate": false },
+      "F-runbook-docs.stoy1": { "score": 3, "score_history": [{"at":"2026-02-04T00:00:00Z","score":3,"reason":"initial mapping"}], "split_candidate": false },
+      "F-helper-gise.stoy_alby_scan": { "score": 5, "score_history": [{"at":"2026-02-04T00:00:00Z","score":5,"reason":"initial mapping"}], "split_candidate": false },
+      "F-helper-gise.stoy_alby_design": { "score": 5, "score_history": [{"at":"2026-02-04T00:00:00Z","score":5,"reason":"initial mapping"}], "split_candidate": false },
+      "F-helper-gise.stoy_alby_scaffold": { "score": 5, "score_history": [{"at":"2026-02-04T00:00:00Z","score":5,"reason":"initial mapping"}], "split_candidate": false },
+      "F-helper-gise.stoy_alby_prototype": { "score": 5, "score_history": [{"at":"2026-02-04T00:00:00Z","score":5,"reason":"initial mapping"}], "split_candidate": false },
+      "F-helper-gise.stoy_alby_iterate": { "score": 3, "score_history": [{"at":"2026-02-04T00:00:00Z","score":3,"reason":"initial mapping"}], "split_candidate": false },
+      "F-helper-gise.STR_TestGise": { "score": 34, "score_history": [{"at":"2026-02-04T00:00:00Z","score":34,"reason":"sum of task priority weights mapped to nearest Fibonacci (40 -> 34)"}], "split_candidate": true }
+    },
+    "features": {
+      "F-security-token": { "feature_score": 13, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"sum of story scores mapped to Fibonacci"}], "split_candidate": true },
+      "F-command-safety": { "feature_score": 13, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"sum of story scores"}], "split_candidate": true },
+      "F-integration-tests": { "feature_score": 13, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"sum of story scores"}], "split_candidate": true },
+      "F-ttl-requeue-policy": { "feature_score": 13, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"sum of story scores"}], "split_candidate": true },
+      "F-retryer": { "feature_score": 13, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"sum of story scores"}], "split_candidate": true },
+      "F-metrics-alerts": { "feature_score": 8, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":8,"reason":"sum of story scores"}], "split_candidate": false },
+      "F-permanent-failed-ui": { "feature_score": 13, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"sum of story scores"}], "split_candidate": true },
+      "F-backup-retention": { "feature_score": 8, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":8,"reason":"sum of story scores"}], "split_candidate": false },
+      "F-runbook-docs": { "feature_score": 3, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":3,"reason":"sum of story scores"}], "split_candidate": false },
+      "F-helper-gise": { "feature_score": 55, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":55,"reason":"sum of story scores including STR_TestGise (57 -> 55)"}], "split_candidate": true },
+      "F-helper-gise.STR_TestGise.part1": { "score": 13, "score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"post-split mapping (t1,g1,gd1,gd2 => 14 -> 13)"}], "split_candidate": true },
+      "F-helper-gise.STR_TestGise.part2": { "score": 21, "score_history": [{"at":"2026-02-04T00:00:00Z","score":21,"reason":"post-split mapping (t2,d1,d2,g2,t_final => 26 -> 21)"}], "split_candidate": true }
+    },
+    "split_threshold": 8,
+    "notes": "Stories or features with score > split_threshold are candidates to be split into Part 1 / Part 2. Use score_history to track re-estimates over time."
+  }
 }
