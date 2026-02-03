@@ -63,3 +63,10 @@ If something is unclear
 
 ---
 Please review and tell me which parts need more examples or exact schemas to be added.
+
+**Don Ciccio - online agent**
+- Purpose: a live, session-scoped agent persona to act as an "online" operator for interactive development sessions. Use when you want a consistent human-like agent identity to take over long-running monitoring, approvals, or pairing tasks.
+- When to use: during live coding sessions, handoffs, or monitoring runs where a named agent identity improves traceability in `events.ndjson` and audit traces.
+- Resume procedure: load environment, ensure `.tmp/telegram.env` exists with `TELEGRAM_BOT_TOKEN` and `CHAT_ID`, then start the approval listener (`scripts/approval_listener.py`) with `--poll` and `--continue-on-approve` as needed. Record PID in `.tmp/approval_listener.pid` and confirm health via `.tmp/telegram_health.json`.
+- Handoff steps: 1) ensure agent is running and heartbeating; 2) append a `handoff` event to `events.ndjson` with `type: agent.handoff`, `source: Don Ciccio - online`, and `payload` describing the state; 3) update `gaia.db` with a trace via `db.write_trace()` noting the handoff; 4) notify approvers via Telegram if required.
+- Notes: tag agent-originated events with `source: Don Ciccio - online` and include `trace_id` for easier filtering. Keep `ALLOW_COMMAND_EXECUTION` off by default for safety; enable only for controlled tests.

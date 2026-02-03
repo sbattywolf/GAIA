@@ -1,0 +1,23 @@
+﻿{
+    "pids":  {
+                 "worker-0.1":  {
+                                    "out":  "E:\\Workspaces\\Git\\GAIA\\.\\\\.tmp\\\\logs\\worker-0.1.20260203_005227.out.log",
+                                    "pid":  6052,
+                                    "err":  "E:\\Workspaces\\Git\\GAIA\\.\\\\.tmp\\\\logs\\worker-0.1.20260203_005227.err.log"
+                                },
+                 "alby_online_dryrun":  {
+                                            "out":  "E:\\Workspaces\\Git\\GAIA\\.\\\\.tmp\\\\logs\\alby_online_dryrun.fallback.20260203_005230.out.log",
+                                            "pid":  6620,
+                                            "err":  "E:\\Workspaces\\Git\\GAIA\\.\\\\.tmp\\\\logs\\alby_online_dryrun.fallback.20260203_005230.err.log"
+                                        },
+                 "reclaimer-0.1":  {
+                                       "out":  "E:\\Workspaces\\Git\\GAIA\\.\\\\.tmp\\\\logs\\reclaimer-0.1.20260203_005228.out.log",
+                                       "pid":  18508,
+                                       "err":  "E:\\Workspaces\\Git\\GAIA\\.\\\\.tmp\\\\logs\\reclaimer-0.1.20260203_005228.err.log"
+                                   }
+             },
+    "started":  "2026-02-03T00:52:30.3654707+01:00",
+    "scheduled":  {
+
+                  }
+}

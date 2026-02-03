@@ -109,6 +109,23 @@ If you need me to change visibility or create an organization-owned remote, tell
 - Agents use `gh` to create issues; if you don't want that, run in `PROTOTYPE_USE_LOCAL_EVENTS=1` mode or remove the `gh` calls.
 - Keep secrets in Bitwarden or `.env`; avoid committing secrets.
 
+Testing note (local):
+
+- A small test case `FAKE_ONREPLY_TEST_2026` was added on 2026-02-03 to `.tmp/pending_commands.json` (id: `fa1cde9e-1234-4bcd-8f1a-0fa1cde00001`). It's marked as a test (`options.is_test = true`) and can be used to validate that on-reply handlers, the monitor UI `Mark as Test` flag, and Telegram inline-button flows keep the original task name when routing approvals and subsequent actions.
+
+To view pending commands quickly:
+
+```powershell
+python -c "from scripts.tg_command_manager import list_pending; import json; print(json.dumps(list_pending(), indent=2)[:2000])"
+```
+
+Run the lightweight monitor UI (one-liner):
+
+```powershell
+python -m scripts.monitor_server --host 127.0.0.1 --port 8080
+# then open http://127.0.0.1:8080 in your browser
+```
+
 ---
 Small, focused README — expand when you want more usage examples or diagrams.
 # GAIA — Agent-First Backlog Orchestrator (scaffold)
@@ -137,6 +154,28 @@ Files of interest:
 - `agents/backlog_agent.py` — CLI wrapper to create issues via `gh` and write NDJSON events to `events.ndjson`.
 - `orchestrator.py` — small service entrypoint (stub).
 - `events.ndjson` — event log appended by agents.
+ - `scripts/claim_cli.py` — small operator CLI to inspect/claim/release/refresh file-backed claims used by agents.
+
+Claim CLI examples
+- Inspect a claim (prints JSON):
+
+```powershell
+python scripts/claim_cli.py inspect my_story default
+```
+
+- Acquire a claim:
+
+```powershell
+python scripts/claim_cli.py claim my_story default operator-joe agent-1 fp-123
+```
+
+- Release a claim:
+
+```powershell
+python scripts/claim_cli.py release my_story default --agent agent-1
+```
+
+The CLI returns JSON to stdout and uses exit code 0 for success, non-zero for failures. See `tests/test_claim_cli.py` for a small example test.
 
 License: MIT (add if desired)
 

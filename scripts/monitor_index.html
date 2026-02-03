@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GAIA Events Monitor</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Arial;margin:12px}
+    pre{background:#111;color:#eee;padding:12px;height:70vh;overflow:auto}
+  </style>
+</head>
+<body>
+  <h2>GAIA Events (live)</h2>
+  <pre id="out">Connecting...
+</pre>
+  <script>
+    const out = document.getElementById('out');
+    const es = new EventSource('/events');
+    es.onmessage = e => {
+      try{
+        const j = JSON.parse(e.data);
+        const ts = j.timestamp || '';
+        const type = j.type || '';
+        out.textContent = `${new Date().toISOString()} ${type} \n` + JSON.stringify(j, null, 2) + '\n\n' + out.textContent;
+      }catch(err){
+        out.textContent = e.data + '\n\n' + out.textContent;
+      }
+    };
+    es.onerror = () => { out.textContent = 'Connection lost, retrying...\n' + out.textContent }
+  </script>
+</body>
+</html>
