@@ -1,0 +1,46 @@
+name: Weekly Monitor & Prune (dry-run)
+
+on:
+  schedule:
+    - cron: '0 3 * * 1' # Every Monday at 03:00 UTC
+  workflow_dispatch:
+
+jobs:
+  monitor-prune:
+    runs-on: ubuntu-latest
+    env:
+      PROTOTYPE_USE_LOCAL_EVENTS: '1'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
+          pip install -r requirements-dev.txt || true
+
+      - name: Run events monitor (dry-run)
+        run: |
+          python scripts/monitor_events.py --events GAIA/events.ndjson || true
+
+      - name: Prepare todo archive copy (dry-run)
+        run: |
+          mkdir -p /tmp/gaia_work
+          if [ -f Gaia/doc/todo-archive.ndjson ]; then cp Gaia/doc/todo-archive.ndjson /tmp/gaia_work/todo-archive.ndjson; else echo '' > /tmp/gaia_work/todo-archive.ndjson; fi
+
+      - name: Run prune on temp copy (dry-run)
+        run: |
+          python scripts/prune_closed_todos.py --ndjson /tmp/gaia_work/todo-archive.ndjson --keep 7 --older-out /tmp/gaia_work/todo-archive-older.ndjson || true
+
+      - name: Upload dry-run outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: gaia-dryrun-archives
+          path: /tmp/gaia_work
+          retention-days: 14

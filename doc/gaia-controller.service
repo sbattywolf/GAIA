@@ -1,0 +1,23 @@
+[Unit]
+Description=GAIA Controller Agent
+After=network.target
+
+[Service]
+Type=simple
+User=gaia
+WorkingDirectory=/opt/gaia
+Environment=PYTHONUNBUFFERED=1
+# ensure log dir exists in user's home (systemd expansion %h uses the user's home)
+ExecStartPre=/bin/mkdir -p /home/gaia/.local/share/gaia
+# write both stdout and stderr to the per-user gaia log (append)
+StandardOutput=append:/home/gaia/.local/share/gaia/controller.log
+StandardError=append:/home/gaia/.local/share/gaia/controller.log
+# optional environment vars
+# Environment=CONTROLLER_POLL=5
+# Environment=CONTROLLER_BATCH=1
+ExecStart=/opt/gaia/.venv/bin/python /opt/gaia/agents/controller_agent.py --poll 10
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

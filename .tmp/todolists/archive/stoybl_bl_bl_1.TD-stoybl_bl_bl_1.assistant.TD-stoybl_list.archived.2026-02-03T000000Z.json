@@ -1,0 +1,64 @@
+{
+  "story": "stoybl bl bl 1",
+  "story_key": "stoybl_bl_bl_1",
+  "agent": "assistant",
+  "todolist": "stoybl_list",
+  "type": "archived",
+  "created_at": "2026-02-03T00:00:00Z",
+  "archived_at": "2026-02-03T00:00:00Z",
+  "notes": "Archived after finalization; template and new current created.",
+  "tasks": [
+    {
+      "id": "t1",
+      "title": "Implement claim primitives integration",
+      "description": "Wire `scripts/claims.py` into monitor server and CLI; ensure audit traces",
+      "status": "in-progress",
+      "priority": "high"
+    },
+    {
+      "id": "t2",
+      "title": "Evaluate TODO classification and apply",
+      "description": "Review `doc/AGENT_BEST_PRACTICES.md` classification scheme and apply to current todo items.",
+      "status": "completed",
+      "priority": "high",
+      "classification": ["governance","documentation"],
+      "impact": "high"
+    },
+    {
+      "id": "t3",
+      "title": "End-to-end functional test (phase 1)",
+      "description": "Create focused unit-first tests for admin requeue → retry worker → audit traces.",
+      "status": "todo",
+      "priority": "high",
+      "classification": ["test","integration"],
+      "impact": "high"
+    },
+    {
+      "id": "t4",
+      "title": "Tests: multi-agent concurrency & idempotency",
+      "description": "Add unit and integration tests that simulate multiple agents claiming tasks concurrently.",
+      "status": "todo",
+      "priority": "high",
+      "classification": ["test","concurrency"],
+      "impact": "high"
+    },
+    {
+      "id": "t5",
+      "title": "Update runbook: agent-task workflow & token usage",
+      "description": "Document naming, claim workflow, conflict behavior, token guidance in `doc/HANDOFF.md`.",
+      "status": "todo",
+      "priority": "medium",
+      "classification": ["documentation","runbook"],
+      "impact": "medium"
+    },
+    {
+      "id": "t6",
+      "title": "Prepare follow-up part2 (CLI/UI + runbook)",
+      "description": "Create `stoybl bl bl 1` part2 draft with CLI/UI tasks and runbook updates.",
+      "status": "todo",
+      "priority": "medium",
+      "classification": ["planning","cli-ui"],
+      "impact": "low"
+    }
+  ]
+}

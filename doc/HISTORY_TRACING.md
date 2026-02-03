@@ -168,6 +168,48 @@ gh repo create <your-username>/GAIA --public --source=. --remote=origin --push
 - At session end, run the shutdown checklist and add the session note summary.
 - Keep `Gaia/doc/todo-archive.ndjson` append-only and machine-friendly so agents can safely add items.
 
+12. Archival policy: keep recent closed todos
+-------------------------------------------
+
+To keep the active todo view concise while preserving history, follow this
+procedure:
+
+- Retain the 7 most recent closed todo items in the active `todo-archive.ndjson`.
+- Move older closed todo records into a separate archival file `Gaia/doc/todo-archive-older.ndjson`.
+- Non-closed (open/active) todos remain in `todo-archive.ndjson`.
+
+A helper script `scripts/prune_closed_todos.py` is provided to perform this
+operation safely. Run it as part of the end-of-session routine or as a
+scheduled maintenance job.
+
+Example (keep 7 closed items):
+
+```powershell
+python scripts/prune_closed_todos.py --ndjson Gaia/doc/todo-archive.ndjson --keep 7
+```
+
+Notes:
+
+- This preserves full history in the `todo-archive-older.ndjson` file while
+  keeping the active archive compact for human review.
+- The script looks for `status: "closed"` or `closed: true` fields to
+  identify closed todos. If your workflow records closures differently,
+  adapt the script or add a `status` field when closing a todo.
+
+13. Monitoring events
+---------------------
+
+Use `scripts/monitor_events.py` to produce a quick metrics summary of the
+`GAIA/events.ndjson` stream (counts by event type, duplicate traces, error
+counts). Useful as a quick health check before deciding to enable a
+controller.
+
+Example:
+
+```powershell
+python scripts/monitor_events.py --events GAIA/events.ndjson
+```
+
 11. Appendices (Ideas for extensions)
 ------------------------------------
 
@@ -184,3 +226,11 @@ If you'd like, I can:
 - Implement `scripts/append_todo.py` to atomically append to `Gaia/doc/todo-archive.ndjson`.
 
 Tell me which of these you'd like next.
+
+## Quick Test Record: Fake OnReply Test
+
+- Date: 2026-02-03T13:57Z
+- Test name: `FAKE_ONREPLY_TEST_2026`
+- Pending command id: `fa1cde9e-1234-4bcd-8f1a-0fa1cde00001`
+- Purpose: exercise on-reply approval routing and ensure the monitor/bot preserve the task name when creating or replying to pending items.
+- Notes: The pending command was added to `.tmp/pending_commands.json` with `options.is_test = true` and `options.exec_request = true`. Use the monitor UI or Telegram inline buttons to approve and observe that on-reply handlers use the same task name for telemetry and audit.

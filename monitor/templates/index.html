@@ -1,0 +1,1140 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>GAIA Monitor</title>
+    <style>
+      :root{ --bg:#f7fafc; --card:#ffffff; --muted:#6b7280; --accent:#0b5fff; --border:#e6edf3 }
+      html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--bg);color:#111827}
+      .wrap{max-width:1200px;margin:18px auto;padding:16px}
+      header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+      header h1{margin:0;font-size:20px}
+      .controls{display:flex;gap:8px;align-items:center}
+      button{background:#fff;border:1px solid var(--border);padding:8px 10px;border-radius:6px;cursor:pointer}
+      .layout{display:grid;grid-template-columns:320px 1fr;gap:16px}
+      .sidebar{background:var(--card);border:1px solid var(--border);padding:12px;border-radius:8px;height:calc(100vh - 180px);overflow:auto}
+      .main{background:var(--card);border:1px solid var(--border);padding:12px;border-radius:8px;height:calc(100vh - 180px);display:flex;flex-direction:column}
+      .card-title{font-weight:600;margin-bottom:8px}
+      .agent-item{padding:8px;border-radius:6px;border:1px solid transparent;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+      .agent-item:hover{background:#f1f5f9}
+      .agent-name{font-weight:600}
+      .muted{color:var(--muted);font-size:13px}
+      .summary-table{width:100%;border-collapse:collapse}
+      .summary-table th,.summary-table td{padding:8px;border-bottom:1px solid #f3f7fb;text-align:left;font-size:13px}
+      .tabs{display:flex;gap:8px;margin-bottom:8px}
+      .tabbtn{background:#fff;border:1px solid var(--border);padding:8px 10px;border-radius:6px;cursor:pointer}
+      .tabbtn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+      .tabpanel{flex:1;overflow:auto}
+      .events-list{max-height:480px;overflow:auto}
+      pre{background:#f8fafc;padding:8px;border-radius:6px;white-space:pre-wrap}
+      .chat-footer{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(255,255,255,0.9),#fff);border-top:1px solid var(--border);padding:10px 18px;display:flex;gap:8px;align-items:center}
+      .chat-input{flex:1;padding:10px;border-radius:8px;border:1px solid var(--border)}
+      .chat-preview{position:fixed;left:0;right:0;bottom:64px;padding:8px 18px;display:flex;align-items:flex-end;justify-content:center}
+      .chat-preview .box{max-width:800px;width:100%;background:var(--card);border:1px solid var(--border);padding:8px;border-radius:8px;display:flex;flex-direction:column;gap:4px;font-size:13px;min-height:64px;max-height:96px;overflow:hidden}
+      .chat-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:2px 6px;border-radius:6px}
+      .chat-line.user{background:#eef2ff;color:#0b3bff;font-weight:600}
+      .chat-line.agent{background:#f3f4f6;color:#374151}
+      .chat-line.typing{font-style:italic;color:#6b7280}
+      .pill{padding:4px 8px;border-radius:999px;background:#eef2ff;color:#0b3bff;font-weight:600;font-size:12px}
+      /* blocked/global start modal */
+      .btn-blocked{background:#f3f4f6;color:#9ca3af;cursor:not-allowed;border-color:#e6edf3}
+      .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;z-index:60}
+      .modal{background:var(--card);padding:16px;border-radius:8px;max-width:640px;width:100%;box-shadow:0 10px 30px rgba(2,6,23,0.2)}
+      .modal h3{margin-top:0}
+      .modal-list{margin:8px 0;padding:0}
+      .modal-list li{margin:6px 0}
+      .small{font-size:12px;color:var(--muted)}
+      a.ghost{color:var(--accent);text-decoration:none}
+      @media (max-width:900px){ .layout{grid-template-columns:1fr} .sidebar{height:auto} .main{height:auto} }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div>
+          <h1>GAIA / Alby Monitor</h1>
+          <div class="small">Lightweight dashboard — quick actions, agent summary, events and an agent chat footer.</div>
+        </div>
+        <div class="controls">
+          <button id="startBtn">Start Agents</button>
+          <button id="stopBtn">Stop Agents</button>
+          <div style="display:flex;align-items:center;gap:6px;margin-left:8px;position:relative">
+            <input id="adminTokenInput" placeholder="Admin token" style="padding:6px;border-radius:6px;border:1px solid var(--border);width:160px" />
+            <button id="adminTokenSave" style="padding:6px 8px">Save</button>
+            <button id="adminTokenClear" style="padding:6px 8px">Clear</button>
+            <button id="adminTokenHelpBtn" title="Token help" style="padding:6px 8px;background:#fff;border:1px solid var(--border);border-radius:6px;margin-left:6px">?</button>
+            <div id="adminTokenHelp" style="position:absolute;top:40px;left:0;min-width:260px;background:#fff8e1;border:1px solid #f1e0a8;padding:8px;border-radius:6px;display:none;box-shadow:0 6px 18px rgba(0,0,0,0.08);font-size:13px;z-index:80">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <div style="font-weight:600">Admin token & security</div>
+                <div style="display:flex;gap:6px;align-items:center">
+                  <a id="adminTokenDocs" href="doc/HANDOFF.md" target="_blank" rel="noopener" style="font-size:12px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:#fff;text-decoration:none;color:inherit">Docs</a>
+                  <button id="adminTokenCopy" style="padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:#fff;font-size:12px">Copy</button>
+                </div>
+              </div>
+              <div id="adminTokenHelpText" style="color:#374151">The token is stored locally in your browser session (sessionStorage) only. Keep it secret — do not paste long-lived credentials here. To persist for all users, place MONITOR_ADMIN_TOKEN in <strong>.tmp/telegram.env</strong>. See <a href="doc/HANDOFF.md" target="_blank" rel="noopener">the runbook</a> for operator guidance.</div>
+            </div>
+          </div>
+          <div id="agentStatus" class="muted">Status: unknown</div>
+          <div id="telegramBadge" class="muted" style="margin-left:12px">Telegram: <span id="telegramText">unknown</span></div>
+          <div id="approvalBadge" class="muted" style="margin-left:12px">Approval: <span id="approvalText">none</span></div>
+          <div id="approversBadge" class="muted" style="margin-left:12px">Approvers: <span id="approversText">any</span></div>
+          <div id="failureBadge" class="muted" style="margin-left:12px">Telegram Failures: <span id="failureCount">0</span></div>
+        </div>
+      </header>
+
+      <div class="layout">
+        <aside class="sidebar">
+          <div class="card-title">Agents</div>
+          <div id="sidebar-config" class="small">Loading agents...</div>
+          <hr/>
+          <div class="card-title">Services</div>
+          <div id="sidebar-services" class="small">Loading services...</div>
+          <div id="approval-hint" class="small" style="margin-top:8px">Approval phrases: <strong>/approve</strong>, <strong>approve</strong>, <strong>yes please</strong> (case-insensitive)</div>
+          <hr/>
+          <div class="card-title">Pending Commands</div>
+          <div id="pendingCommandsList" class="small">Loading pending commands...</div>
+          <hr/>
+          <div class="card-title">Recent Telegram Failures</div>
+          <div id="failureList" class="small">Loading failures...</div>
+          <hr/>
+          <div class="card-title">Running</div>
+          <div id="sidebar-agents">Loading...</div>
+          <hr/>
+          <div class="card-title">Capabilities</div>
+          <div id="side-caps" class="small">Loading...</div>
+        </aside>
+
+        <main class="main">
+            <div class="tabs">
+            <button class="tabbtn" data-tab="overview">Overview</button>
+            <button class="tabbtn" data-tab="summary">Summary</button>
+            <button class="tabbtn" data-tab="events">Events</button>
+            <button class="tabbtn" data-tab="capabilities">Capabilities</button>
+            <button class="tabbtn" data-tab="logs">Logs</button>
+            <button class="tabbtn" data-tab="pending">Pending</button>
+            <button class="tabbtn" data-tab="agents">Agents</button>
+          </div>
+
+          <div id="panels" style="flex:1;display:flex;flex-direction:column">
+            <div id="overview" class="tabpanel">
+              <h2>Overview</h2>
+              <div style="display:flex;justify-content:flex-end;margin-top:6px;gap:8px">
+                <button class="tabbtn" data-tab="overview">Overview</button>
+                <button class="tabbtn" data-tab="agents">Agents</button>
+                <button class="tabbtn" data-tab="capabilities">Capabilities</button>
+                <button class="tabbtn" data-tab="events">Events</button>
+                <button class="tabbtn" data-tab="logs">Logs</button>
+                <button class="tabbtn" data-tab="summary">Summary</button>
+              </div>
+              <p class="small">Quick links and status. Use the chat footer to instruct agents (UI prototype).</p>
+              <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+                <div style="background:#fff;border:1px solid var(--border);padding:10px;border-radius:8px;min-width:160px">
+                  <div class="pill">Agents</div>
+                  <div id="overview-agents-count" style="font-weight:600;font-size:18px">—</div>
+                </div>
+                <div style="background:#fff;border:1px solid var(--border);padding:10px;border-radius:8px;min-width:160px">
+                  <div class="pill">Events (1d)</div>
+                  <div id="overview-1d" style="font-weight:600;font-size:18px">—</div>
+                </div>
+                <div style="background:#fff;border:1px solid var(--border);padding:10px;border-radius:8px;min-width:160px">
+                  <div class="pill">Events (7d)</div>
+                  <div id="overview-7d" style="font-weight:600;font-size:18px">—</div>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:12px">
+              <h3>Agents</h3>
+              <div id="overview-agents" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-top:8px"></div>
+            </div>
+
+            <div id="summary" class="tabpanel" style="display:none">
+              <h2>Summary</h2>
+              <div id="summary-table-container">Loading...</div>
+            </div>
+
+            <div id="events" class="tabpanel" style="display:none">
+              <h2>Recent Events</h2>
+              <div class="events-list" id="events-list">Loading events...</div>
+            </div>
+
+            <div id="pending" class="tabpanel" style="display:none">
+              <h2>Pending Commands</h2>
+              <div id="pending-panel">Loading pending...</div>
+            </div>
+
+            <div id="capabilities" class="tabpanel" style="display:none">
+              <h2>Capabilities</h2>
+              <div id="cap-summaries"></div>
+            </div>
+
+            <div id="logs" class="tabpanel" style="display:none">
+              <h2>Logs</h2>
+              <div id="logs-list">Use the `.tmp` folder to inspect logs.</div>
+            </div>
+
+            <div id="agents" class="tabpanel" style="display:none">
+              <h2>Agents</h2>
+              <div id="agents-list" class="small">Loading agents...</div>
+            </div>
+          </div>
+        </main>
+        <!-- right content column is the main element -->
+      </div>
+    </div>
+
+    <div class="chat-footer">
+      <input id="chatInput" class="chat-input" placeholder="Message agents (type /start to start agents)" />
+      <button id="chatSend">Send</button>
+      <a class="ghost" href="/api/agents/capabilities">Capabilities</a>
+    </div>
+
+    <!-- Chat preview: shows up to 3 recent messages plus the current typing line -->
+    <div class="chat-preview">
+      <div class="box" id="chatPreviewBox">
+        <!-- lines inserted dynamically -->
+      </div>
+    </div>
+
+    <!-- Blocking modal shown when a global Start is blocked by an online agent -->
+    <div id="blockModal" style="display:none" aria-hidden="true">
+      <div class="modal-backdrop" id="blockModalBackdrop">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="blockModalTitle">
+          <h3 id="blockModalTitle">Start Blocked</h3>
+          <div class="small">A running "online" agent prevents a full 'Start Agents' action. The following agent(s) are currently running and block the global Start:</div>
+          <ul id="blockModalList" class="modal-list"></ul>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+            <button id="blockModalClose">Close</button>
+          </div>
+        </div>
+      </div>
+
+        <!-- Confirm requeue modal -->
+        <div id="confirmRequeueModal" style="display:none" aria-hidden="true">
+          <div class="modal-backdrop" id="confirmRequeueBackdrop">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmRequeueTitle">
+              <h3 id="confirmRequeueTitle">Confirm Requeue</h3>
+              <div class="small">Are you sure you want to requeue this pending command? This will attempt to resend the Telegram reply.</div>
+              <pre id="confirmRequeuePreview" style="max-height:160px;overflow:auto;margin-top:8px;background:#f8fafc;padding:8px;border-radius:6px"></pre>
+              <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+                <button id="confirmRequeueCancel">Cancel</button>
+                <button id="confirmRequeueConfirm" style="background:var(--accent);color:#fff;border-color:var(--accent)">Requeue</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Per-agent detail modal (logs preview, restart, compare) -->
+        <div id="agentDetailModal" style="display:none" aria-hidden="true">
+          <div class="modal-backdrop" id="agentDetailBackdrop">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="agentDetailTitle">
+              <h3 id="agentDetailTitle">Agent</h3>
+              <div style="display:flex;gap:12px;align-items:start;">
+                <div style="flex:1;min-width:320px">
+                  <div class="small" id="agentMeta">Loading...</div>
+                  <div style="margin-top:8px"><button id="agentRestartBtn">Restart</button> <button id="agentStartBtn">Start</button> <button id="agentStopBtn">Stop</button> <button id="agentProbeBtn">Probe</button> <button id="agentLogsBtn">Open Full Logs</button></div>
+                  <h4 style="margin-top:12px">Log preview</h4>
+                  <pre id="agentLogPreview" style="max-height:220px;overflow:auto">Loading...</pre>
+                </div>
+                <div style="width:360px">
+                  <h4>Compare</h4>
+                  <div id="agentCompare" class="small">Loading compare data...</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+                <button id="agentDetailClose">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <script>
+      // Approval SSE hookup: updates approval badge when approval.json changes
+      (function(){
+        const approvalText = document.getElementById('approvalText');
+        async function fetchState(){
+          try{
+            const r = await fetch('/api/approval/state');
+            const j = await r.json();
+            if(j && j.approved){
+              const ts = j.payload && j.payload.timestamp ? j.payload.timestamp : 'now';
+              approvalText.textContent = 'approved · ' + ts;
+            } else {
+              approvalText.textContent = 'none';
+            }
+          }catch(e){ /* ignore */ }
+        }
+        fetchState();
+        try{
+          const es = new EventSource('/api/approval/stream');
+          es.addEventListener('approval', (ev)=>{
+            try{ const data = JSON.parse(ev.data); approvalText.textContent = 'approved · ' + (data.timestamp||'now'); }catch(e){ approvalText.textContent='approved'; }
+          });
+          es.addEventListener('error', ()=>{});
+        }catch(e){ }
+      })();
+
+      // Telegram health SSE hookup
+      (function(){
+        const tgText = document.getElementById('telegramText');
+        async function fetchTg(){
+          try{
+            const r = await fetch('/api/telegram/health');
+            const j = await r.json();
+            if(j && j.health){
+              const h = j.health;
+              const status = h.running ? 'running' : 'stopped';
+              const qlen = j.queue_len != null ? j.queue_len : '-';
+              tgText.textContent = `${status} · q=${qlen}`;
+            } else {
+              tgText.textContent = 'unknown';
+            }
+          }catch(e){ tgText.textContent = 'error' }
+        }
+        fetchTg();
+        try{
+          const es = new EventSource('/api/telegram/stream');
+          es.addEventListener('telegram_health', (ev)=>{ try{ const d = JSON.parse(ev.data); const status = d.running ? 'running' : 'stopped'; document.getElementById('telegramText').textContent = `${status} · q=?`; }catch(e){} });
+          es.addEventListener('telegram_queue', (ev)=>{ try{ const d = JSON.parse(ev.data); const prev = document.getElementById('telegramText').textContent || ''; const parts = prev.split('·'); const st = parts[0] ? parts[0].trim() : 'unknown'; document.getElementById('telegramText').textContent = `${st} · q=${d.len}`; }catch(e){} });
+          es.addEventListener('error', ()=>{});
+        }catch(e){}
+      })();
+
+      // Approvers and failure count polling
+      (function(){
+        async function fetchApprovers(){
+          try{
+            const r = await fetch('/api/telegram/approvers');
+            const j = await r.json();
+            if(j && j.approvers && j.approvers.length){
+              document.getElementById('approversText').textContent = j.approvers.join(', ');
+              window.telegramApprovers = j.approvers || [];
+            } else {
+              document.getElementById('approversText').textContent = 'any';
+              window.telegramApprovers = [];
+            }
+          }catch(e){ document.getElementById('approversText').textContent = 'error' }
+        }
+
+        async function fetchFailures(){
+          try{
+            const r = await fetch('/api/telegram/failures');
+            const j = await r.json();
+            if(j && typeof j.count === 'number'){
+              document.getElementById('failureCount').textContent = j.count;
+              // populate recent list
+              try{
+                const el = document.getElementById('failureList');
+                if(!el) return;
+                el.innerHTML = '';
+                const recent = j.recent || [];
+                if(!recent.length){ el.textContent = 'No recent failures'; return }
+                for(const line of recent.slice(-10).reverse()){
+                  const d = document.createElement('div'); d.style.padding='6px'; d.style.borderBottom='1px solid #f3f7fb'; d.style.fontSize='12px'; d.textContent = line;
+                  el.appendChild(d);
+                }
+              }catch(e){ }
+            }
+          }catch(e){ document.getElementById('failureCount').textContent = 'err' }
+        }
+
+        fetchApprovers(); fetchFailures();
+        setInterval(fetchFailures, 5000);
+        setInterval(fetchApprovers, 15000);
+      })();
+
+      // Pending commands SSE hookup + initial fetch
+      (function(){
+        // Minimal Pending tab that queries the lightweight monitor endpoint `/pending`.
+        const panel = document.getElementById('pending-panel');
+        async function refreshPending(){
+          try{
+            const r = await fetch('/pending');
+            if(!r.ok){ panel.textContent = 'error fetching pending'; return }
+            const j = await r.json().catch(()=>({}));
+            const items = (j && j.pending) || [];
+            if(!items || !items.length){ panel.textContent = 'No pending commands'; return }
+            panel.innerHTML = '';
+            for(const it of items.slice(-50).reverse()){
+              const row = document.createElement('div'); row.style.marginBottom='8px'; row.style.padding='8px'; row.style.borderBottom='1px solid #f3f7fb';
+              const title = document.createElement('div'); title.style.fontWeight='600'; title.textContent = (it.command||'').split('\n')[0].slice(0,240);
+              const meta = document.createElement('div'); meta.className='small muted'; meta.textContent = `id=${(it.id||'') .toString().slice(0,12)} · from=${(it.from&&it.from.first_name)||it.from||'unknown'} · ${it.status||'pending'}`;
+              const cli = document.createElement('div'); cli.className='small'; cli.textContent = `CLI: python scripts/tg_command_manager.py approve ${it.id}`;
+              const btns = document.createElement('div'); btns.style.marginTop='6px'; btns.style.display='flex'; btns.style.gap='8px';
+              const requeueBtn = document.createElement('button'); requeueBtn.textContent = 'Requeue'; requeueBtn.style.padding='6px 8px';
+              requeueBtn.addEventListener('click', async ()=>{
+                // require saved admin token
+                if(!window.MONITOR_ADMIN_TOKEN){ alert('Save admin token first using the input at top-right'); return; }
+                // open modal and show preview
+                try{
+                  const preview = document.getElementById('confirmRequeuePreview');
+                  preview.textContent = JSON.stringify(it, null, 2);
+                  document.getElementById('confirmRequeueModal').style.display = 'block';
+                  document.getElementById('confirmRequeueModal').setAttribute('aria-hidden','false');
+                  // store current item id on modal element
+                  const modal = document.getElementById('confirmRequeueModal');
+                  modal.dataset.requeueId = it.id || '';
+                }catch(e){ alert('Could not open confirm dialog: '+e); }
+              });
+              btns.appendChild(requeueBtn);
+              row.appendChild(title); row.appendChild(meta); row.appendChild(cli); row.appendChild(btns);
+              panel.appendChild(row);
+            }
+          }catch(e){ panel.textContent = 'error loading pending'; }
+        }
+        refreshPending();
+        // refresh periodically for a light-weight UI
+        setInterval(refreshPending, 4000);
+      })();
+
+      // basic tab handling with active highlighting
+      function setActiveTab(name){
+        document.querySelectorAll('.tabbtn').forEach(x=>{ x.classList.toggle('active', x.dataset.tab===name); });
+        document.querySelectorAll('.tabpanel').forEach(p=>p.style.display='none');
+        const el = document.getElementById(name);
+        if(el) el.style.display = 'block';
+      }
+      document.querySelectorAll('.tabbtn').forEach(b=>{
+        b.addEventListener('click', ()=>{ const tab = b.dataset.tab; setActiveTab(tab); });
+      });
+      // default
+      setActiveTab('overview');
+
+      // Admin token helpers: persist to sessionStorage and expose to window
+      (function(){
+        const input = document.getElementById('adminTokenInput');
+        const save = document.getElementById('adminTokenSave');
+        const clear = document.getElementById('adminTokenClear');
+        try{
+          const saved = sessionStorage.getItem('monitor_admin_token');
+          if(saved){ input.value = saved; window.MONITOR_ADMIN_TOKEN = saved; }
+        }catch(e){}
+        save.addEventListener('click', ()=>{
+          try{ const v = input.value.trim(); if(!v) return; sessionStorage.setItem('monitor_admin_token', v); window.MONITOR_ADMIN_TOKEN = v; alert('Admin token saved to session'); }catch(e){ alert('Save failed'); }
+        });
+        clear.addEventListener('click', ()=>{ try{ sessionStorage.removeItem('monitor_admin_token'); input.value=''; window.MONITOR_ADMIN_TOKEN = null; alert('Cleared'); }catch(e){ alert('Clear failed'); } });
+      })();
+      // help tooltip for admin token
+      try{
+        const helpBtn = document.getElementById('adminTokenHelpBtn');
+        const helpBox = document.getElementById('adminTokenHelp');
+        const helpText = document.getElementById('adminTokenHelpText');
+        const copyBtn = document.getElementById('adminTokenCopy');
+        helpBtn.addEventListener('click', ()=>{
+          if(helpBox.style.display === 'none'){
+            helpBox.style.display = 'block';
+            // auto-hide after 12s
+            setTimeout(()=>{ try{ helpBox.style.display='none'; }catch(_){} }, 12000);
+          } else { helpBox.style.display='none'; }
+        });
+        // copy help text to clipboard
+        if(copyBtn){
+          copyBtn.addEventListener('click', async ()=>{
+            try{
+              const text = helpText ? helpText.innerText || helpText.textContent : 'Admin token help';
+              await navigator.clipboard.writeText(text);
+              copyBtn.textContent = 'Copied';
+              setTimeout(()=>{ copyBtn.textContent = 'Copy'; }, 2000);
+            }catch(e){ alert('Copy failed: ' + e); }
+          });
+        }
+      }catch(e){}
+
+      // --- data fetchers ---
+      async function fetchEvents(){
+
+        // --- configured agents panel ---
+        async function fetchAgentsConfig(){
+          try{
+            const r = await fetch('/api/agents/config');
+            const j = await r.json().catch(()=>({}));
+            const container = document.getElementById('sidebar-config');
+            container.innerHTML = '';
+            const agents = (j && j.agents) || [];
+            // expose globally for other UI helpers
+            window.agentsConfig = agents;
+            if(!agents || !agents.length){ container.innerHTML = '<em>No configured agents</em>'; return }
+            for(const a of agents){
+              const id = a.id || a.name || a.display_name || '';
+              const row = document.createElement('div'); row.className='agent-item';
+              const left = document.createElement('div'); left.innerHTML = `<div class='agent-name'>${a.display_name||a.name||id}</div><div class='muted'>${id}${a.version?(' · v'+a.version):''}</div>`;
+              const right = document.createElement('div'); right.style.display='flex'; right.style.gap='8px'; right.style.alignItems='center';
+                const statusSpan = document.createElement('span'); statusSpan.className='muted'; statusSpan.style.marginLeft='8px'; statusSpan.textContent='(probe: unknown)';
+              const toggleBtn = document.createElement('button'); toggleBtn.style.padding='6px 8px';
+              const logsBtn = document.createElement('button'); logsBtn.textContent='Logs'; logsBtn.style.padding='6px 8px';
+              const detailsBtn = document.createElement('button'); detailsBtn.textContent='Details'; detailsBtn.style.padding='6px 8px';
+              // initialize toggle label based on latest known pids
+              try{
+                const latest = window.latestPids || {};
+                if (latest && latest[id] && latest[id].alive === true) { toggleBtn.textContent = 'Stop'; }
+                else { toggleBtn.textContent = 'Start'; }
+              }catch(e){ toggleBtn.textContent = 'Start' }
+
+              toggleBtn.addEventListener('click', async ()=>{
+                const action = (toggleBtn.textContent||'').toLowerCase();
+                if (action === 'start') {
+                  toggleBtn.disabled = true; toggleBtn.textContent = 'Starting…';
+                  try{
+                    const res = await fetch('/api/agents/start', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({id: id}) });
+                    const out = await res.json().catch(()=>({}));
+                    await fetchPids(); await fetchAgentsConfig();
+                    if(out && out.ok === false && out.error === 'agent_already_running'){
+                      alert('Agent already running: ' + id);
+                    } else {
+                      // flip to Stop if started
+                      toggleBtn.textContent = 'Stop';
+                      alert('Start: ' + JSON.stringify(out));
+                    }
+                  }catch(e){ alert('Start failed: '+e) }
+                  toggleBtn.disabled = false; if(toggleBtn.textContent!=='Stop') toggleBtn.textContent='Start';
+                } else {
+                  if(!confirm('Stop agent '+id+'?')) return;
+                  toggleBtn.disabled = true; toggleBtn.textContent = 'Stopping…';
+                  try{
+                    const res = await fetch('/api/agents/stop', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({id: id}) });
+                    const out = await res.json().catch(()=>({}));
+                    await fetchPids(); await fetchAgentsConfig();
+                    toggleBtn.textContent = 'Start';
+                    alert('Stop: ' + JSON.stringify(out));
+                  }catch(e){ alert('Stop failed: '+e) }
+                  toggleBtn.disabled = false;
+                }
+              });
+              // disable Toggle Start if agent already running and it's an online agent (server enforces single-instance too)
+              try{
+                const latest = window.latestPids || {};
+                if (latest && latest[id] && latest[id].alive === true) {
+                  // button should show Stop, allow stopping
+                }
+              }catch(e){}
+              right.appendChild(toggleBtn);
+              right.appendChild(statusSpan);
+              right.appendChild(detailsBtn);
+              right.appendChild(logsBtn);
+              logsBtn.addEventListener('click', ()=>{
+                const url = '/api/agents/log?id=' + encodeURIComponent(id) + '&type=both';
+                window.open(url, '_blank');
+              });
+              detailsBtn.addEventListener('click', ()=>{ showAgentDetail(id, a); });
+              row.appendChild(left); row.appendChild(right);
+              container.appendChild(row);
+
+              // wire probe button
+              const probeBtn = document.createElement('button'); probeBtn.textContent='Probe'; probeBtn.style.padding='6px 8px'; probeBtn.style.marginLeft='6px';
+              probeBtn.addEventListener('click', async ()=>{
+                try{
+                  statusSpan.textContent='(probing...)';
+                  const r = await fetch('/api/agents/probe?id='+encodeURIComponent(id));
+                  const j = await r.json();
+                  if(j && j.ok && j.probe){
+                    const p = j.probe;
+                    statusSpan.textContent = `(alive:${p.alive? 'yes':'no'} pid:${p.pid||'—'})`;
+                  } else {
+                    statusSpan.textContent = '(probe: failed)';
+                  }
+                }catch(e){ statusSpan.textContent='(probe: error)'; }
+              });
+              right.appendChild(probeBtn);
+            }
+          }catch(e){ console.error(e); }
+          // update global start/stop state whenever config changes
+          try{ updateGlobalStartButton(); }catch(e){}
+          // render services box
+          renderServicesBox();
+        }
+
+      function renderServicesBox(){
+        try{
+          const svcBox = document.getElementById('sidebar-services');
+          if(!svcBox) return;
+          svcBox.innerHTML = '';
+          const services = [
+            { id: 'monitor', label: 'Monitor (web UI)' },
+            { id: 'telegram_bridge', label: 'Telegram Bridge' },
+            { id: 'approval_listener', label: 'Approval Listener' },
+            { id: 'periodic_runner', label: 'Periodic Runner' },
+            { id: 'scheduler', label: 'Scheduler' }
+          ];
+          services.forEach(s => {
+            const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.alignItems='center'; row.style.marginBottom='6px';
+            const left = document.createElement('div'); left.innerHTML = `<div style="font-weight:600">${s.label}</div><div class='muted'>${s.id}</div>`;
+            const right = document.createElement('div'); right.style.display='flex'; right.style.gap='6px';
+            const startBtn = document.createElement('button'); startBtn.textContent = 'Start'; startBtn.style.padding='6px 8px';
+            const stopBtn = document.createElement('button'); stopBtn.textContent = 'Stop'; stopBtn.style.padding='6px 8px';
+            startBtn.addEventListener('click', async ()=>{
+              startBtn.disabled = true; startBtn.textContent = 'Starting…';
+              try{ const r = await fetch('/api/service/start',{ method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({service: s.id}) }); const j = await r.json().catch(()=>({})); alert('Start: '+JSON.stringify(j)); await fetchPids(); }catch(e){ alert('Start failed: '+e) }
+              startBtn.disabled = false; startBtn.textContent = 'Start';
+            });
+            stopBtn.addEventListener('click', async ()=>{
+              stopBtn.disabled = true; stopBtn.textContent = 'Stopping…';
+              try{ const r = await fetch('/api/service/stop',{ method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({service: s.id}) }); const j = await r.json().catch(()=>({})); alert('Stop: '+JSON.stringify(j)); await fetchPids(); }catch(e){ alert('Stop failed: '+e) }
+              stopBtn.disabled = false; stopBtn.textContent = 'Stop';
+            });
+            right.appendChild(startBtn); right.appendChild(stopBtn);
+            row.appendChild(left); row.appendChild(right);
+            svcBox.appendChild(row);
+          });
+        }catch(e){ console.error('renderServicesBox', e); }
+      }
+
+        function getBlockingOnlineAgents(){
+          const agents = window.agentsConfig || [];
+          const pids = window.latestPids || {};
+          const blocking = [];
+          for(const a of agents){
+            const id = (a.id||a.name||'').toLowerCase();
+            if(!id) continue;
+            if(id.includes('online')){
+              if(pids[id] && pids[id].alive === true){ blocking.push({id:id, display: a.display_name||a.name||id, pid: pids[id].pid}); }
+            }
+          }
+          return blocking;
+        }
+
+        function updateGlobalStartButton(){
+          try{
+            const btn = document.getElementById('startBtn');
+            if(!btn) return;
+            const agents = window.agentsConfig || [];
+            const pids = window.latestPids || {};
+            let anyOnlineRunning = false;
+            for(const a of agents){
+              const id = (a.id||a.name||'').toLowerCase();
+              if(!id) continue;
+              if(id.includes('online')){
+                if(pids[id] && pids[id].alive === true){ anyOnlineRunning = true; break }
+              }
+            }
+            if(anyOnlineRunning){ btn.classList.add('btn-blocked'); btn.dataset.blocked = '1'; btn.title = 'Disabled because an online agent is running'; }
+            else { btn.classList.remove('btn-blocked'); delete btn.dataset.blocked; btn.title = ''; }
+          }catch(e){ /* ignore */ }
+        }
+        try{
+          const res = await fetch('/api/events?n=100');
+          const ev = await res.json();
+          const container = document.getElementById('events-list');
+          container.innerHTML = '';
+          let cnt1 = 0, cnt7 = 0;
+          const now = Date.now();
+          for(const e of ev.reverse()){
+            const t = e.timestamp || e.time || '';
+            const ts = Date.parse(t) || 0;
+            const delta = (now - ts)/1000/60/60/24;
+            if (delta <= 1) cnt1++;
+            if (delta <= 7) cnt7++;
+            const card = document.createElement('div');
+            card.style.padding='8px'; card.style.borderBottom='1px solid #f3f7fb';
+            card.innerHTML = `<div style='display:flex;justify-content:space-between'><strong>${e.type||'(event)'}</strong><span class='muted'>${t||''}</span></div><pre>${JSON.stringify(e.payload||e, null, 2)}</pre>`;
+            container.appendChild(card);
+          }
+          document.getElementById('overview-1d').textContent = cnt1;
+          document.getElementById('overview-7d').textContent = cnt7;
+          // update chat preview with recent instruct/messages
+          try{ renderChatPreviewFromEvents(ev); }catch(e){ /* ignore */ }
+        }catch(err){ console.error(err); document.getElementById('events-list').textContent = 'Error loading events'; }
+      }
+
+      // Render chat preview: show up to 3 recent messages plus typing line
+      function renderChatPreviewFromEvents(events){
+        if(!Array.isArray(events)) return;
+        // prefer events with payload.message or payload.msg
+        const msgs = [];
+        for(const ev of events){
+          const p = ev.payload || ev;
+          const text = p && (p.message || p.msg || p.text || p.content);
+          if(text){ msgs.push({from: ev.source || ev.actor || 'agent', text: String(text).replace(/\n/g,' ') }); }
+        }
+        // take last 3
+        const recent = msgs.slice(-3);
+        // current typing (if present)
+        const current = (window._currentTyping || '').trim();
+        const box = document.getElementById('chatPreviewBox'); box.innerHTML = '';
+        for(const m of recent){ const el = document.createElement('div'); el.className = 'chat-line agent'; el.textContent = `${m.from}: ${m.text}`; box.appendChild(el); }
+        if(current){ const el = document.createElement('div'); el.className = 'chat-line typing'; el.textContent = `You (typing): ${current}`; box.appendChild(el); }
+        // fill to 4 lines if fewer
+        while(box.childElementCount < 4){ const el = document.createElement('div'); el.className='chat-line'; el.textContent=''; box.appendChild(el); }
+      }
+
+      // Update overview counters based on a single incoming event (best-effort)
+      function updateCountersForEvent(ev){
+        try{
+          const t = ev.timestamp || ev.time || '';
+          const ts = Date.parse(t) || 0;
+          if(!ts) return;
+          const now = Date.now();
+          const deltaDays = (now - ts) / 1000 / 60 / 60 / 24;
+          const d1 = document.getElementById('overview-1d');
+          const d7 = document.getElementById('overview-7d');
+          if(d1 && deltaDays <= 1){ d1.textContent = String((parseInt(d1.textContent||'0')||0) + 1); }
+          if(d7 && deltaDays <= 7){ d7.textContent = String((parseInt(d7.textContent||'0')||0) + 1); }
+        }catch(e){ }
+      }
+
+      async function fetchSummary(){
+        try{
+          const r = await fetch('/api/agents/summary');
+          const list = await r.json();
+          // also fetch PID status to detect fallbacks
+          let pidStatus = {};
+          try{
+            const pr = await fetch('/api/agents/pids_status');
+            if(pr.ok){ const pj = await pr.json(); pidStatus = pj.status || {}; }
+          }catch(e){ /* ignore */ }
+
+          const ctr = document.getElementById('summary-table-container');
+          if (!list || !list.length){ ctr.innerHTML = '<em>No agents detected</em>'; return }
+          const tbl = document.createElement('table'); tbl.className='summary-table';
+          const hdr = document.createElement('tr'); hdr.innerHTML = '<th>Agent</th><th title="Shows if this entry is a debug fallback process (agent_sleep.py)">Fallback</th><th>Model</th><th>1d</th><th>7d</th><th>Todos</th>';
+          tbl.appendChild(hdr);
+          for(const a of list){
+            // determine fallback by matching agent name/id/path against pidStatus keys
+            const candidates = [];
+            if(a.name) candidates.push((a.name||'').toLowerCase());
+            if(a.id) candidates.push((a.id||'').toLowerCase());
+            if(a.path) candidates.push(((a.path||'').split('/').pop()||'').toLowerCase());
+            let isFallback = false;
+            for(const k of Object.keys(pidStatus||{})){
+              const kk = (k||'').toLowerCase();
+              if(candidates.includes(kk)){
+                isFallback = !!pidStatus[k].fallback; break;
+              }
+            }
+            const tr = document.createElement('tr');
+            const todos = (a.todos||[]).slice(0,3).map(t=>t.title||t.event?.payload?.title||'').join('\n');
+            const fbCell = isFallback ? '<td style="color:#92400e;font-weight:600">yes</td>' : '<td style="color:#6b7280">no</td>';
+            tr.innerHTML = `<td><strong>${a.name||''}</strong><br/><small class='muted'>${a.path||''}</small></td>${fbCell}<td>${a.model||''}</td><td style='text-align:center'>${(a.scores||{}).1d||0}</td><td style='text-align:center'>${(a.scores||{}).7d||0}</td><td><pre>${todos}</pre></td>`;
+            tbl.appendChild(tr);
+            // summary-only list item (sidebar configured agents list is rendered separately)
+          }
+          ctr.innerHTML = ''; ctr.appendChild(tbl);
+        }catch(e){ console.error(e); }
+      }
+
+      async function fetchCaps(){
+        try{ const r=await fetch('/api/agents/capabilities'); const c=await r.json(); const el=document.getElementById('cap-summaries'); el.innerHTML=''; if(!c||!c.length){ el.textContent='No capability files detected'; return } for(const cap of c){ const d=document.createElement('div'); d.innerHTML=`<strong>${cap.name||cap.path}</strong> <div class='muted'>${cap.skills?.join(',')||''}</div>`; el.appendChild(d) } }catch(e){ console.error(e) }
+      }
+
+      // --- PID / status polling and UI update ---
+      function updatePidsUI(map){
+        // `map` may be either:
+        // - { agent: { pid, alive } }
+        // - { agent: { pid, out, err } }
+        // - { agent: pid }
+        const side = document.getElementById('sidebar-agents');
+        side.innerHTML = '';
+        const keys = Object.keys(map||{});
+        if(!keys.length){ side.innerHTML = '<em>No running agents</em>'; document.getElementById('agentStatus').textContent = 'Stopped'; document.getElementById('overview-agents-count').textContent = 0; return }
+        let aliveCount = 0;
+        for(const k of keys){
+          const v = map[k];
+          let pid = null, alive = null;
+          if(v && typeof v === 'object'){
+            if('alive' in v) alive = !!v.alive;
+            if('pid' in v) pid = v.pid;
+            else if(v.pid === undefined && Object.keys(v).length===1){ pid = v[Object.keys(v)[0]]; }
+          } else {
+            pid = v;
+          }
+          const el = document.createElement('div'); el.className='agent-item';
+          const badge = document.createElement('span'); badge.style.padding='4px 8px'; badge.style.borderRadius='999px'; badge.style.fontWeight='600'; badge.style.fontSize='12px';
+          if(alive === true){ badge.textContent = 'live'; badge.style.background='#dcfce7'; badge.style.color='#166534'; aliveCount++; }
+          else if(alive === false){ badge.textContent = 'dead'; badge.style.background='#fee2e2'; badge.style.color='#991b1b'; }
+          else { badge.textContent = 'unknown'; badge.style.background='#f3f4f6'; badge.style.color='#374151'; }
+          const left = document.createElement('div'); left.innerHTML = `<div class='agent-name'>${k}</div><div class='muted'>PID ${pid||'—'}</div>`;
+          const right = document.createElement('div'); right.style.display='flex'; right.style.gap='8px'; right.style.alignItems='center'; right.appendChild(badge);
+          // show fallback badge if present
+          if(v && typeof v === 'object' && v.fallback){
+            const fb = document.createElement('span'); fb.textContent = 'fallback'; fb.style.padding='4px 8px'; fb.style.borderRadius='999px'; fb.style.fontSize='11px'; fb.style.background='#fff7ed'; fb.style.color='#92400e'; fb.style.fontWeight='600'; right.appendChild(fb);
+          }
+          // small logs link
+          try{
+            const lbtn = document.createElement('button'); lbtn.textContent='Logs'; lbtn.style.padding='6px 8px'; lbtn.style.fontSize='12px'; lbtn.addEventListener('click', ()=>{ window.open('/api/agents/log?id='+encodeURIComponent(k)+'&type=both','_blank') }); right.appendChild(lbtn);
+          }catch(e){}
+          el.appendChild(left); el.appendChild(right);
+          side.appendChild(el);
+        }
+        document.getElementById('agentStatus').textContent = `Running (${aliveCount} live / ${keys.length} total)`;
+        document.getElementById('overview-agents-count').textContent = keys.length;
+        try{ updateGlobalStartButton(); }catch(e){}
+      }
+
+      async function fetchPids(){
+        try{
+          const r = await fetch('/api/agents/pids_status');
+          if(!r.ok) return;
+          const j = await r.json();
+          if(!j) return;
+          // preferred shape: { pids: {...}, status: { agent: {pid, alive} } }
+          if(j.status && typeof j.status === 'object'){
+            updatePidsUI(j.status);
+            window.latestPids = j.status;
+            return;
+          }
+          // fallback: try pids map
+          const maybe = j.pids || (j.data && j.data.pids) || j.data || null;
+          if(maybe){
+            // convert map entries to {pid, alive: null}
+            const normalized = {};
+            for(const k of Object.keys(maybe)){
+              const v = maybe[k];
+              if(v && typeof v === 'object' && 'pid' in v) normalized[k] = {pid: v.pid, alive: null};
+              else normalized[k] = {pid: v, alive: null};
+            }
+            updatePidsUI(normalized);
+            window.latestPids = normalized;
+          }
+        }catch(e){ /* non-fatal */ }
+      }
+
+      // --- Start / Stop handlers ---
+      document.getElementById('startBtn').addEventListener('click', async ()=>{
+        const b = document.getElementById('startBtn');
+        // if visually blocked by an online agent, show modal explaining blockers
+        if(b.dataset && b.dataset.blocked){
+          const blockers = getBlockingOnlineAgents() || [];
+          const list = document.getElementById('blockModalList'); list.innerHTML = '';
+          if(blockers.length===0){ list.innerHTML = '<li><em>Unknown blocker</em></li>'; }
+          else { for(const bl of blockers){ const li = document.createElement('li'); li.textContent = `${bl.display} — pid ${bl.pid||'?'}`; list.appendChild(li); } }
+          document.getElementById('blockModal').style.display = 'block'; document.getElementById('blockModal').setAttribute('aria-hidden','false');
+          return;
+        }
+
+        b.disabled = true; b.textContent = 'Starting…';
+        try{
+          const res = await fetch('/api/agents/start',{ method: 'POST' });
+          const j = await res.json().catch(()=>({}));
+          // prefer returned pids, otherwise poll the pids endpoint a few times
+          if(j && (j.pids || (j.pids === null && j.stdout))){
+            if(j.pids) { updatePidsUI(j.pids); window.latestPids = j.pids; }
+          } else {
+            for(let i=0;i<6;i++){ await fetchPids(); await new Promise(r=>setTimeout(r,500)); }
+          }
+          alert('Start result: ' + JSON.stringify(j));
+        }catch(err){ alert('Failed to start: '+err) }
+        b.disabled = false; b.textContent = 'Start Agents';
+      });
+
+      document.getElementById('stopBtn').addEventListener('click', async ()=>{
+        if(!confirm('Stop agents?')) return;
+        const b = document.getElementById('stopBtn'); b.disabled = true; b.textContent = 'Stopping…';
+        try{
+          const res = await fetch('/api/agents/stop',{ method: 'POST' });
+          const j = await res.json().catch(()=>({}));
+          // refresh pids to reflect stopped state
+          await fetchPids();
+          // if still present, clear UI
+          if(!window.latestPids || Object.keys(window.latestPids).length===0) updatePidsUI({});
+          alert('Stop result: ' + JSON.stringify(j));
+        }catch(err){ alert('Failed to stop: '+err) }
+        b.disabled = false; b.textContent = 'Stop Agents';
+      });
+
+      // chat UI: send to /api/agents/instruct. Use @agent to target (e.g. "@alby do X").
+      function sendChatMessage(){
+        const input = document.getElementById('chatInput');
+        const v = input.value.trim();
+        if(!v) return;
+        if(v.startsWith('/start')){ document.getElementById('startBtn').click(); input.value=''; return }
+        let target = null; let msg = v;
+        const m = v.match(/^@([^\s]+)\s+(.*)/);
+        if(m){ target = m[1]; msg = m[2] || '' }
+        // optimistically append to preview
+        appendChatPreviewLocal('You', v);
+        fetch('/api/agents/instruct', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({message: msg || v, target: target}) })
+          .then(r=>r.json())
+          .then(j=>{
+            if(j && j.ok){ const ev = j.event; const card = document.createElement('div'); card.style.padding='8px'; card.style.borderBottom='1px solid #f3f7fb'; card.innerHTML = `<div style='display:flex;justify-content:space-between'><strong>${ev.type||'(event)'}</strong><span class='muted'>${ev.timestamp||''}</span></div><pre>${JSON.stringify(ev.payload||ev, null, 2)}</pre>`; const list = document.getElementById('events-list'); if(list.firstChild) list.insertBefore(card, list.firstChild); else list.appendChild(card); } else { alert('Send failed: ' + (j && (j.error||JSON.stringify(j)))) }
+          }).catch(e=>{ alert('Request failed: '+e) });
+        input.value = '';
+      }
+
+      function appendChatPreviewLocal(who, text){
+        try{
+          // push into a small buffer on window for immediate feedback
+          window._localChatBuf = window._localChatBuf || [];
+          window._localChatBuf.push({from: who, text: text});
+          if(window._localChatBuf.length > 50) window._localChatBuf.shift();
+          // render last 3 from events + this local if events don't include it yet
+          const box = document.getElementById('chatPreviewBox');
+          const el = document.createElement('div'); el.className='chat-line user'; el.textContent = `${who}: ${text}`;
+          // append user line and trim to 4
+          box.appendChild(el);
+          while(box.childElementCount > 4) box.removeChild(box.firstChild);
+        }catch(e){ }
+      }
+
+      // Prepend an incoming event to the events list UI
+      function prependEventToList(ev){
+        try{
+          const container = document.getElementById('events-list');
+          const t = ev.timestamp || ev.time || '';
+          const card = document.createElement('div');
+          card.style.padding='8px'; card.style.borderBottom='1px solid #f3f7fb';
+          card.innerHTML = `<div style='display:flex;justify-content:space-between'><strong>${ev.type||'(event)'}</strong><span class='muted'>${t||''}</span></div><pre>${JSON.stringify(ev.payload||ev, null, 2)}</pre>`;
+          if(container.firstChild) container.insertBefore(card, container.firstChild); else container.appendChild(card);
+          // update overview counters quickly (best-effort)
+          try{ const d1 = document.getElementById('overview-1d'); const d7 = document.getElementById('overview-7d'); if(d1 && d7){ d1.textContent = String((parseInt(d1.textContent||'0')||0)+1); d7.textContent = String((parseInt(d7.textContent||'0')||0)+1); } }catch(e){}
+        }catch(e){ console.error('prepend failed', e) }
+      }
+
+      // EventSource (SSE) for live events
+      (function initEventSource(){
+        if(typeof(EventSource) === 'undefined') return;
+        try{
+          const es = new EventSource('/api/events/stream');
+          // generic message fallback
+          es.onmessage = function(evt){
+            try{
+              const data = evt.data || '';
+              if(!data) return;
+              const ev = JSON.parse(data);
+              prependEventToList(ev);
+              try{ renderChatPreviewFromEvents([ev]); }catch(e){}
+              try{ updateCountersForEvent(ev); }catch(e){}
+            }catch(e){ /* ignore parse errors */ }
+          };
+
+          // listen specifically for instruction events
+          es.addEventListener('instruct', function(evt){
+            try{
+              const ev = JSON.parse(evt.data || '{}');
+              prependEventToList(ev);
+              // update chat preview with instruct immediately
+              try{ renderChatPreviewFromEvents([ev]); }catch(e){}
+              try{ updateCountersForEvent(ev); }catch(e){}
+            }catch(e){}
+          });
+
+          // generic system or other types
+          es.addEventListener('system', function(evt){
+            try{
+              const ev = JSON.parse(evt.data || '{}');
+              prependEventToList(ev);
+              try{ updateCountersForEvent(ev); }catch(e){}
+            }catch(e){}
+          });
+
+          es.onerror = function(err){
+            console.warn('EventSource error', err);
+            try{ es.close(); }catch(e){}
+            // attempt reconnect after a short delay
+            setTimeout(initEventSource, 2000);
+          };
+        }catch(e){ console.warn('SSE init failed', e); }
+      })();
+
+      // Subscribe to agent-state SSE channel
+      (function initStateSSE(){
+        if(typeof(EventSource) === 'undefined') return;
+        try{
+          const sse = new EventSource('/api/agents/state/stream');
+          sse.addEventListener('agent-state', function(evt){
+            try{
+              const st = JSON.parse(evt.data || '{}');
+              // find corresponding row in agents config list and update status span
+              try{
+                const id = (st.id||'').toString();
+                // look for agent-item with matching name text
+                document.querySelectorAll('.agent-item').forEach(row=>{
+                  const nm = row.querySelector('.muted');
+                  if(!nm) return;
+                  if(nm.textContent && nm.textContent.toLowerCase().includes(id.toLowerCase())){
+                    const span = row.querySelector('span.muted');
+                    if(span) span.textContent = `(alive:${st.alive? 'yes':'no'} pid:${st.pid||'—'})`;
+                  }
+                });
+              }catch(e){}
+            }catch(e){}
+          });
+          sse.onerror = function(){ try{ sse.close(); }catch(e){}; setTimeout(initStateSSE, 3000); };
+        }catch(e){}
+      })();
+
+      document.getElementById('chatSend').addEventListener('click', sendChatMessage);
+      document.getElementById('chatInput').addEventListener('keydown', (e)=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendChatMessage(); } });
+      // update typing preview
+      document.getElementById('chatInput').addEventListener('input', (e)=>{ window._currentTyping = e.target.value || ''; try{ renderChatPreviewFromEvents([]); }catch(_){} });
+
+      // initial load and polling
+      fetchEvents(); fetchSummary(); fetchCaps(); fetchPids(); fetchAgentsConfig();
+      setInterval(()=>{ fetchEvents(); fetchSummary(); fetchCaps(); fetchPids(); fetchAgentsConfig(); }, 5000);
+
+      // render Agents page
+      function renderAgentsPage(){
+        try{
+          const container = document.getElementById('agents-list'); container.innerHTML = '';
+          const agents = window.agentsConfig || [];
+          if(!agents.length){ container.innerHTML = '<div class="small">No configured agents</div>'; return }
+          for(const a of agents){
+            const id = a.id || a.name || '';
+            const row = document.createElement('div'); row.className='agent-item';
+            const left = document.createElement('div'); left.innerHTML = `<div class='agent-name'>${a.display_name||a.name||id}</div><div class='muted'>${id}${a.version?(' · v'+a.version):''}</div>`;
+            const right = document.createElement('div'); right.style.display='flex'; right.style.gap='8px'; right.style.alignItems='center';
+            const openBtn = document.createElement('button'); openBtn.textContent='Open'; openBtn.addEventListener('click', ()=>{ showAgentDetail(id,a); });
+            const probeBtn = document.createElement('button'); probeBtn.textContent='Probe'; probeBtn.addEventListener('click', async ()=>{ await doAgentProbe(id); await doAgentCompare(id); });
+            right.appendChild(openBtn); right.appendChild(probeBtn);
+            row.appendChild(left); row.appendChild(right); container.appendChild(row);
+          }
+        }catch(e){ console.error('renderAgentsPage', e); }
+      }
+
+      // ensure Agents and Overview update when config or pids change
+      if(!window._orig_fetchAgentsConfig) window._orig_fetchAgentsConfig = fetchAgentsConfig;
+      fetchAgentsConfig = async function(){ await window._orig_fetchAgentsConfig(); renderOverviewAgents(); renderAgentsPage(); }
+      if(!window._orig_fetchPids) window._orig_fetchPids = fetchPids;
+      fetchPids = async function(){ await window._orig_fetchPids(); renderOverviewAgents(); renderAgentsPage(); }
+
+      // render overview agents list
+      function renderOverviewAgents(){
+        try{
+          const container = document.getElementById('overview-agents');
+          container.innerHTML = '';
+          const agents = window.agentsConfig || [];
+          const pids = window.latestPids || {};
+          if(!agents.length){ container.innerHTML = '<div class="small">No configured agents</div>'; return }
+          for(const a of agents){
+            const id = a.id || a.name || '';
+            const card = document.createElement('div'); card.style.border='1px solid var(--border)'; card.style.borderRadius='8px'; card.style.padding='8px'; card.style.background='#fff';
+            const title = document.createElement('div'); title.innerHTML = `<strong>${a.display_name||a.name||id}</strong>`; title.style.cursor='pointer';
+            title.addEventListener('click', ()=>{ showAgentDetail(id, a); });
+            const meta = document.createElement('div'); meta.className='small muted';
+            const st = (pids[id] ? (pids[id].alive? 'live':'dead') : 'unknown');
+            meta.textContent = `id: ${id} · status: ${st}`;
+            const actions = document.createElement('div'); actions.style.marginTop='8px'; actions.style.display='flex'; actions.style.gap='8px';
+            const det = document.createElement('button'); det.textContent='Details'; det.addEventListener('click', ()=>{ showAgentDetail(id, a); });
+            const probe = document.createElement('button'); probe.textContent='Probe'; probe.addEventListener('click', async ()=>{ await doAgentProbe(id); await doAgentCompare(id); });
+            actions.appendChild(det); actions.appendChild(probe);
+            card.appendChild(title); card.appendChild(meta); card.appendChild(actions);
+            container.appendChild(card);
+          }
+        }catch(e){ console.error('renderOverviewAgents', e); }
+      }
+
+      // update overview agents when config or pids change
+      const origFetchAgentsConfig = fetchAgentsConfig;
+      fetchAgentsConfig = async function(){ await origFetchAgentsConfig(); renderOverviewAgents(); }
+      const origFetchPids = fetchPids;
+      fetchPids = async function(){ await origFetchPids(); renderOverviewAgents(); }
+
+      // --- Agent detail modal handlers ---
+      function showAgentDetail(id, cfg){
+        try{
+          document.getElementById('agentDetailTitle').textContent = cfg.display_name || cfg.name || id;
+          document.getElementById('agentMeta').textContent = `id: ${id} · path: ${cfg.path||cfg.module||''}`;
+          document.getElementById('agentLogPreview').textContent = 'Loading logs...';
+          document.getElementById('agentCompare').textContent = 'Loading compare data...';
+          document.getElementById('agentDetailModal').style.display = 'block';
+          document.getElementById('agentDetailModal').setAttribute('aria-hidden','false');
+          // wire control buttons
+          document.getElementById('agentLogsBtn').onclick = ()=>{ window.open('/api/agents/log?id='+encodeURIComponent(id)+'&type=both','_blank'); };
+          document.getElementById('agentProbeBtn').onclick = async ()=>{ await doAgentProbe(id); };
+          document.getElementById('agentStartBtn').onclick = async ()=>{ await doAgentAction('start', id); };
+          document.getElementById('agentStopBtn').onclick = async ()=>{ await doAgentAction('stop', id); };
+          document.getElementById('agentRestartBtn').onclick = async ()=>{ await doAgentRestart(id); };
+          // populate preview (tail last 200 lines)
+          try{
+            const res = await fetch('/api/agents/log_preview?id='+encodeURIComponent(id)+'&lines=200');
+            if(res.ok){
+              const j = await res.json().catch(()=>null);
+              if(j && Array.isArray(j.preview) && j.preview.length){
+                const pieces = j.preview.map(p=>`--- ${p.kind} (${p.path}) ---\n${p.tail||''}`).join('\n\n');
+                document.getElementById('agentLogPreview').textContent = pieces || '<no logs>';
+              } else {
+                document.getElementById('agentLogPreview').textContent = '<no logs available>';
+              }
+            } else {
+              document.getElementById('agentLogPreview').textContent = '<no logs available>';
+            }
+          }catch(e){ document.getElementById('agentLogPreview').textContent = '<error fetching logs>'; }
+          // populate compare: probe (live) vs DB-persisted state
+          await doAgentCompare(id);
+        }catch(e){ console.error('showAgentDetail', e); }
+      }
+
+      async function doAgentAction(action, id){
+        try{
+          const btn = document.getElementById('agent'+(action.charAt(0).toUpperCase()+action.slice(1))+'Btn');
+        }catch(e){}
+        try{
+          const url = (action==='start')?'/api/agents/start':'/api/agents/stop';
+          const r = await fetch(url, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({id: id}) });
+          const j = await r.json().catch(()=>({}));
+          await fetchPids(); await fetchAgentsConfig();
+          alert(action+' result: '+JSON.stringify(j));
+          await doAgentCompare(id);
+        }catch(e){ alert(action+' failed: '+e); }
+      }
+
+      async function doAgentRestart(id){
+        if(!confirm('Restart agent '+id+'?')) return;
+        try{
+          // stop then start
+          await fetch('/api/agents/stop',{ method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id:id}) });
+          // short wait
+          await new Promise(r=>setTimeout(r,800));
+          await fetch('/api/agents/start',{ method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id:id}) });
+          await fetchPids(); await fetchAgentsConfig();
+          alert('Restart issued for '+id);
+          await doAgentCompare(id);
+        }catch(e){ alert('Restart failed: '+e); }
+      }
+
+      async function doAgentProbe(id){
+        try{
+          const r = await fetch('/api/agents/probe?id='+encodeURIComponent(id));
+          const j = await r.json();
+          if(j && j.probe){ document.getElementById('agentCompare').textContent = 'Probe: ' + JSON.stringify(j.probe, null, 2); }
+          else { document.getElementById('agentCompare').textContent = 'Probe failed'; }
+          await fetchPids();
+        }catch(e){ document.getElementById('agentCompare').textContent = 'Probe error: '+e; }
+      }
+
+      async function doAgentCompare(id){
+        try{
+          // live probe
+          let live = null;
+          try{ const pr = await fetch('/api/agents/probe?id='+encodeURIComponent(id)); if(pr.ok){ const pj = await pr.json(); live = pj.probe || null; } }catch(e){}
+          // persisted state
+          let persisted = null;
+          try{ const sr = await fetch('/api/agents/state'); if(sr.ok){ const sj = await sr.json(); const arr = sj || []; persisted = (Array.isArray(arr)? arr.find(x=> (x.id||'').toString()===id) : (sj[id] || null)); } }catch(e){}
+          const comp = { live: live, persisted: persisted };
+          document.getElementById('agentCompare').textContent = JSON.stringify(comp, null, 2);
+        }catch(e){ document.getElementById('agentCompare').textContent = 'Compare error: '+e; }
+      }
+
+      document.getElementById('agentDetailClose').addEventListener('click', ()=>{ document.getElementById('agentDetailModal').style.display='none'; document.getElementById('agentDetailModal').setAttribute('aria-hidden','true'); });
+      document.getElementById('agentDetailBackdrop').addEventListener('click', (e)=>{ if(e.target.id === 'agentDetailBackdrop'){ document.getElementById('agentDetailClose').click(); } });
+
+      // block modal handlers
+      document.getElementById('blockModalClose').addEventListener('click', ()=>{
+        document.getElementById('blockModal').style.display = 'none'; document.getElementById('blockModal').setAttribute('aria-hidden','true');
+      });
+      document.getElementById('blockModalBackdrop').addEventListener('click', (e)=>{ if(e.target.id === 'blockModalBackdrop'){ document.getElementById('blockModalClose').click(); } });
+
+      // Confirm requeue modal handlers
+      try{
+        const confirmModal = document.getElementById('confirmRequeueModal');
+        const confirmBtn = document.getElementById('confirmRequeueConfirm');
+        const cancelBtn = document.getElementById('confirmRequeueCancel');
+        cancelBtn.addEventListener('click', ()=>{ confirmModal.style.display='none'; confirmModal.setAttribute('aria-hidden','true'); confirmModal.dataset.requeueId=''; });
+        document.getElementById('confirmRequeueBackdrop').addEventListener('click', (e)=>{ if(e.target.id === 'confirmRequeueBackdrop'){ cancelBtn.click(); } });
+        confirmBtn.addEventListener('click', async ()=>{
+          try{
+            const modal = document.getElementById('confirmRequeueModal');
+            const id = modal.dataset.requeueId || null;
+            if(!id){ alert('Missing item id'); return; }
+            const headers = {'Content-Type':'application/json', 'X-Admin-Token': window.MONITOR_ADMIN_TOKEN};
+            const res = await fetch('/admin/requeue', { method: 'POST', headers: headers, body: JSON.stringify({id: id}) });
+            const j = await res.json().catch(()=>({}));
+            if(!res.ok){ alert('Requeue failed: ' + (j && (j.error||JSON.stringify(j)))); return }
+            alert('Requeued');
+            modal.style.display='none'; modal.setAttribute('aria-hidden','true'); modal.dataset.requeueId='';
+            refreshPending();
+          }catch(e){ alert('Requeue request failed: '+e) }
+        });
+      }catch(e){}
+    </script>
+  </body>
+</html>
