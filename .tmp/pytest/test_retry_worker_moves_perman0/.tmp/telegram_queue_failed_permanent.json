@@ -1,0 +1,12 @@
+[
+  {
+    "action": "answer_callback",
+    "callback_query_id": "cb-2",
+    "update": {
+      "update_id": 102
+    },
+    "_retries": 0,
+    "_error": "400 Bad Request",
+    "_failed_at": "2026-02-03T19:56:38.760289Z"
+  }
+]

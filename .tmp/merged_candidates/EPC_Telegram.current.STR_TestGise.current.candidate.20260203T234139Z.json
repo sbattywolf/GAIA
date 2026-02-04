@@ -1,0 +1,28 @@
+{
+  "source": ".tmp\\todolists\\EPC_Telegram.current.STR_TestGise.current",
+  "created_at": "20260203T234139Z",
+  "actor": "Gise",
+  "content": {
+    "story": "TestGise",
+    "story_key": "STR_TestGise",
+    "agent": "Gise",
+    "todolist": "current",
+    "type": "current",
+    "tasks": [
+      {
+        "id": "t1",
+        "title": "Initial smoke test: verify agent environment and connectivity",
+        "description": "Confirm dependencies, environment variables and basic connectivity for agent Gise.",
+        "status": "todo",
+        "priority": "medium"
+      },
+      {
+        "id": "t2",
+        "title": "Run acceptance scenario: create claim → approve → archive event",
+        "description": "Execute a full acceptance scenario and verify gaia.db records and events.ndjson entries.",
+        "status": "todo",
+        "priority": "high"
+      }
+    ]
+  }
+}

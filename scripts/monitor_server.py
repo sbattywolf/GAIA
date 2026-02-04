@@ -1,3 +1,89 @@
+from __future__ import annotations
+import os
+import json
+import subprocess
+from pathlib import Path
+from typing import List
+
+from flask import Flask, request, jsonify, send_from_directory, abort
+
+ROOT = Path(__file__).resolve().parents[1]
+TMP = ROOT / ".tmp"
+PENDING = TMP / "pending_commands.json"
+
+app = Flask(__name__, static_folder=str(ROOT / 'scripts'))
+
+
+def load_pending() -> List[dict]:
+    if not PENDING.exists():
+        return []
+    try:
+        return json.loads(PENDING.read_text(encoding='utf-8'))
+    except Exception:
+        return []
+
+
+def check_token(req) -> bool:
+    env_token = os.environ.get('MONITOR_ADMIN_TOKEN')
+    if not env_token:
+        # fallback to file in .tmp/monitor_token
+        f = TMP / 'monitor_token'
+        if f.exists():
+            env_token = f.read_text(encoding='utf-8').strip()
+    header = req.headers.get('X-Admin-Token') or req.args.get('token')
+    return bool(env_token and header and header == env_token)
+
+
+@app.route('/')
+def index():
+    return send_from_directory(app.static_folder, 'monitor_ui.html')
+
+
+@app.route('/pending')
+def pending():
+    return jsonify(load_pending())
+
+
+@app.route('/action', methods=['POST'])
+def action():
+    if not check_token(request):
+        return abort(403, 'invalid token')
+    data = request.get_json() or {}
+    act = data.get('action')
+    item_id = data.get('id')
+    if act not in ('approve', 'deny') or not item_id:
+        return jsonify({'ok': False, 'error': 'invalid payload'}), 400
+
+    # For now call claim CLI as a subprocess; this keeps server stateless.
+    # Map actions to CLI calls (adjust as needed): approve -> claim, deny -> release
+    if act == 'approve':
+        cmd = [os.sys.executable, 'scripts/claim_cli.py', 'claim', '--name', item_id]
+    else:
+        cmd = [os.sys.executable, 'scripts/claim_cli.py', 'release', '--name', item_id]
+
+    env = os.environ.copy()
+    # forward token to the subprocess so CLI can audit-protect if implemented
+    token = request.headers.get('X-Admin-Token')
+    if token:
+        env['MONITOR_ADMIN_TOKEN'] = token
+
+    try:
+        p = subprocess.run(cmd, env=env, capture_output=True, text=True, timeout=30)
+        return jsonify({'ok': True, 'returncode': p.returncode, 'stdout': p.stdout, 'stderr': p.stderr})
+    except subprocess.TimeoutExpired:
+        return jsonify({'ok': False, 'error': 'timeout'}), 500
+    except Exception as exc:
+        return jsonify({'ok': False, 'error': str(exc)}), 500
+
+
+def serve(port: int = 8002):
+    # Helpful dev server starter
+    print(f"Monitor server starting on http://localhost:{port}")
+    app.run(host='127.0.0.1', port=port)
+
+
+if __name__ == '__main__':
+    serve()
 """Lightweight monitor HTTP endpoint for GAIA.
 
 Provides:

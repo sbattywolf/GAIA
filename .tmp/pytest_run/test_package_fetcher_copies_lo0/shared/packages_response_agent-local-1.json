@@ -1,0 +1,13 @@
+{
+  "agent_id": "agent-local-1",
+  "requested": [
+    "E:\\Workspaces\\Git\\GAIA\\.tmp\\pytest_run\\test_package_fetcher_copies_lo0\\dummy_pkg.tar.gz"
+  ],
+  "results": [
+    {
+      "package": "E:\\Workspaces\\Git\\GAIA\\.tmp\\pytest_run\\test_package_fetcher_copies_lo0\\dummy_pkg.tar.gz",
+      "status": "copied"
+    }
+  ],
+  "timestamp": "2026-02-03T23:21:06.151949Z"
+}
