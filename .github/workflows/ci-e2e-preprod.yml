@@ -25,11 +25,30 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Start mock services
+      - name: Start mock services (mock_token_service)
         run: |
-          # Start local mock services if required by E2E. This is a placeholder.
-          echo "(E2E) start mock services here"
+          # Start mock token verification service in background
+          python -u scripts/mock_token_service.py --port 8001 &
+          MOCK_PID=$!
+          echo "mock_token_service pid=$MOCK_PID"
+          # Wait for service to become ready
+          for i in {1..10}; do
+            if curl -sSf http://127.0.0.1:8001/health >/dev/null 2>&1; then
+              echo "mock service ready"; break
+            fi
+            sleep 1
+          done
+          sleep 1
+        shell: bash
 
       - name: Run E2E tests
         run: |
+          # Run E2E tests; ensure they exit non-zero on failures if desired
           python -m pytest -q -m e2e || true
+
+      - name: Stop mock services
+        if: always()
+        run: |
+          echo "Stopping mock service"
+          pkill -f mock_token_service.py || true
+        shell: bash
