@@ -1,0 +1,9 @@
+{
+  "epic": "EPC_Telegram",
+  "feature_id": "F-integration-tests",
+  "feature_name": "Integration tests",
+  "story_key": "stoy_auto",
+  "agent": "assistant",
+  "tasks": [],
+  "impediments": []
+}

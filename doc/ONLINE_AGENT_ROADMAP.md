@@ -99,3 +99,32 @@ Next immediate action (I will do on confirmation): implement the Harden agent wi
 4. Add a CI smoke-step that runs `scripts/online_agent.py --command dry_run`.
 
 Estimated time for that immediate action: 12–18 hours (8 SP). If you confirm, I'll start by adding the tests and retry/backoff.
+
+## Score & Reuse Tracking
+
+To keep track of how previous work, tests, and reusable components reduce future estimates, we append a simple scoring table. Update this table as you complete work or identify reusable components — the **Score** column should reflect how much effort (in % of original estimate) can be reused from earlier work (higher score = more reuse, lower remaining work).
+
+### High-level functionality score (per chapter)
+
+| Functionality / Chapter | Original Estimate (hours) | Reuse Score (%) | Adjusted Estimate (hours) | Notes |
+|---|---:|---:|---:|---|
+| Manual dry-run & audit | 2 | 80 | 0.4 | Events + audit already implemented and tested |
+| Send Telegram (prototype) | 4 | 60 | 1.6 | Mock server + env gating available |
+| Create GH issue | 3 | 70 | 0.9 | `backlog_agent` patterns reusable |
+| Hardening (retries/logging/tests) | 12 | 30 | 8.4 | Some retry code present; tests added |
+| CI smoke test | 2 | 0 | 2.0 | New CI step required |
+| Bridge Telegram→GH (Phase 2) | 20 | 10 | 18.0 | Architecture partially documented |
+
+### Per-entity / per-functionality quick tracker
+
+Use this smaller table for per-function or entity-level tracking (update with PR/commit refs):
+
+| Entity / Function | Status | Reuse (%) | Remaining Notes |
+|---|---|---:|---|
+| `events.ndjson` append | Done | 100 | Core mechanism in place, reuse fully |
+| `gaia.db` audit writes | Done | 80 | `audit_v2` fallback added to maintain compatibility |
+| `scripts/mock_telegram_server.py` | Done | 70 | Use in integration tests |
+| `scripts/online_agent.py` | In progress | 40 | Adding env-driven retries and tests (this PR) |
+| CI workflow (smoke) | In progress | 0 | New smoke-step being added |
+
+Update these tables every sprint to reflect measured reuse and to reduce future estimates accordingly.

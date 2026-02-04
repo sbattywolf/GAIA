@@ -1,0 +1,282 @@
+{
+  "epic": "EPC_Telegram",
+  "agent": "assistant",
+  "created_at": "2026-02-03T00:00:00Z",
+  "summary": "Normalized epic representing the Telegram approval/control backlog. Features, stories and tasks are canonical here.",
+  "conventions": {
+    "naming": "Epic.Feature.Story.agent.todolist.(current|draft)",
+    "agent_files": "Agent-specific current/draft files under .tmp/todolists are ephemeral; canonical backlog is this `doc/EPC_Telegram.current`",
+    "workflow": "Agents create/update .tmp/todolists entries; maintainers merge into this canonical epic and empty the draft. Use added_tasks for transient records. Finalize with scripts/enforce_todolist_final.py"
+  },
+  "features": [
+    {
+      "id": "F-security-token",
+      "name": "Security & token rotation",
+      "stories": [
+        {
+          "story_key": "stoy_STR",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t11", "title": "Document recommended file permissions and storage for .tmp/telegram.env", "status": "todo", "priority": "medium" },
+            { "id": "t12", "title": "Create .env.template and usage guidance", "status": "todo", "priority": "medium" },
+            { "id": "t13", "title": "Add scripts/rotate_admin_token.py scaffold and CLI", "status": "todo", "priority": "high" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-command-safety",
+      "name": "Command execution safety",
+      "stories": [
+        {
+          "story_key": "stoy1",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t14", "title": "Enforce ALLOW_COMMAND_EXECUTION=0 by default", "status": "todo", "priority": "high" },
+            { "id": "t15", "title": "Add UI confirmation modal and explicit approval step for destructive commands", "status": "todo", "priority": "high" },
+            { "id": "t16", "title": "Add safe-quoting helpers and tests for tg_command_manager.py", "status": "todo", "priority": "medium" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-integration-tests",
+      "name": "Integration tests",
+      "stories": [
+        {
+          "story_key": "stoy1",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t17", "title": "Implement mocked Telegram API harness for CI/local tests", "status": "todo", "priority": "high" },
+            { "id": "t18", "title": "Add integration test exercising approval listener→UI→approve→claim_cli flow", "status": "todo", "priority": "high" },
+            { "id": "t19", "title": "Add idempotency replay assertions for integration tests", "status": "todo", "priority": "high" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-ttl-requeue-policy",
+      "name": "Claim TTL & Requeue Policy",
+      "stories": [
+        {
+          "story_key": "stoy1",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t20", "title": "Finalize CLAIM_DEFAULT_TTL proposal and document tradeoffs", "status": "todo", "priority": "medium" },
+            { "id": "t21", "title": "Add CLAIM_DEFAULT_TTL env var and update scripts/claims.py", "status": "todo", "priority": "medium" },
+            { "id": "t22", "title": "Add automated tests for TTL expiry and takeover semantics", "status": "todo", "priority": "high" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-retryer",
+      "name": "Retryer error classification",
+      "stories": [
+        {
+          "story_key": "stoy_STR",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t23", "title": "Map HTTP error codes for retryer (5xx/429/4xx) and tests", "status": "todo", "priority": "high" },
+            { "id": "t24", "title": "Implement exponential backoff with jitter in retryer", "status": "todo", "priority": "high" },
+            { "id": "t25", "title": "Add tests simulating 429 and 5xx responses", "status": "todo", "priority": "high" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-metrics-alerts",
+      "name": "Metrics & alerts",
+      "stories": [
+        {
+          "story_key": "stoy_STR",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t26", "title": "Add counters and persist metrics to .tmp/metrics.json", "status": "todo", "priority": "medium" },
+            { "id": "t27", "title": "Emit gaia.db traces when thresholds crossed", "status": "todo", "priority": "medium" },
+            { "id": "t28", "title": "Wire scripts/alert_on_metrics.py to read metrics and notify admin chat", "status": "todo", "priority": "medium" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-permanent-failed-ui",
+      "name": "Permanent-failed UI & requeue",
+      "stories": [
+        {
+          "story_key": "stoy_STR",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t29", "title": "Add monitor page to list permanent-failed entries", "status": "todo", "priority": "medium" },
+            { "id": "t30", "title": "Implement one-click requeue action with token protection", "status": "todo", "priority": "high" },
+            { "id": "t31", "title": "Record audit traces for UI-initiated requeues and confirmation modal", "status": "todo", "priority": "medium" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-backup-retention",
+      "name": "Backup & retention",
+      "stories": [
+        {
+          "story_key": "stoy_STR",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t32", "title": "Implement scripts/backup_tmp.py to create timestamped archives", "status": "todo", "priority": "medium" },
+            { "id": "t33", "title": "Add retention policy config and scripts/cleanup_backups.py", "status": "todo", "priority": "medium" },
+            { "id": "t34", "title": "Document backup cadence and include backup in release checklist", "status": "todo", "priority": "low" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "F-runbook-docs",
+      "name": "Runbook & documentation",
+      "stories": [
+        {
+          "story_key": "stoy1",
+          "agent": "assistant",
+          "tasks": [
+            { "id": "t35", "title": "Populate CLI examples in doc/STR_Telegram.current#CLI-Examples", "status": "todo", "priority": "low" },
+            { "id": "t36", "title": "Add example workflows (manual requeue, safe dry-run) to docs", "status": "todo", "priority": "low" },
+            { "id": "t37", "title": "Add release checklist & CI badge guidance to runbook", "status": "todo", "priority": "low" }
+          ]
+        }
+      ]
+    }
+      {
+        "id": "F-helper-gise-part1",
+        "name": "Helper Gise — Foundation",
+        "summary": "Design and scaffold core agent functionality: repository scanning, design, and initial scaffolding for a local ALby-based helper.",
+        "stories": [
+          {
+            "story_key": "stoy_alby_scan",
+            "agent": "assistant",
+            "summary": "Scan the repository for ALby references and surface documentation/examples to guide implementation.",
+            "tasks": [ { "id": "t38", "title": "Scan repository for ALby 0.3 documentation and examples", "summary": "Locate ALby v0.3 references and examples to inform agent design.", "status": "todo", "priority": "high" } ]
+          },
+          {
+            "story_key": "stoy_alby_design",
+            "agent": "assistant",
+            "summary": "Design a small local agent using ALby patterns for safe merges and archive workflows.",
+            "tasks": [ { "id": "t39", "title": "Design small local agent using ALby patterns to automate merges/archives/validation/tests", "summary": "Create an architecture sketch and component list for the local agent.", "status": "todo", "priority": "high" } ]
+          },
+          {
+            "story_key": "stoy_alby_scaffold",
+            "agent": "assistant",
+            "summary": "Scaffold the agent runtime and basic commands (archive, validate, dry-run).",
+            "tasks": [ { "id": "t40", "title": "Scaffold scripts/alby_agent.py to run version_docs.py, validate_todolists.py, archive drafts, and run targeted tests", "summary": "Provide CLI entrypoints and safe dry-run behaviors for the agent scaffold.", "status": "todo", "priority": "high" } ]
+          }
+        ]
+      },
+      {
+        "id": "F-helper-gise-part2",
+        "name": "Helper Gise — Prototype & Acceptance",
+        "summary": "Prototype, test, and acceptance work for the agent: prototype runs, iteration, and STR_TestGise acceptance scenarios.",
+        "stories": [
+          {
+            "story_key": "stoy_alby_prototype",
+            "agent": "assistant",
+            "summary": "Run prototypes and dry-runs to validate agent heuristics and archive flows.",
+            "tasks": [ { "id": "t41", "title": "Run alby_agent prototype in dry-run then execute archive+validate+tests", "summary": "Execute dry-run and then live archive/validate cycles to collect timings and behavior.", "status": "todo", "priority": "high" } ]
+          },
+          {
+            "story_key": "stoy_alby_iterate",
+            "agent": "assistant",
+            "summary": "Iterate heuristics, measurements, and update epic estimates.",
+            "tasks": [ { "id": "t42", "title": "Iterate heuristics and update epic report estimates based on prototype results", "summary": "Measure test durations and update dev-day estimates accordingly.", "status": "todo", "priority": "medium" } ]
+          },
+          {
+            "story_key": "STR_TestGise.part1",
+            "agent": "Gise",
+            "summary": "Part 1 of STR_TestGise: environment checks and helpers",
+            "tasks": [
+              { "id": "t1", "title": "Initial smoke test: verify agent environment and connectivity", "description": "Confirm dependencies, environment variables and basic connectivity for agent Gise.", "summary": "Smoke test environment and connectivity.", "status": "todo", "priority": "medium", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" },
+              { "id": "g1", "title": "Verify agent can read .tmp/telegram.env and secrets (dry-run)", "description": "Dry-run to confirm agent can safely load environment and secret values without performing actions.", "summary": "Validate credential loading works in dry-run.", "status": "todo", "priority": "high", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" },
+              { "id": "gd1", "title": "Add verbose logging around claim acquisition for debug", "description": "Temporarily increase logging for claim acquisition to aid debugging in CI and local runs.", "summary": "Add temporary debug logging.", "status": "todo", "priority": "medium", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" },
+              { "id": "gd2", "title": "Add small helper to export chat history to .tmp/exports", "description": "Create a utility to export chat history to .tmp/exports for offline analysis and audits.", "summary": "Implement chat history export helper.", "status": "todo", "priority": "medium", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" }
+            ]
+          },
+          {
+            "story_key": "STR_TestGise.part2",
+            "agent": "Gise",
+            "summary": "Part 2 of STR_TestGise: acceptance tests and governance",
+            "tasks": [
+              { "id": "t2", "title": "Run acceptance scenario: create claim → approve → archive event", "description": "Execute a full acceptance scenario and verify gaia.db records and events.ndjson entries.", "summary": "Full acceptance flow to validate end-to-end behavior.", "status": "todo", "priority": "high", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" },
+              { "id": "d1", "title": "Add regression case: claim takeover when TTL expired", "description": "Create a regression test that simulates TTL expiry and verifying takeover semantics and recovery.", "summary": "Regression test for TTL takeover semantics.", "status": "todo", "priority": "high", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" },
+              { "id": "d2", "title": "Document expected chat-history lookup steps for audit", "description": "Outline the steps and scripts used to extract chat history for audit and attach to gaia.db traces.", "summary": "Document chat-history extraction steps for audits.", "status": "todo", "priority": "medium", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" },
+              { "id": "g2", "title": "Run a full acceptance flow and record timestamps in gaia.db", "description": "Execute acceptance flow and validate timestamps and audit traces are correctly persisted in gaia.db.", "summary": "Record acceptance timestamps and verify audit persistence.", "status": "todo", "priority": "high", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" },
+              { "id": "t_final", "title": "MANDATORY: Check history of the chat and all docs; record findings and close story", "description": "Collect chat history and document findings, attach evidence and mark story closed following governance.", "summary": "Final governance checks and closure.", "status": "todo", "priority": "critical", "moved_from": "STR_TestGise", "moved_at": "2026-02-04T00:00:00Z" }
+            ]
+          }
+        ]
+      }
+  ],
+  "added_tasks": [],
+  "notes": "This file is the canonical backlog for the EPC_Telegram epic. Use feature/stories/task entries for planning and PRs. Agent work should reference these task ids."
+  ,
+  "scoring": {
+    "generated_at": "2026-02-04T00:00:00Z",
+    "weights": { "critical": 8, "high": 5, "medium": 3, "low": 1 },
+    "fibonacci": [1,2,3,5,8,13,21,34,55,89],
+    "stories": {
+      "F-security-token.stoy_STR": { "score": 13, "score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"initial Fibonacci mapping from task priorities (critical=8,high=5,medium=3,low=1)"}], "split_candidate": true },
+      "F-command-safety.stoy1": { "score": 13, "score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"initial mapping"}], "split_candidate": true },
+      "F-integration-tests.stoy1": { "score": 13, "score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"initial mapping"}], "split_candidate": true },
+      "F-ttl-requeue-policy.stoy1": { "score": 13, "score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"initial mapping"}], "split_candidate": true },
+      "F-retryer.stoy_STR": { "score": 13, "score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"initial mapping"}], "split_candidate": true },
+      "F-metrics-alerts.stoy_STR": { "score": 8, "score_history": [{"at":"2026-02-04T00:00:00Z","score":8,"reason":"initial mapping"}], "split_candidate": false },
+      "F-permanent-failed-ui.stoy_STR": { "score": 13, "score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"initial mapping"}], "split_candidate": true },
+      "F-backup-retention.stoy_STR": { "score": 8, "score_history": [{"at":"2026-02-04T00:00:00Z","score":8,"reason":"initial mapping"}], "split_candidate": false },
+      "F-runbook-docs.stoy1": { "score": 3, "score_history": [{"at":"2026-02-04T00:00:00Z","score":3,"reason":"initial mapping"}], "split_candidate": false },
+      "F-helper-gise.stoy_alby_scan": { "score": 5, "score_history": [{"at":"2026-02-04T00:00:00Z","score":5,"reason":"initial mapping"}], "split_candidate": false },
+      "F-helper-gise.stoy_alby_design": { "score": 5, "score_history": [{"at":"2026-02-04T00:00:00Z","score":5,"reason":"initial mapping"}], "split_candidate": false },
+      "F-helper-gise.stoy_alby_scaffold": { "score": 5, "score_history": [{"at":"2026-02-04T00:00:00Z","score":5,"reason":"initial mapping"}], "split_candidate": false },
+      "F-helper-gise.stoy_alby_prototype": { "score": 5, "score_history": [{"at":"2026-02-04T00:00:00Z","score":5,"reason":"initial mapping"}], "split_candidate": false },
+      "F-helper-gise.stoy_alby_iterate": { "score": 3, "score_history": [{"at":"2026-02-04T00:00:00Z","score":3,"reason":"initial mapping"}], "split_candidate": false },
+      "F-helper-gise.STR_TestGise": { "score": 34, "score_history": [{"at":"2026-02-04T00:00:00Z","score":34,"reason":"sum of task priority weights mapped to nearest Fibonacci (40 -> 34)"}], "split_candidate": true }
+    },
+    "features": {
+      "F-security-token": { "feature_score": 13, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"sum of story scores mapped to Fibonacci"}], "split_candidate": true },
+      "F-command-safety": { "feature_score": 13, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"sum of story scores"}], "split_candidate": true },
+      "F-integration-tests": { "feature_score": 13, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"sum of story scores"}], "split_candidate": true },
+      "F-ttl-requeue-policy": { "feature_score": 13, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"sum of story scores"}], "split_candidate": true },
+      "F-retryer": { "feature_score": 13, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"sum of story scores"}], "split_candidate": true },
+      "F-metrics-alerts": { "feature_score": 8, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":8,"reason":"sum of story scores"}], "split_candidate": false },
+      "F-permanent-failed-ui": { "feature_score": 13, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"sum of story scores"}], "split_candidate": true },
+      "F-backup-retention": { "feature_score": 8, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":8,"reason":"sum of story scores"}], "split_candidate": false },
+      "F-runbook-docs": { "feature_score": 3, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":3,"reason":"sum of story scores"}], "split_candidate": false },
+      "F-helper-gise-part1": { "feature_score": 21, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":21,"reason":"split feature part1 (design/scaffold)"}], "split_candidate": false },
+      "F-helper-gise-part2": { "feature_score": 34, "feature_score_history": [{"at":"2026-02-04T00:00:00Z","score":34,"reason":"split feature part2 (prototype + STR_TestGise parts)"}], "split_candidate": true },
+      "F-helper-gise.STR_TestGise.part1": { "score": 13, "score_history": [{"at":"2026-02-04T00:00:00Z","score":13,"reason":"post-split mapping (t1,g1,gd1,gd2 => 14 -> 13)"}], "split_candidate": true },
+      "F-helper-gise.STR_TestGise.part2": { "score": 21, "score_history": [{"at":"2026-02-04T00:00:00Z","score":21,"reason":"post-split mapping (t2,d1,d2,g2,t_final => 26 -> 21)"}], "split_candidate": true }
+    },
+    "split_threshold": 8,
+    "notes": "Stories or features with score > split_threshold are candidates to be split into Part 1 / Part 2. Use score_history to track re-estimates over time."
+  }
+}
+
+---
+
+**Human-readable Session Summary (table)**
+
+| Area | Summary | Key artifacts | Status | Next steps |
+|---|---|---|---|---|
+| Consolidation | Agent-scoped todolists were merged into the canonical backlog and ephemeral drafts removed. Provenance fields (`moved_from`, `moved_at`) added for split items. | `doc/EPC_Telegram.current`, `.tmp/merged_candidates/`, `.tmp/todolists/`, `doc/archive/` | Done (local) | Push branch and open PR for review
+| Helper agent | `scripts/alby_agent.py` scaffolded/extended to archive drafts, validate, produce merge candidates (dry-run + live) and write audit traces to `gaia.db`. | `scripts/alby_agent.py`, `scripts/validate_todolists.py`, `events.ndjson`, `gaia.db` | Prototype complete | Review agent behavior and merge strategy
+| Validation & tests | Validator run repeatedly until zero errors. Targeted pytest suites executed; full test suite passed locally. Slowest tests recorded for estimation. | `scripts/validate_todolists.py`, `tests/` | Done (local) | CI run on PR recommended
+| Scoring & splitting | Added Fibonacci-based scoring, score_history, and split_threshold=8. Large stories/features flagged and split (e.g., `STR_TestGise` → `part1`/`part2`; `F-helper-gise` → part1/part2). | `doc/EPC_Telegram.current` (scoring), `doc/EPC_Telegram_scoring.md` | Done | Re-review splits and re-estimate if needed
+| STR_TestGise split | Split into `STR_TestGise.part1` (env/helpers) and `STR_TestGise.part2` (acceptance/governance). `t_final` governance task retained. | `doc/EPC_Telegram.current` (STR_TestGise.part1/part2) | Done | Run acceptance scenario in staging and attach traces
+| Audit & archive | Live runs wrote audit rows to `gaia.db` (recent ids ~320–323) and archived `.tmp/todolists` snapshots to `doc/archive/`. | `gaia.db`, `doc/archive/` | Done (local) | Add audit assertions in unit tests if desired
+| Reports & docs | Updated `doc/EPC_Telegram_Report.md`, added `doc/EPC_Telegram_report_addendum.md`, `doc/EPC_Telegram_detail_variants.md` and scoring doc. Human-readable summaries appended to variants doc and canonical file. | `doc/EPC_Telegram_Report.md`, `doc/EPC_Telegram_detail_variants.md`, `doc/EPC_Telegram_report_addendum.md` | Done | Consolidate final reviewer notes into PR description
+| Branch & PR | Changes are committed on `feat/merge-STR_TestGise-candidates` branch locally. | Git branch (local) | Pending push | Confirm and push branch; open PR with description + addendum
+
+**Notes & context / quick facts**
+
+- Validator output: "Scanned 11 files, 10 JSON objects, 0 validation errors" (local runs).
+- Archive: helper-agent reported "Found 12 targets" and archived snapshots under `doc/archive/`.
+- Merge candidates: `.tmp/merged_candidates/` contains wrapper JSONs for `STR_TestGise` inputs.
+- Audit: Recent audit rows show `actor: Gise`, `action: merge_candidate_created`, with candidate file paths recorded.
+- Tests: Full pytest suite passed locally; slowest test times recorded (top durations ~11.13s, 10.34s, 10.03s).
+
+If you want, I can now (a) run the validator and tests here, (b) commit & push the branch and open the PR, or (c) split further features before publishing — which should I do next?

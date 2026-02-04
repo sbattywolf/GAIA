@@ -9,13 +9,22 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import sqlite3
 import sys
 import time
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import requests
+
+# Structured logger
+logger = logging.getLogger("online_agent")
+handler = logging.StreamHandler()
+formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 
 def now_iso() -> str:
@@ -36,10 +45,23 @@ def write_audit(trace_id: str, action: str, payload: Dict[str, Any]) -> None:
         cur.execute(
             "CREATE TABLE IF NOT EXISTS audit (id INTEGER PRIMARY KEY, trace_id TEXT, action TEXT, payload TEXT, ts TEXT)"
         )
-        cur.execute(
-            "INSERT INTO audit (trace_id, action, payload, ts) VALUES (?, ?, ?, ?)",
-            (trace_id, action, json.dumps(payload), now_iso()),
-        )
+        # Ensure compatibility with existing DBs: if the existing `audit` table lacks expected
+        # columns, fall back to an alternate table `audit_v2` so we don't fail writes.
+        cur.execute("PRAGMA table_info(audit)")
+        cols = [r[1] for r in cur.fetchall()]
+        if "trace_id" in cols and "payload" in cols:
+            cur.execute(
+                "INSERT INTO audit (trace_id, action, payload, ts) VALUES (?, ?, ?, ?)",
+                (trace_id, action, json.dumps(payload), now_iso()),
+            )
+        else:
+            cur.execute(
+                "CREATE TABLE IF NOT EXISTS audit_v2 (id INTEGER PRIMARY KEY, trace_id TEXT, action TEXT, payload TEXT, ts TEXT)"
+            )
+            cur.execute(
+                "INSERT INTO audit_v2 (trace_id, action, payload, ts) VALUES (?, ?, ?, ?)",
+                (trace_id, action, json.dumps(payload), now_iso()),
+            )
         conn.commit()
     finally:
         try:
@@ -48,19 +70,59 @@ def write_audit(trace_id: str, action: str, payload: Dict[str, Any]) -> None:
             pass
 
 
+def request_with_retry(
+    method: str,
+    url: str,
+    json_payload: Optional[Dict[str, Any]] = None,
+    headers: Optional[Dict[str, str]] = None,
+    max_retries: Optional[int] = None,
+) -> Dict[str, Any]:
+    # Allow configuration from environment for CI or runtime tuning
+    if max_retries is None:
+        try:
+            max_retries = int(os.environ.get("ONLINE_AGENT_MAX_RETRIES", "3"))
+        except Exception:
+            max_retries = 3
+
+    base_delay = 1
+    try:
+        base_delay = float(os.environ.get("ONLINE_AGENT_RETRY_BASE_DELAY", "1"))
+    except Exception:
+        base_delay = 1
+
+    delay = base_delay
+    last_err = None
+    for attempt in range(1, max_retries + 1):
+        try:
+            logger.info(json.dumps({"event": "request_attempt", "method": method, "url": url, "attempt": attempt}))
+            if method.lower() == "post":
+                resp = requests.post(url, json=json_payload, headers=headers, timeout=15)
+            else:
+                resp = requests.get(url, params=json_payload, headers=headers, timeout=15)
+            resp.raise_for_status()
+            try:
+                return resp.json()
+            except ValueError:
+                return {"status_code": resp.status_code, "text": resp.text}
+        except Exception as e:
+            last_err = e
+            logger.warning(json.dumps({"event": "request_error", "attempt": attempt, "error": str(e)}))
+            if attempt < max_retries:
+                time.sleep(delay)
+                delay *= 2
+    # Final failure: raise last error for caller to handle
+    raise last_err
+
+
 def send_telegram(text: str, bot_token: str, chat_id: str) -> Dict[str, Any]:
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
-    resp = requests.post(url, json={"chat_id": chat_id, "text": text})
-    resp.raise_for_status()
-    return resp.json()
+    return request_with_retry("post", url, json_payload={"chat_id": chat_id, "text": text})
 
 
 def create_issue(repo: str, title: str, body: str, token: str) -> Dict[str, Any]:
     api = f"https://api.github.com/repos/{repo}/issues"
     headers = {"Authorization": f"token {token}", "Accept": "application/vnd.github+json"}
-    resp = requests.post(api, json={"title": title, "body": body}, headers=headers)
-    resp.raise_for_status()
-    return resp.json()
+    return request_with_retry("post", api, json_payload={"title": title, "body": body}, headers=headers)
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -1,0 +1,9 @@
+{
+  "epic": "EPC_Telegram",
+  "feature_id": "F-ttl-requeue-policy",
+  "feature_name": "Claim TTL & Requeue Policy",
+  "story_key": "stoy_auto",
+  "agent": "assistant",
+  "tasks": [],
+  "impediments": []
+}
