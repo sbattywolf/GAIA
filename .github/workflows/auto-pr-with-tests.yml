@@ -15,6 +15,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          lfs: true
+
+      - name: Install Git LFS
+        run: |
+          git lfs version || echo "git-lfs not available"
+          git lfs install || true
 
       - name: Set up Python
         uses: actions/setup-python@v4
