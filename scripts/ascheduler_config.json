@@ -1,0 +1,10 @@
+{
+  "tasks": [
+    {
+      "name": "notify.telegram.summary",
+      "interval_minutes": 30,
+      "command": ["python", "scripts/telegram_summary.py"],
+      "env": { "GAIA_PROTOTYPE_USE_LOCAL_EVENTS": "1" }
+    }
+  ]
+}

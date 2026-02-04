@@ -14,11 +14,37 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: [3.11]
+        python-version: ['3.11']
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: false
+
+      - name: Neutralize broken submodule entries
+        shell: bash
+        run: |
+          if [ -f .gitmodules ]; then
+            python - <<'PY'
+            import re,os
+            content=open('.gitmodules','r',encoding='utf-8').read()
+            sections=re.findall(r'\[submodule "([^\"]+)"\]([\s\S]*?)(?=\n\[|\Z)',content)
+            out=[]
+            removed=[]
+            for name,body in sections:
+              if re.search(r'\burl\s*=\s*.+',body):
+                out.append(f'[submodule "{name}"]'+body)
+              else:
+                removed.append(name)
+            if removed:
+              open('.gitmodules','w',encoding='utf-8').write('\n'.join(out)+('\n' if out else ''))
+              for n in removed:
+                os.system(f"git config -f .git/config --remove-section submodule.{n} 2>/dev/null || true")
+              print('Removed broken submodule entries:', removed)
+            else:
+              print('No broken submodule entries found')
+            PY
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -39,6 +65,17 @@ jobs:
           if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
           if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
           python -m pip install pytest flake8 || true
+          # try editable install of repo (if pyproject/setup exists)
+          python -m pip install -e . || true
+        shell: bash
+
+      - name: Ensure repo importable
+        run: |
+          python .github/scripts/write_pth.py
+
+      - name: Smoke - import check
+        run: |
+          python -c "import agents, scripts, orchestrator"
         shell: bash
 
       - name: Smoke - online agent dry_run
@@ -47,6 +84,8 @@ jobs:
         shell: bash
 
       - name: Run tests
-        run: |
-          python -m pytest -q --basetemp .tmp/pytest
         shell: bash
+        run: |
+          # ensure repo path is available to python via .pth in the user site-packages (cross-platform)
+          python .github/scripts/write_pth.py
+          python -m pytest -q --basetemp .tmp/pytest
