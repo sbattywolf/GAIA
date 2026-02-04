@@ -1,3 +1,86 @@
+name: Auto-merge approved PRs
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  auto-merge:
+    name: Auto-merge when approved and checks pass
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: read
+    steps:
+      - name: Auto-merge if approved and checks passed
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const review = context.payload.review;
+            if (!pr) {
+              core.info('No pull request payload, exiting.');
+              return;
+            }
+
+            // Require explicit label to opt-in to auto-merge
+            const requiredLabel = 'automerge';
+            const labels = pr.labels || [];
+            const hasLabel = labels.some(l => (l.name || '').toLowerCase() === requiredLabel);
+            if (!hasLabel) {
+              core.info(`PR does not have required label '${requiredLabel}'; skipping auto-merge.`);
+              return;
+            }
+
+            if (!review || (review.state || '').toLowerCase() !== 'approved') {
+              core.info('Review submitted is not an approval; skipping auto-merge.');
+              return;
+            }
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const pull_number = pr.number;
+
+            // Determine whether there is at least one non-author approval
+            const reviewsResp = await github.rest.pulls.listReviews({ owner, repo, pull_number });
+            // keep the latest review per reviewer
+            const latestByUser = new Map();
+            for (const r of reviewsResp.data) {
+              latestByUser.set(r.user.login, r);
+            }
+            const prAuthor = (pr.user && pr.user.login) || '';
+            let hasNonAuthorApproval = false;
+            for (const r of latestByUser.values()) {
+              const reviewer = (r.user && r.user.login) || '';
+              if (reviewer.toLowerCase() === prAuthor.toLowerCase()) continue;
+              if ((r.state || '').toLowerCase() === 'approved') { hasNonAuthorApproval = true; break; }
+            }
+            if (!hasNonAuthorApproval) {
+              core.info('No active non-author approvals found; skipping auto-merge.');
+              return;
+            }
+
+            // Check combined status for the PR head commit
+            const ref = pr.head.sha;
+            const combined = await github.rest.repos.getCombinedStatusForRef({ owner, repo, ref });
+            if ((combined.data.state || '').toLowerCase() !== 'success') {
+              core.info(`Combined status is not 'success' (state=${combined.data.state}); skipping.`);
+              return;
+            }
+
+            // Ensure check runs are all successful (or neutral)
+            const checks = await github.rest.checks.listForRef({ owner, repo, ref });
+            for (const run of checks.data.check_runs) {
+              if (!['success','neutral'].includes((run.conclusion || '').toLowerCase())) {
+                core.info(`Check run '${run.name}' conclusion='${run.conclusion}'; skipping.`);
+                return;
+              }
+            }
+
+            // Merge the PR (squash to keep history tidy)
+            await github.rest.pulls.merge({ owner, repo, pull_number, merge_method: 'squash' });
+            core.info(`Merged PR #${pull_number} (sha ${ref}).`);
 name: Auto-merge PRs after CI success
 
 on:
