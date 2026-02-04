@@ -1,0 +1,39 @@
+name: Promote Automerge to Live
+
+on:
+  workflow_dispatch:
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          persist-credentials: true
+
+      - name: Enable live runs in workflow
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('.github/workflows/automerge-agent-dry-run.yml')
+          if not p.exists():
+              print('automerge-agent-dry-run.yml not found; aborting')
+              raise SystemExit(1)
+          s = p.read_text()
+          s = s.replace("DRY_RUN: ${{ github.event.inputs.dry_run || 'true' }}","DRY_RUN: 'false'")
+          s = s.replace("DRY_RUN: 'true'","DRY_RUN: 'false'")
+          p.write_text(s)
+          print('Updated workflow to set DRY_RUN to false')
+          PY
+
+      - name: Commit & push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/workflows/automerge-agent-dry-run.yml
+          git commit -m "chore: enable live automerge agent (promoted)" || echo 'No changes to commit'
+          git push origin HEAD:master
