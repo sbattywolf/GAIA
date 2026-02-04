@@ -70,8 +70,9 @@ def main() -> int:
     tasks = load_tasks(tasks_file)
     msg = make_message(tasks)
 
-    token = os.environ.get("TELEGRAM_BOT_TOKEN")
-    chat_id = os.environ.get("TELEGRAM_CHAT_ID")
+    # Prefer GAIA-prefixed env vars; fall back to older names for compatibility
+    token = os.environ.get("GAIA_TELEGRAM_BOT_TOKEN") or os.environ.get("TELEGRAM_BOT_TOKEN")
+    chat_id = os.environ.get("GAIA_TELEGRAM_CHAT_ID") or os.environ.get("TELEGRAM_CHAT_ID")
 
     if token and chat_id:
         ok = send_telegram(token, chat_id, msg)
@@ -142,8 +143,9 @@ def load_env(path: Path):
 def main():
     from scripts.env_utils import load_preferred_env
     env = load_preferred_env(ROOT)
-    token = env.get('TELEGRAM_BOT_TOKEN') or ''
-    chat = env.get('CHAT_ID') or ''
+    # allow GAIA-prefixed names in env files
+    token = env.get('GAIA_TELEGRAM_BOT_TOKEN') or env.get('TELEGRAM_BOT_TOKEN') or ''
+    chat = env.get('GAIA_TELEGRAM_CHAT_ID') or env.get('CHAT_ID') or ''
     stats = parse_epic(EPIC)
     msg = build_message(stats)
     if not token or not chat:

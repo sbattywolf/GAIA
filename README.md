@@ -109,6 +109,11 @@ If you need me to change visibility or create an organization-owned remote, tell
 - Agents use `gh` to create issues; if you don't want that, run in `PROTOTYPE_USE_LOCAL_EVENTS=1` mode or remove the `gh` calls.
 - Keep secrets in Bitwarden or `.env`; avoid committing secrets.
 
+Periodic Telegram summary
+-------------------------
+
+This repository includes a scheduled GitHub Action that posts a short status summary to Telegram every 30 minutes. The workflow is `.github/workflows/notify-telegram-summary.yml` and expects repository secrets named `GAIA_TELEGRAM_BOT_TOKEN` and `GAIA_TELEGRAM_CHAT_ID` (preferred). The action falls back to the legacy `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` names if present.
+
 Testing note (local):
 
 - A small test case `FAKE_ONREPLY_TEST_2026` was added on 2026-02-03 to `.tmp/pending_commands.json` (id: `fa1cde9e-1234-4bcd-8f1a-0fa1cde00001`). It's marked as a test (`options.is_test = true`) and can be used to validate that on-reply handlers, the monitor UI `Mark as Test` flag, and Telegram inline-button flows keep the original task name when routing approvals and subsequent actions.
