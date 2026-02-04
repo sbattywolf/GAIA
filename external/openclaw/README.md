@@ -1,3 +1,28 @@
+# external/openclaw
+
+This directory was previously an external git submodule. It has been converted into a tracked tree inside this repository
+to make referencing its code simpler for integration work.
+
+Conversion note
+- Converted into tracked files in-repo at commit: 4c38694 (chore/fix-ci-workflow). See Git history for that commit.
+
+Upstream origin (optional)
+- If you know the original upstream repository and commit that this tree was taken from, please add the details below:
+
+  Upstream repo: <add upstream repository URL here>
+  Upstream commit/tag: <add upstream commit SHA or tag here>
+
+How to record the upstream info
+- To record an upstream URL and commit, edit this file and fill the two fields above; commit the change so future maintainers know the source.
+
+Recommended next steps
+- Add a `LICENSE` or attribution file here if required by upstream license.
+- If you want to continue to track upstream changes, consider converting this back to a submodule or maintaining a vendor sync script that pulls a specific commit and copies only required files.
+
+Adapter suggestion
+- If you plan to call Node-based code from GAIA's Python agents, consider adding `external/openclaw/adapter/` with a small Node entrypoint that accepts JSON on stdin and returns JSON on stdout. Keep the adapter's contract minimal for easier testing in CI.
+
+Generated: Feb 4, 2026
 # 🦞 OpenClaw — Personal AI Assistant
 
 <p align="center">
