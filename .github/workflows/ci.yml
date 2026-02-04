@@ -69,6 +69,10 @@ jobs:
           python -m pip install -e . || true
         shell: bash
 
+      - name: Ensure repo importable
+        run: |
+          python .github/scripts/write_pth.py
+
       - name: Smoke - import check
         run: |
           python -c "import agents, scripts, orchestrator"

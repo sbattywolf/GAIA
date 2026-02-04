@@ -40,6 +40,9 @@ jobs:
           if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
           python -m pip install pytest flake8 || true
         shell: bash
+      - name: Ensure repo importable
+        run: |
+          python .github/scripts/write_pth.py
 
       - name: Smoke - import check
         run: |
