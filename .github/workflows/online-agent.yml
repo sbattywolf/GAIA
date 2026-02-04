@@ -1,0 +1,54 @@
+name: Online Agent
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'Action to run'
+        required: true
+        default: 'dry_run'
+      title:
+        description: 'Title for create_issue'
+        required: false
+      body:
+        description: 'Body for create_issue or message for send_telegram'
+        required: false
+      branch:
+        description: 'Branch name for push_branch (optional)'
+        required: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install runtime deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run online agent
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PROTOTYPE_USE_LOCAL_EVENTS: ${{ secrets.PROTOTYPE_USE_LOCAL_EVENTS }}
+          ALLOW_COMMAND_EXECUTION: ${{ secrets.ALLOW_COMMAND_EXECUTION }}
+        run: |
+          python scripts/online_agent.py \
+            --command "${{ github.event.inputs.command }}" \
+            --title "${{ github.event.inputs.title }}" \
+            --body "${{ github.event.inputs.body }}" \
+            --branch "${{ github.event.inputs.branch }}"

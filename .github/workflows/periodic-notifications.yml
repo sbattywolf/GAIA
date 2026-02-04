@@ -1,0 +1,33 @@
+name: Periodic Notifications (simulated)
+
+on:
+  schedule:
+    - cron: '*/10 * * * *' # every 10 minutes
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: '.'
+      PROTOTYPE_USE_LOCAL_EVENTS: '1'   # simulate sends by default
+      PERIODIC_NOTIFICATIONS_ENABLED: '0' # keep disabled in CI by default
+      ALLOW_COMMAND_EXECUTION: '0'
+      TELEGRAM_BOT_TOKEN: dummy
+      CHAT_ID: dummy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run periodic notifier (simulated)
+        run: |
+          python -c "from scripts.gise_autonomous_runner import load_preferred_env, send_telegram; print('Simulated periodic notifier run: not sending due to PROTOTYPE_USE_LOCAL_EVENTS=1')"

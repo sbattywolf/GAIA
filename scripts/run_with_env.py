@@ -22,7 +22,8 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ENV_PATH = ROOT / '.tmp' / 'telegram.env'
+from scripts.env_utils import preferred_env_path
+ENV_PATH = preferred_env_path(ROOT)
 
 
 def load_env(path: Path):

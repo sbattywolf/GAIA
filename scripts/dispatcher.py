@@ -13,12 +13,13 @@ import re
 import time
 import json
 from pathlib import Path
+from scripts.env_utils import preferred_env_path
 from contextlib import redirect_stdout
 import io
 
 ROOT = Path(__file__).resolve().parents[1]
 QUEUE_FILE = ROOT / '.tmp' / 'telegram_queue.json'
-ENV_FILE = ROOT / '.tmp' / 'telegram.env'
+ENV_FILE = preferred_env_path(ROOT)
 
 def load_env():
     env = {}

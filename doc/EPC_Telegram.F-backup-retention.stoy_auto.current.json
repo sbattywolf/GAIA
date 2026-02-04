@@ -1,0 +1,8 @@
+{
+  "epic": "EPC_Telegram",
+  "feature_id": "F-backup-retention",
+  "feature_name": "Backup & retention",
+  "story_key": "stoy_auto",
+  "agent": "assistant",
+  "tasks": []
+}

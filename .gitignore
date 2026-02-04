@@ -47,3 +47,6 @@ Thumbs.db
 
 # Temporarily ignore renamed imported repo directory marked for deletion
 TOBEDELETE__AILocalModelLibrary/
+
+# Local private secrets folder (never commit)
+.private/
