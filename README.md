@@ -211,6 +211,25 @@ python agents/alby_agent.py --cmd "echo hi" --concurrency 2 --dry-run
 
 Use `.env` (see `.env.example`) for operator-provided secrets; prefer `ALBY_INTERNET_TOKEN` or project-specific `CI_TOKEN` names. Do not commit secrets.
 
+### Pre-commit (recommended)
+
+We use `pre-commit` locally to run quick checks and `detect-secrets` before commits.
+
+Install and enable the hooks:
+
+```bash
+pip install pre-commit detect-secrets
+pre-commit install
+```
+
+Once installed, `pre-commit` will run on each commit and prevent accidental secret commits (based on `.secrets.baseline`). If you update the baseline intentionally, run:
+
+```bash
+detect-secrets scan > .secrets.baseline
+git add .secrets.baseline && git commit -m "chore: update detect-secrets baseline"
+```
+
+
 Secrets testing and unhappy-paths
 --------------------------------
 
