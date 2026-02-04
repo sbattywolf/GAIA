@@ -152,7 +152,7 @@ This section documents a concise, repeatable process for agents and maintainers 
 - Canonical epic: `doc/EPC_Telegram.current`
 - Agent drafts/current: `.tmp/todolists/*.current` and `.tmp/todolists/*.draft`
 
-If you want, I can now run the validator (`scripts/validate_todolists.py`) and attach the validation output. 
+If you want, I can now run the validator (`scripts/validate_todolists.py`) and attach the validation output.
 
 ---
 

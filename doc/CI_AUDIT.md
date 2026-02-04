@@ -45,4 +45,3 @@ If you want, I can:
 - Open a PR with the CI fixes (I already pushed workflow files earlier).
 - Inspect and patch `.gitmodules` or remove the problematic submodule.
 - Produce `doc/MULTI_AGENT_ARCHITECTURE.md` draft (phase plan + permissions model).
-

@@ -31,7 +31,7 @@ try {
         Write-Host "Tailing events (Ctrl+C to stop)"
         Get-Content .\events.ndjson -Wait -Tail 50
     } else {
-        Write-Host "No events.ndjson found yet. Run an agent or create the file to begin." 
+        Write-Host "No events.ndjson found yet. Run an agent or create the file to begin."
     }
 } catch {
     Write-Warning "start_session.ps1 encountered an error: $_"
@@ -71,7 +71,7 @@ try {
         Write-Host "Tailing events (Ctrl+C to stop)"
         Get-Content .\events.ndjson -Wait -Tail 50
     } else {
-        Write-Host "No events.ndjson found yet. Run an agent or create the file to begin." 
+        Write-Host "No events.ndjson found yet. Run an agent or create the file to begin."
     }
 } catch {
     Write-Warning "start_session.ps1 encountered an error: $_"
@@ -97,5 +97,5 @@ if (Test-Path .\events.ndjson) {
     Write-Host "Tailing events (Ctrl+C to stop)"
     Get-Content .\events.ndjson -Wait -Tail 50
 } else {
-    Write-Host "No events.ndjson found yet. Run an agent or create the file to begin." 
+    Write-Host "No events.ndjson found yet. Run an agent or create the file to begin."
 }

@@ -158,4 +158,3 @@ Next steps (I can implement):
 - Produce a minimal GitHub App manifest and deployment steps.
 - Scaffold the Backlog Agent to create issues from failed CI runs.
 - Add a small dashboard/monitor to tail `events.ndjson` via SSE.
-

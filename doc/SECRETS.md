@@ -52,4 +52,3 @@ Security notes
 
 - Never commit secrets into git. Use `.private` and add it to `.gitignore`.
 - For CI, use environment-scoped secrets and require manual approvals for workflows that will perform real sends.
-

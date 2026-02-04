@@ -39,13 +39,13 @@ addopts = --basetemp=.pytest_tmp
 Rationale
 ---------
 
-- Some pytest versions do not accept `basetemp` as a config key in `pytest.ini` and will emit a warning. Using `addopts` ensures the CLI flag is applied when pytest runs via configuration.  
+- Some pytest versions do not accept `basetemp` as a config key in `pytest.ini` and will emit a warning. Using `addopts` ensures the CLI flag is applied when pytest runs via configuration.
 - This preserves the repo-local basetemp behavior (avoids system-temp permission issues on Windows) while removing the warning.
 
 Trace / Next actions
 --------------------
 
-- Apply same change to any repository templates or CI job configurations that set `basetemp` directly in INI-like files. For GitHub Actions, the workflow already passes `--basetemp .tmp/pytest` on the CLI; no change required there.  
+- Apply same change to any repository templates or CI job configurations that set `basetemp` directly in INI-like files. For GitHub Actions, the workflow already passes `--basetemp .tmp/pytest` on the CLI; no change required there.
 - Consider adding this patch to onboarding docs and any repo generator template so newly created projects include `addopts` instead of `basetemp`.
 
 Audit

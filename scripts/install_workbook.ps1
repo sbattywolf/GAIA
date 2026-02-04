@@ -34,7 +34,7 @@ if ($args -contains '-Install') {
             & winget install --silent --accept-package-agreements --accept-source-agreements $t.install
         }
     } else {
-        Write-Host "winget not found; please install missing tools manually or enable winget." 
+        Write-Host "winget not found; please install missing tools manually or enable winget."
     }
 }
 
