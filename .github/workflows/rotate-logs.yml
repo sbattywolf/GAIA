@@ -10,6 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Install Git LFS
+        run: |
+          git lfs version || echo "git-lfs not available"
+          git lfs install || true
       - name: Setup PowerShell
         uses: PowerShell/PowerShell@v2
       - name: Run rotate_logs.ps1 (dry-run)
