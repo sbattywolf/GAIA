@@ -7,6 +7,13 @@ class TokenHandler(BaseHTTPRequestHandler):
     expected_token = None
 
     def do_GET(self):
+        # Health endpoint
+        if self.path == '/health':
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b'OK')
+            return
+
         if self.path != '/verify':
             self.send_response(404)
             self.end_headers()
