@@ -19,7 +19,7 @@ Deepgram 是一个语音转文字 API。在 OpenClaw 中，它通过 `tools.medi
 
 启用后，OpenClaw 会将音频文件上传到 Deepgram，并将转录文本注入回复管道（`{{Transcript}}` + `[Audio]` 块）。这**不是流式**处理；它使用的是预录音转录端点。
 
-网站：https://deepgram.com  
+网站：https://deepgram.com
 文档：https://developers.deepgram.com
 
 ## 快速开始

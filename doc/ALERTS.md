@@ -7,7 +7,7 @@ This document explains how to enable real alerts for GAIA. The repo includes saf
 - Test send:
 
 ```powershell
-$env:SMTP_HOST='smtp.example.com'; $env:SMTP_PORT='587'; $env:SMTP_USER='you@example.com'; $env:SMTP_PASS='s3cret'; python scripts\send_alert_email.py --to sbattywolf@hotmail.com --subject "GAIA: Connect" --body "Please connect via WhatsApp/Telegram." 
+$env:SMTP_HOST='smtp.example.com'; $env:SMTP_PORT='587'; $env:SMTP_USER='you@example.com'; $env:SMTP_PASS='s3cret'; python scripts\send_alert_email.py --to sbattywolf@hotmail.com --subject "GAIA: Connect" --body "Please connect via WhatsApp/Telegram."
 ```
 
 2) Telegram Bot

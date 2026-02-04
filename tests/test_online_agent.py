@@ -38,7 +38,7 @@ def test_prototype_skip_on_send_telegram(tmp_path, monkeypatch):
     monkeypatch.setenv("PROTOTYPE_USE_LOCAL_EVENTS", "1")
     monkeypatch.setenv("ALLOW_COMMAND_EXECUTION", "0")
 
-    rc = main(["--command", "send_telegram", "--body", "hello"]) 
+    rc = main(["--command", "send_telegram", "--body", "hello"])
     # In prototype mode without ALLOW_COMMAND_EXECUTION, script exits 0 and records prototype_skipped
     assert rc == 0
     events = read_events(tmp_path / "events.ndjson")

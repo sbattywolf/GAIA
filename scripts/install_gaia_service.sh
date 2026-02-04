@@ -35,4 +35,4 @@ sed \
 systemctl daemon-reload
 systemctl enable --now "$SERVICE_NAME"
 echo "Installed and started $SERVICE_NAME"
-echo "Check status: systemctl status $SERVICE_NAME" 
+echo "Check status: systemctl status $SERVICE_NAME"

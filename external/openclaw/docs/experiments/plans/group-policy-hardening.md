@@ -7,8 +7,8 @@ title: "Telegram Allowlist Hardening"
 
 # Telegram Allowlist Hardening
 
-**Date**: 2026-01-05  
-**Status**: Complete  
+**Date**: 2026-01-05
+**Status**: Complete
 **PR**: #216
 
 ## Summary
