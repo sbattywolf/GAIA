@@ -18,23 +18,17 @@ jobs:
         with:
           script: |
             const pr = context.payload.pull_request;
-            const review = context.payload.review;
             if (!pr) {
               core.info('No pull request payload, exiting.');
               return;
             }
 
-            // Require explicit label to opt-in to auto-merge
+            // Opt-in by label only (prototype mode - no approval required)
             const requiredLabel = 'automerge';
             const labels = pr.labels || [];
             const hasLabel = labels.some(l => (l.name || '').toLowerCase() === requiredLabel);
             if (!hasLabel) {
               core.info(`PR does not have required label '${requiredLabel}'; skipping auto-merge.`);
-              return;
-            }
-
-            if (!review || (review.state || '').toLowerCase() !== 'approved') {
-              core.info('Review submitted is not an approval; skipping auto-merge.');
               return;
             }
 
