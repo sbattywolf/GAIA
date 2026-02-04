@@ -25,6 +25,18 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
+      - name: Start infra (Postgres test DB) via docker-compose
+        run: |
+          docker-compose -f infra/docker-compose.preprod.yml up -d
+        shell: bash
+
+      - name: Wait for Postgres
+        run: |
+          apt-get update && apt-get install -y postgresql-client
+          chmod +x scripts/wait_for_postgres.sh
+          ./scripts/wait_for_postgres.sh 127.0.0.1 5432 30
+        shell: bash
+
       - name: Start mock services (mock_token_service)
         run: |
           # Start mock token verification service in background
@@ -51,4 +63,10 @@ jobs:
         run: |
           echo "Stopping mock service"
           pkill -f mock_token_service.py || true
+        shell: bash
+
+      - name: Tear down infra
+        if: always()
+        run: |
+          docker-compose -f infra/docker-compose.preprod.yml down
         shell: bash
