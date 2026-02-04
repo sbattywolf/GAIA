@@ -28,6 +28,10 @@ jobs:
             python -m pip install -r requirements.txt
           fi
 
+      - name: Ensure repo importable
+        run: |
+          python .github/scripts/write_pth.py
+
       - name: Smoke - import check
         run: |
           python -c "import agents, scripts, orchestrator"
