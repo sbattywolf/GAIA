@@ -1,0 +1,76 @@
+# replace-text.template.txt
+# Template generated from .secrets.scan (REDACTED — no real secrets included)
+# USAGE:
+# 1) Replace each <PASTE_...> placeholder with the exact secret string you want to remove.
+# 2) Save this file as replace-text.txt (DO NOT commit the filled file).
+# 3) Run: git filter-repo --replace-text replace-text.txt --refs refs/heads/* --refs refs/tags/*
+#
+# Format: exact_literal==>[REDACTED_TAG]
+# You can also use regex replacements. Prefix with 're:' for regex-like patterns.
+# Example literal replacement (replace placeholder before use):
+# <PASTE_GITHUB_PAT_DOC_SECRETS_ROTATION>==>[REDACTED_GITHUB_PAT]
+
+# --------------------------
+# High-risk findings (placeholders)
+# --------------------------
+# 1) Detected: GitHub Personal Access Token (example location: doc/SECRETS_ROTATION.md:94)
+# Replace the placeholder below with the exact token string.
+<Paste_GITHUB_PAT_1>==>[REDACTED_GITHUB_PAT]
+
+# 2) Detected: Private Key (example location: external/openclaw/apps/ios/fastlane/Fastfile:L47)
+<Paste_PRIVATE_KEY_1>==>[REDACTED_PRIVATE_KEY]
+
+# 3) Detected: Anthropic/OpenAI-style API keys (example locations: external/openclaw/apps/macos/AnthropicOAuth.swift)
+<Paste_ANTHROPIC_KEY_1>==>[REDACTED_ANTHROPIC_KEY]
+<Paste_OPENAI_KEY_1>==>[REDACTED_OPENAI_KEY]
+
+# 4) Telegram Bot Token (example detector: TelegramBotTokenDetector)
+<Paste_TELEGRAM_BOT_TOKEN_1>==>[REDACTED_TELEGRAM_BOT_TOKEN]
+
+# 5) Discord Bot Token
+<Paste_DISCORD_TOKEN_1>==>[REDACTED_DISCORD_TOKEN]
+
+# 6) Twilio / SendGrid / Stripe / Pypi tokens (fill as needed)
+<Paste_TWILIO_KEY_1>==>[REDACTED_TWILIO_KEY]
+<Paste_SENDGRID_KEY_1>==>[REDACTED_SENDGRID_KEY]
+<Paste_STRIPE_KEY_1>==>[REDACTED_STRIPE_KEY]
+<Paste_PYPI_TOKEN_1>==>[REDACTED_PYPI_TOKEN]
+
+# --------------------------
+# Useful regex rules (example safe patterns — adjust to match exact formats in your repo)
+# --------------------------
+# GitHub token patterns (ghp_... / gho_... / ghu_... / gha_...):
+re:gh[pousr]_[A-Za-z0-9_\-]{36}==>[REDACTED_GITHUB_PAT]
+
+# OpenAI / Anthropic style env lines (KEY=value):
+re:^OPENAI_API_KEY=.*==>OPENAI_API_KEY=[REDACTED]
+re:^ANTHROPIC_API_KEY=.*==>ANTHROPIC_API_KEY=[REDACTED]
+
+# AWS keys (common env patterns):
+re:^AWS_ACCESS_KEY_ID=.*==>AWS_ACCESS_KEY_ID=[REDACTED]
+re:^AWS_SECRET_ACCESS_KEY=.*==>AWS_SECRET_ACCESS_KEY=[REDACTED]
+
+# Generic API key env line fallback:
+re:^[A-Z0-9_]+_API_KEY=.*==>[REDACTED_API_KEY]
+
+# --------------------------
+# HOW TO FILL AND RUN (example):
+# - Edit this file locally, replace <Paste_...> with the exact secret string(s) you want removed.
+# - Save as replace-text.txt (DO NOT add or commit the filled file to git).
+# - Run a dry-run first by operating on a mirror clone (recommended). Example:
+#
+#   git clone --mirror <repo-url> gaia-mirror.git
+#   cd gaia-mirror.git
+#   git filter-repo --replace-text /path/to/replace-text.txt
+#
+# - Inspect refs and verify that secrets are removed. When satisfied, push cleaned refs back to remote (coordinate with team):
+#
+#   git push --force --all origin
+#   git push --force --tags origin
+#
+# NOTES:
+# - Do NOT paste real secrets into the repository. Keep the filled replace-text.txt out of version control.
+# - The .secrets.scan file shows filenames and line numbers; use those to place the correct secret string(s) into this template.
+# - If many unique secrets exist, create multiple <Paste_...> lines (one per secret) before running filter-repo.
+# - Consider rotating any leaked credentials immediately before or after the rewrite.
+# --------------------------

@@ -1,0 +1,42 @@
+# replace-text.preset.txt - small preset (one placeholder per high-risk file)
+#
+# INSTRUCTIONS:
+# - For each line below, replace the left-hand placeholder with the exact secret text
+#   found in that file on your local machine (do NOT commit the filled file).
+# - Keep the right-hand side as the safe replacement token.
+# - Run: `git-filter-repo --replace-text replace-text.preset.txt` on a fresh mirror
+#   (dry-run first), verify results, then follow your team-approved push procedure.
+#
+# Format: ORIGINAL_TEXT==>REPLACEMENT_TEXT
+#
+# --- High-risk file placeholders ---
+
+<PASTE_SECRET_001_.secrets.baseline>==>[REDACTED_SECRETS_BASELINE_001]
+
+<PASTE_SECRET_002_external_openclaw_detect-secrets_cfg>==>[REDACTED_OPENCLAW_CFG_002]
+
+<PASTE_SECRET_003_external_openclaw_secrets_baseline>==>[REDACTED_OPENCLAW_BASELINE_003]
+
+<PASTE_SECRET_004_external_openclaw_apps_ios_fastlane_Fastfile>==>[REDACTED_FASTFILE_004]
+
+<PASTE_SECRET_005_external_openclaw_docs_environment_md>==>[REDACTED_ENV_DOC_005]
+
+<PASTE_SECRET_006_external_openclaw_src_agents_models-config_fillstest>==>[REDACTED_MODELSTEST_006]
+
+<PASTE_SECRET_007_external_openclaw_src_agents_models-config_skips-test>==>[REDACTED_SKIPSTEST_007]
+
+<PASTE_SECRET_008_external_openclaw_src_agents_models-config_uses-first-profile>==>[REDACTED_PROFILETEST_008]
+
+<PASTE_SECRET_009_external_openclaw_src_config_env-vars_test>==>[REDACTED_CONFIGENV_009]
+
+<PASTE_SECRET_010_external_openclaw_src_config_env-substitution_test>==>[REDACTED_ENVSUB_010]
+
+<PASTE_SECRET_011_external_openclaw_src_gateway_client_test>==>[REDACTED_GATEWAYCLIENT_011]
+
+<PASTE_SECRET_012_external_openclaw_src_infra_env_test>==>[REDACTED_INFROENV_012]
+
+<PASTE_SECRET_013_external_openclaw_src_infra_shell-env_test>==>[REDACTED_SHELLENV_013]
+
+<PASTE_SECRET_014_external_openclaw_src_logging_redact_test>==>[REDACTED_REDACTTEST_014]
+
+# End of preset
