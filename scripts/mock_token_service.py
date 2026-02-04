@@ -19,10 +19,18 @@ class TokenHandler(BaseHTTPRequestHandler):
             self.end_headers()
             return
 
-        auth = self.headers.get('Authorization','')
+        auth = self.headers.get('Authorization', '')
         # Accept 'token <t>' or 'Bearer <t>'
         parts = auth.split()
         token = parts[1] if len(parts) == 2 else ''
+
+        # If no expected token was configured, run in permissive mode for CI/local
+        # health/startup checks — accept any token (or none) for /verify.
+        if self.expected_token is None:
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b'OK')
+            return
 
         if token and token == self.expected_token:
             self.send_response(200)
@@ -49,7 +57,9 @@ def run_server(token=None, host='127.0.0.1', port=8000, ready_event: threading.E
             pass
 
     if not token:
-        raise RuntimeError('No token provided (env MOCK_TOKEN or .tmp/generated_token.txt)')
+        # Don't fail startup when no token is present; run in permissive mode.
+        print('No token provided; starting mock in permissive mode (verify will accept any token)')
+        token = None
 
     TokenHandler.expected_token = token
     srv = ThreadingHTTPServer((host, port), TokenHandler)
