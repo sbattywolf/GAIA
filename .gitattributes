@@ -1,0 +1,6 @@
+external/openclaw/**/assets/** filter=lfs diff=lfs merge=lfs -text
+external/openclaw/**/*.png filter=lfs diff=lfs merge=lfs -text
+external/openclaw/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+external/openclaw/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+external/openclaw/**/*.ico filter=lfs diff=lfs merge=lfs -text
+external/openclaw/**/*.icns filter=lfs diff=lfs merge=lfs -text
