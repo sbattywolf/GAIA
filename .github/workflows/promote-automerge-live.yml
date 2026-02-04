@@ -14,6 +14,12 @@ jobs:
         with:
           ref: master
           persist-credentials: true
+          lfs: true
+
+      - name: Install Git LFS
+        run: |
+          git lfs version || echo "git-lfs not available"
+          git lfs install || true
 
       - name: Enable live runs in workflow
         run: |
