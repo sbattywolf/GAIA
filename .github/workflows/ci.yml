@@ -39,6 +39,8 @@ jobs:
           if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
           if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
           python -m pip install pytest flake8 || true
+          # try editable install of repo (if pyproject/setup exists)
+          python -m pip install -e . || true
         shell: bash
 
       - name: Smoke - online agent dry_run
@@ -48,5 +50,7 @@ jobs:
 
       - name: Run tests
         run: |
-          python -m pytest -q --basetemp .tmp/pytest
+            # ensure repo path is available to python via .pth
+            python -c "import site,os; p=site.getsitepackages()[0] if hasattr(site,'getsitepackages') else site.getusersitepackages(); open(os.path.join(p,'gaia_repo_path.pth'),'w').write(os.getenv('GITHUB_WORKSPACE')+os.linesep); print('wrote .pth to',p)"
+            python -m pytest -q --basetemp .tmp/pytest
         shell: bash

@@ -1,0 +1,55 @@
+name: Auto-merge PRs after CI success
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-merge when CI passed and PR approved
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const run = context.payload.workflow_run;
+            const head_sha = run.head_sha;
+            const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: head_sha,
+            });
+            if (!prs || prs.length === 0) {
+              core.info('No pull request associated with this run. Exiting.');
+              return;
+            }
+            const pr = prs[0];
+            core.info(`Found PR #${pr.number} for commit ${head_sha}`);
+
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+            });
+
+            const approved = Array.isArray(reviews) ? reviews.some(r => r.state === 'APPROVED') : false;
+            if (!approved) {
+              core.setFailed(`PR #${pr.number} has no APPROVED reviews — not merging.`);
+              return;
+            }
+
+            // Attempt to merge using default method
+            await github.rest.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              merge_method: 'merge'
+            });
+            core.info(`Merged PR #${pr.number}`);
