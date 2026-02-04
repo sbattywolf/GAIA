@@ -241,3 +241,18 @@ Telegram improvements trace
 --------------------------
 
 For a full trace of the Telegram integration work (enqueue/approval/inline buttons/monitor UI), see `doc/TELEGRAM_IMPROVEMENTS.md`.
+
+Auto-merge opt-in (convenience)
+--------------------------------
+
+The repository supports an opt-in auto-merge flow to speed merges for small, reviewed PRs. To opt a PR into auto-merge:
+
+- Add the label `automerge` to the PR.
+- Ensure at least one reviewer (who is not the PR author) approves the PR.
+- Wait for all CI checks and check-runs to pass.
+
+When those conditions are met the GitHub Actions workflow `.github/workflows/auto-merge.yml` will automatically squash-merge the PR.
+
+If you prefer stricter controls (two approvals, team approvals, or label gating), update `.github/workflows/auto-merge.yml` or contact maintainers.
+
+See `docs/AUTOMERGE.md` for full details and branch-protection recommendations.
