@@ -1,4 +1,26 @@
 <#
+Load local environment variables from .env if present.
+This sets process environment variables for the current PowerShell session.
+Usage: .\scripts\load_env.ps1
+#>
+$envFile = Join-Path $PSScriptRoot '..\.env'
+if (-not (Test-Path $envFile)) {
+    Write-Output ".env not found. Copy .env.template to .env and edit values."
+    exit 0
+}
+
+Get-Content $envFile | ForEach-Object {
+    if ($_ -match '^[#;]') { return }
+    if ($_ -match '^\s*$') { return }
+    $parts = $_ -split '=',2
+    if ($parts.Length -ne 2) { return }
+    $name = $parts[0].Trim()
+    $value = $parts[1].Trim()
+    if ($name) { [System.Environment]::SetEnvironmentVariable($name, $value, 'Process') }
+}
+
+Write-Output "Loaded environment variables from .env into current PowerShell process."
+<#
 Load local .env into the PowerShell session and apply PATH_APPEND.
 
 Usage:
