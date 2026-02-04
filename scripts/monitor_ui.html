@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>GAIA Monitor</title>
+    <style>
+      body { font-family: system-ui, Arial; padding: 16px }
+      .item { border: 1px solid #ddd; padding: 8px; margin: 6px 0 }
+      button { margin-right: 8px }
+    </style>
+  </head>
+  <body>
+    <h2>Pending Commands</h2>
+    <div>
+      Admin token: <input id="token" placeholder="paste admin token" size="40" />
+      <button id="refresh">Refresh</button>
+    </div>
+    <div id="list"></div>
+
+    <script>
+    async function fetchPending() {
+      const token = document.getElementById('token').value;
+      const res = await fetch('/pending', { headers: token ? { 'X-Admin-Token': token } : {} });
+      const data = await res.json();
+      const list = document.getElementById('list');
+      list.innerHTML = '';
+      if (!data.length) {
+        list.textContent = 'No pending commands';
+        return;
+      }
+      data.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `<strong>${item.id || item.name || ''}</strong> <pre>${JSON.stringify(item, null, 2)}</pre>`;
+        const approve = document.createElement('button');
+        approve.textContent = 'Approve';
+        approve.onclick = () => doAction('approve', item.id || item.name);
+        const deny = document.createElement('button');
+        deny.textContent = 'Deny';
+        deny.onclick = () => doAction('deny', item.id || item.name);
+        div.appendChild(approve);
+        div.appendChild(deny);
+        list.appendChild(div);
+      });
+    }
+
+    async function doAction(action, id) {
+      const token = document.getElementById('token').value;
+      const res = await fetch('/action', {
+        method: 'POST',
+        headers: Object.assign({'Content-Type': 'application/json'}, token ? {'X-Admin-Token': token} : {}),
+        body: JSON.stringify({ action, id })
+      });
+      const j = await res.json();
+      alert(JSON.stringify(j));
+      fetchPending();
+    }
+
+    document.getElementById('refresh').addEventListener('click', fetchPending);
+    fetchPending();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "t-toggle-1",
+    "chat_id": "test_chat",
+    "message_id": "m1",
+    "command": "echo hi",
+    "from": {
+      "first_name": "tester"
+    },
+    "status": "pending",
+    "created": "2026-02-03T23:21:06.436763Z",
+    "options": {
+      "exec_request": true
+    }
+  }
+]

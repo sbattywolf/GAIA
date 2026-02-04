@@ -1,0 +1,17 @@
+{
+  "story_key": "stoybl_bl_bl_1",
+  "generated_at": "2026-02-03T00:00:00Z",
+  "canonical_tasks": {
+    "t1": { "title": "Implement claim primitives integration", "file": ".tmp/todolists/stoybl_bl_bl_1.TD-stoybl_bl_bl_1.assistant.TD-stoybl_list.current" },
+    "t2": { "title": "Evaluate TODO classification and apply", "file": ".tmp/todolists/stoybl_bl_bl_1.TD-stoybl_bl_bl_1.assistant.TD-stoybl_list.current" },
+    "t3": { "title": "End-to-end functional test (phase 1)", "file": ".tmp/todolists/stoybl_bl_bl_1.TD-stoybl_bl_bl_1.assistant.TD-stoybl_list.current" },
+    "t4": { "title": "Tests: multi-agent concurrency & idempotency", "file": ".tmp/todolists/stoybl_bl_bl_1.TD-stoybl_bl_bl_1.assistant.TD-stoybl_list.current" },
+    "t5": { "title": "Update runbook: agent-task workflow & token usage", "file": ".tmp/todolists/stoybl_bl_bl_1.TD-stoybl_bl_bl_1.assistant.TD-stoybl_list.current" },
+    "t6": { "title": "Prepare follow-up part2 (CLI/UI + runbook)", "file": ".tmp/todolists/stoybl_bl_bl_1.TD-stoybl_bl_bl_1.assistant.TD-stoybl_list.current" },
+    "t7": { "title": "CLI/UI controls", "file": ".tmp/todolists/stoybl_bl_bl_1.TD-stoybl_bl_bl_1.assistant.TD-stoybl_list.current" },
+    "t8": { "title": "Runbook entry", "file": ".tmp/todolists/stoybl_bl_bl_1.TD-stoybl_bl_bl_1.assistant.TD-stoybl_list.current" },
+    "t9": { "title": "CLI/UI controls (merged)", "file": ".tmp/todolists/stoybl_bl_bl_1.TD-stoybl_bl_bl_1.assistant.TD-stoybl_list.current" },
+    "t10": { "title": "Runbook entry (merged)", "file": ".tmp/todolists/stoybl_bl_bl_1.TD-stoybl_bl_bl_1.assistant.TD-stoybl_list.current" },
+    "t_final": { "title": "Finalize todo-list best-practice rule", "file": ".tmp/todolists/stoybl_bl_bl_1.TD-stoybl_bl_bl_1.assistant.TD-stoybl_list.current" }
+  }
+}
