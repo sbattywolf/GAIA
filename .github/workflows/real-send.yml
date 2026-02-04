@@ -1,0 +1,58 @@
+name: Real Telegram Send (manual, protected)
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: 'Message to send to the configured Telegram chat.'
+        required: true
+        default: 'GAIA manual notification'
+      confirm_send:
+        description: 'Type YES to confirm sending the message.'
+        required: true
+        default: 'NO'
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    # Use a protected environment (configure required reviewers in the repo settings)
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install runtime deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Validate confirmation
+        run: |
+          if [ "${{ github.event.inputs.confirm_send }}" != "YES" ]; then
+            echo "Confirmation not YES; aborting." >&2
+            exit 1
+          fi
+
+      - name: Send Telegram message
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python - <<'PY'
+          import os, sys, requests
+          token = os.environ.get('TELEGRAM_BOT_TOKEN')
+          chat = os.environ.get('TELEGRAM_CHAT_ID')
+          if not token or not chat:
+              print('Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID in secrets', file=sys.stderr)
+              sys.exit(1)
+          msg = '''${{ github.event.inputs.message }}'''
+          url = f'https://api.telegram.org/bot{token}/sendMessage'
+          r = requests.post(url, json={'chat_id': chat, 'text': msg})
+          r.raise_for_status()
+          print('Sent OK', r.json())
+          PY

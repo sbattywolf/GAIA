@@ -111,22 +111,14 @@ def main():
     p.add_argument('--rotate-bytes', type=int, default=10_000_000)
     args = p.parse_args()
 
+    from scripts.env_utils import load_preferred_env
     token = os.environ.get('TELEGRAM_BOT_TOKEN')
     if not token:
         try:
-            envp = os.path.join(ROOT, '.tmp', 'telegram.env')
-            if os.path.exists(envp):
-                with open(envp, 'r', encoding='utf-8') as ef:
-                    for line in ef.read().splitlines():
-                        line = line.strip()
-                        if not line or line.startswith('#'):
-                            continue
-                        if '=' in line:
-                            k, v = line.split('=', 1)
-                            if k.strip() == 'TELEGRAM_BOT_TOKEN' and not token:
-                                token = v.strip()
+            env = load_preferred_env(Path(ROOT))
+            token = env.get('TELEGRAM_BOT_TOKEN')
         except Exception:
-            pass
+            token = None
 
     if not token:
         print('ERROR: TELEGRAM_BOT_TOKEN required')
@@ -230,20 +222,11 @@ def main():
                         from_user = callback.get('from') or {}
                         from_id = from_user.get('id')
                         try:
-                            # localized short ack
-                            envp = os.path.join(ROOT, '.tmp', 'telegram.env')
+                            # localized short ack (prefer .private then .tmp)
                             default_lang = 'en'
                             try:
-                                if os.path.exists(envp):
-                                    with open(envp, 'r', encoding='utf-8') as ef:
-                                        for line in ef.read().splitlines():
-                                            line = line.strip()
-                                            if not line or line.startswith('#'):
-                                                continue
-                                            if '=' in line:
-                                                k, v = line.split('=', 1)
-                                                if k.strip() == 'TELEGRAM_DEFAULT_LANG' and v:
-                                                    default_lang = v.strip()
+                                env = load_preferred_env(Path(ROOT))
+                                default_lang = env.get('TELEGRAM_DEFAULT_LANG', 'en')
                             except Exception:
                                 default_lang = 'en'
                             tc.answer_callback(token, cqid, text=_t('received', default_lang))
@@ -373,27 +356,17 @@ def main():
                     from_id = from_user.get('id')
                     try:
                         # localized short ack
-                        envp = os.path.join(ROOT, '.tmp', 'telegram.env')
-                        default_lang = 'en'
                         try:
-                            if os.path.exists(envp):
-                                with open(envp, 'r', encoding='utf-8') as ef:
-                                    for line in ef.read().splitlines():
-                                        line = line.strip()
-                                        if not line or line.startswith('#'):
-                                            continue
-                                        if '=' in line:
-                                            k, v = line.split('=', 1)
-                                            if k.strip() == 'TELEGRAM_DEFAULT_LANG' and v:
-                                                default_lang = v.strip()
+                            env = load_preferred_env(Path(ROOT))
+                            default_lang = env.get('TELEGRAM_DEFAULT_LANG', 'en')
                         except Exception:
                             default_lang = 'en'
-                            tc.answer_callback(token, cqid, text=_t('received', default_lang))
+                        tc.answer_callback(token, cqid, text=_t('received', default_lang))
                     except Exception:
-                            try:
-                                tc.record_failed_reply({'action': 'answer_callback', 'callback_query_id': cqid, 'error': traceback.format_exc(), 'update': item, 'ts': now()})
-                            except Exception:
-                                pass
+                        try:
+                            tc.record_failed_reply({'action': 'answer_callback', 'callback_query_id': cqid, 'error': traceback.format_exc(), 'update': item, 'ts': now()})
+                        except Exception:
+                            pass
                     log_debug('callback', {'from': from_id, 'data': data}, rotate_bytes=args.rotate_bytes)
                     if isinstance(data, str) and ':' in data:
                         cmd, arg = data.split(':', 1)

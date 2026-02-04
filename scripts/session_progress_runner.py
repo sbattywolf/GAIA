@@ -18,7 +18,8 @@ except Exception:
     pass
 
 ROOT = Path(__file__).resolve().parents[1]
-ENV_FILE = ROOT / '.tmp' / 'telegram.env'
+from scripts.env_utils import preferred_env_path
+ENV_FILE = preferred_env_path(ROOT)
 HEALTH_FILE = ROOT / '.tmp' / 'telegram_health.json'
 QUEUE_FILE = ROOT / '.tmp' / 'telegram_queue.json'
 EVENTS_FILE = ROOT / 'events.ndjson'

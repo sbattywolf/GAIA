@@ -14,7 +14,8 @@ from scripts import telegram_client as tc
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / '.tmp' / 'telegram_connectivity.json'
-ENV_FILE = ROOT / '.tmp' / 'telegram.env'
+from scripts.env_utils import preferred_env_path
+ENV_FILE = preferred_env_path(ROOT)
 
 def load_env():
     env = {}

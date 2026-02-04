@@ -114,8 +114,9 @@ def safe_load_pending():
 
 
 def load_admin_token():
-    # prefer .tmp/telegram.env if present
-    envp = ROOT / '.tmp' / 'telegram.env'
+    # prefer .private/telegram.env then .tmp/telegram.env
+    from scripts.env_utils import preferred_env_path
+    envp = preferred_env_path(ROOT)
     token = os.environ.get('MONITOR_ADMIN_TOKEN')
     try:
         if envp.exists():

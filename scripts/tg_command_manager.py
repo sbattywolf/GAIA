@@ -24,7 +24,8 @@ from . import telegram_idempotency as tid
 ROOT = Path(__file__).resolve().parents[1]
 TMP = ROOT / '.tmp'
 PENDING = TMP / 'pending_commands.json'
-ENV_FILE = TMP / 'telegram.env'
+from scripts.env_utils import preferred_env_path
+ENV_FILE = preferred_env_path(ROOT)
 EVENTS = ROOT / 'events.ndjson'
 DB_PATH = ROOT / 'gaia.db'
 

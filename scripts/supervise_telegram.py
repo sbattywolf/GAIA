@@ -67,7 +67,8 @@ def update_health(running_services):
 
 def load_env_file():
     env = os.environ.copy()
-    envfile = TMP / 'telegram.env'
+    from scripts.env_utils import preferred_env_path
+    envfile = preferred_env_path(ROOT)
     if envfile.exists():
         for line in envfile.read_text(encoding='utf-8').splitlines():
             line = line.strip()
