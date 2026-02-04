@@ -50,3 +50,15 @@ TOBEDELETE__AILocalModelLibrary/
 
 # Local private secrets folder (never commit)
 .private/
+
+# Additional runtime and temp artifacts to keep out of the index
+.tmp/
+*.err
+# agent runtime logs/backups
+TOBEDELETE__AILocalModelLibrary/**/logs/
+TOBEDELETE__AILocalModelLibrary/**/backups/
+TOBEDELETE__AILocalModelLibrary/**/.venv/
+# node/package caches under external vendors
+external/**/node_modules/
+external/**/pnpm-lock.yaml
+
