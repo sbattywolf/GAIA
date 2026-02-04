@@ -1,7 +1,0 @@
-{
-  "agent_id": "c080a14c-5d1a-40e2-80fa-ff0e3174461f",
-  "agent_name": "Alby 0.3",
-  "state": "guarded",
-  "message": "Internet-capable skills detected but no secrets set; set ALBY_INTERNET_TOKEN or CI_TOKEN to enable.",
-  "timestamp": "2026-02-03T19:55:51.875150Z"
-}
