@@ -431,7 +431,7 @@ Related: [Migrating](/install/migrating), [Where things live on disk](/help/faq#
 
 ### Where do I see what is new in the latest version
 
-Check the GitHub changelog:  
+Check the GitHub changelog:
 https://github.com/openclaw/openclaw/blob/main/CHANGELOG.md
 
 Newest entries are at the top. If the top section is marked **Unreleased**, the next dated
@@ -459,12 +459,12 @@ We ship builds to **beta**, test them, and once a build is solid we **promote
 that same version to `latest`**. That’s why beta and stable can point at the
 **same version**.
 
-See what changed:  
+See what changed:
 https://github.com/openclaw/openclaw/blob/main/CHANGELOG.md
 
 ### How do I install the beta version and whats the difference between beta and dev
 
-**Beta** is the npm dist‑tag `beta` (may match `latest`).  
+**Beta** is the npm dist‑tag `beta` (may match `latest`).
 **Dev** is the moving head of `main` (git); when published, it uses the npm dist‑tag `dev`.
 
 One‑liners (macOS/Linux):
@@ -591,7 +591,7 @@ Short answer: follow the Linux guide, then run the onboarding wizard.
 
 Any Linux VPS works. Install on the server, then use SSH/Tailscale to reach the Gateway.
 
-Guides: [exe.dev](/platforms/exe-dev), [Hetzner](/platforms/hetzner), [Fly.io](/platforms/fly).  
+Guides: [exe.dev](/platforms/exe-dev), [Hetzner](/platforms/hetzner), [Fly.io](/platforms/fly).
 Remote access: [Gateway remote](/gateway/remote).
 
 ### Where are the cloudVPS install guides
@@ -1079,13 +1079,13 @@ Not directly. macOS skills are gated by `metadata.openclaw.os` plus required bin
 
 You have three supported patterns:
 
-**Option A - run the Gateway on a Mac (simplest).**  
+**Option A - run the Gateway on a Mac (simplest).**
 Run the Gateway where the macOS binaries exist, then connect from Linux in [remote mode](#how-do-i-run-openclaw-in-remote-mode-client-connects-to-a-gateway-elsewhere) or over Tailscale. The skills load normally because the Gateway host is macOS.
 
-**Option B - use a macOS node (no SSH).**  
+**Option B - use a macOS node (no SSH).**
 Run the Gateway on Linux, pair a macOS node (menubar app), and set **Node Run Commands** to "Always Ask" or "Always Allow" on the Mac. OpenClaw can treat macOS-only skills as eligible when the required binaries exist on the node. The agent runs those skills via the `nodes` tool. If you choose "Always Ask", approving "Always Allow" in the prompt adds that command to the allowlist.
 
-**Option C - proxy macOS binaries over SSH (advanced).**  
+**Option C - proxy macOS binaries over SSH (advanced).**
 Keep the Gateway on Linux, but make the required CLI binaries resolve to SSH wrappers that run on a Mac. Then override the skill to allow Linux so it stays eligible.
 
 1. Create an SSH wrapper for the binary (example: `imsg`):
@@ -1946,9 +1946,9 @@ Models are referenced as `provider/model` (example: `anthropic/claude-opus-4-5`)
 
 ### What model do you recommend
 
-**Recommended default:** `anthropic/claude-opus-4-5`.  
-**Good alternative:** `anthropic/claude-sonnet-4-5`.  
-**Reliable (less character):** `openai/gpt-5.2` - nearly as good as Opus, just less personality.  
+**Recommended default:** `anthropic/claude-opus-4-5`.
+**Good alternative:** `anthropic/claude-sonnet-4-5`.
+**Reliable (less character):** `openai/gpt-5.2` - nearly as good as Opus, just less personality.
 **Budget:** `zai/glm-4.7`.
 
 MiniMax M2.1 has its own docs: [MiniMax](/providers/minimax) and

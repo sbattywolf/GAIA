@@ -17,4 +17,3 @@ def test_dry_run_trace_emitted(tmp_path, monkeypatch):
         obj = json.loads(line)
         assert obj['type'] == 'alby.job.complete'
         assert 'idem' in obj['payload']
-

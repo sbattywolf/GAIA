@@ -13,11 +13,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          lfs: true
 
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
+
+      - name: Install Git LFS
+        run: |
+          git lfs install || true
 
       - name: Install dependencies
         run: |
@@ -27,12 +33,12 @@ jobs:
 
       - name: Run events monitor (dry-run)
         run: |
-          python scripts/monitor_events.py --events GAIA/events.ndjson || true
+          python scripts/monitor_events.py --events events.ndjson || true
 
       - name: Prepare todo archive copy (dry-run)
         run: |
           mkdir -p /tmp/gaia_work
-          if [ -f Gaia/doc/todo-archive.ndjson ]; then cp Gaia/doc/todo-archive.ndjson /tmp/gaia_work/todo-archive.ndjson; else echo '' > /tmp/gaia_work/todo-archive.ndjson; fi
+          if [ -f docs/todo-archive.ndjson ]; then cp docs/todo-archive.ndjson /tmp/gaia_work/todo-archive.ndjson; else echo '' > /tmp/gaia_work/todo-archive.ndjson; fi
 
       - name: Run prune on temp copy (dry-run)
         run: |

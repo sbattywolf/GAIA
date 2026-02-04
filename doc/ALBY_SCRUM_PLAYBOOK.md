@@ -53,4 +53,3 @@ Online Integration (Alby 0.3 nextagent prototype)
 - Keep remote ops idempotent: include `trace_id`, suggested `task_id`, and original payload in the event to allow reconciliation.
 
 This file pairs with `agents/alby_agent_template.py` for local-first workflows and `agents/alby_online_agent.py` for online interactions.
-

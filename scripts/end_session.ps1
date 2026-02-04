@@ -42,4 +42,4 @@ try {
     Write-Host "Prune script failed: $_"
 }
 
-Write-Host "End-of-session routine complete. You can now safely close the machine." 
+Write-Host "End-of-session routine complete. You can now safely close the machine."

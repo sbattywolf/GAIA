@@ -319,4 +319,3 @@ python scripts/enforce_todolist_final.py --finalize
 ```
 
 The script looks under `.tmp/todolists/*.current`, prints the last task for each file, and returns a non-zero exit code if a final marker is missing. Operators should run `--validate` before archiving and `--finalize` once they are ready to mark the story closed.
-

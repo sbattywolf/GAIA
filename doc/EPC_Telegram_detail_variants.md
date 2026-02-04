@@ -101,4 +101,3 @@ Below are human-readable summaries for the newly split `F-helper-gise` features 
 	- Acceptance: end-to-end acceptance flow completes, gaia.db timestamped records are present, and `t_final` verification steps complete.
 
 These summaries are appended here for convenience; the canonical `doc/EPC_Telegram.current` contains the task-level summaries and `moved_from` metadata for traceability.
-

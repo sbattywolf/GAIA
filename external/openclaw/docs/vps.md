@@ -31,7 +31,7 @@ deployments work at a high level.
 - Secure default: keep the Gateway on loopback and access it via SSH tunnel or Tailscale Serve.
   If you bind to `lan`/`tailnet`, require `gateway.auth.token` or `gateway.auth.password`.
 
-Remote access: [Gateway remote](/gateway/remote)  
+Remote access: [Gateway remote](/gateway/remote)
 Platforms hub: [Platforms](/platforms)
 
 ## Using nodes with a VPS
