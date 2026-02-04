@@ -38,6 +38,28 @@ def load_env(env_path: Path) -> dict:
     return env
 
 
+def load_preferred_env() -> dict:
+    """Load env preferring `.private/telegram.env` then `.tmp/telegram.env`.
+
+    Returns an env dict (may be empty).
+    """
+    private = ROOT / '.private' / 'telegram.env'
+    tmp = ROOT / '.tmp' / 'telegram.env'
+    if private.exists():
+        try:
+            return load_env(private)
+        except Exception:
+            print('Warning: failed to read .private/telegram.env; falling back to .tmp/telegram.env')
+    return load_env(tmp)
+
+
+def env_flag_true(env: dict, key: str) -> bool:
+    v = env.get(key)
+    if v is None:
+        return False
+    return str(v).lower() in ('1', 'true', 'yes', 'on')
+
+
 def send_telegram(token: str, chat_id: str, text: str) -> bool:
     url = f'https://api.telegram.org/bot{token}/sendMessage'
     try:
@@ -122,9 +144,10 @@ def main():
     p.add_argument('--tenmin-hours', type=float, default=20.0, help='Hours to send 10-min updates')
     p.add_argument('--thirtymin-hours', type=float, default=30.0, help='Hours to send 30-min updates')
     p.add_argument('--duration-hours', type=float, default=20.0, help='Primary work duration (hours)')
+    p.add_argument('--nogise', action='store_true', help='Do not run Gise helper tasks; run validator and send updates only')
     args = p.parse_args()
 
-    env = load_env(ROOT / '.tmp' / 'telegram.env')
+    env = load_preferred_env()
     token = env.get('TELEGRAM_BOT_TOKEN')
     chat = env.get('CHAT_ID')
 
@@ -146,11 +169,28 @@ def main():
         if do_ten or do_thirty:
             val = run_validator()
             epic = parse_epic_progress(epic_file)
-            helpers = try_part1_helpers()
+            helpers = []
+            if not args.nogise:
+                helpers = try_part1_helpers()
+            else:
+                helpers = [('nogise', 'skipped')]
             msg = status_message(epic, val, helpers)
             sent = False
-            if token and chat:
+            # Require explicit opt-in to send notifications; safe default is off
+            enabled = env_flag_true(env, 'PERIODIC_NOTIFICATIONS_ENABLED')
+            allow_exec = env.get('ALLOW_COMMAND_EXECUTION', '0') == '1'
+            prototype_local = env_flag_true(env, 'PROTOTYPE_USE_LOCAL_EVENTS')
+
+            if enabled and token and chat and allow_exec and not prototype_local:
                 sent = send_telegram(token, chat, msg)
+            else:
+                # If prototype local events enabled, treat as simulated send
+                if enabled and prototype_local:
+                    print('Periodic notifier: prototype local events enabled — simulated send')
+                if not enabled:
+                    print('Periodic notifier not enabled (set PERIODIC_NOTIFICATIONS_ENABLED=1 to opt-in)')
+                if enabled and not allow_exec:
+                    print('ALLOW_COMMAND_EXECUTION != 1; not sending')
             # also write a local status note
             note_dir = ROOT / '.tmp' / 'gise_status'
             note_dir.mkdir(parents=True, exist_ok=True)

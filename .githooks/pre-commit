@@ -1,0 +1,4 @@
+#!/bin/sh
+# Git pre-commit hook (POSIX sh)
+PYTHON=$(command -v python3 || command -v python || echo python)
+exec "$PYTHON" "$(git rev-parse --show-toplevel)/scripts/check_staged_secrets.py"

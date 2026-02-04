@@ -1,0 +1,14 @@
+Gise plan — next 20 hours (11 features available):
+- F-security-token: Security & token rotation — stories: 0, tasks: 0
+- F-command-safety: Command execution safety — stories: 0, tasks: 0
+- F-integration-tests: Integration tests — stories: 0, tasks: 0
+- F-ttl-requeue-policy: Claim TTL & Requeue Policy — stories: 0, tasks: 0
+- F-retryer: Retryer error classification — stories: 0, tasks: 0
+- F-metrics-alerts: Metrics & alerts — stories: 0, tasks: 0
+- F-permanent-failed-ui: Permanent-failed UI & requeue — stories: 0, tasks: 0
+- F-backup-retention: Backup & retention — stories: 0, tasks: 0
+- F-runbook-docs: Runbook & documentation — stories: 0, tasks: 0
+- F-helper-gise-part1: Helper Gise — Foundation — stories: 0, tasks: 0
+- F-helper-gise-part2: Helper Gise — Prototype & Acceptance — stories: 0, tasks: 0
+
+Planned execution: work through `F-helper-gise` (part1→part2), then prioritize high/critical stories: security, command-safety, integration-tests, retryer. I will run validator/tests and small helpers, archive snapshots, update scoring and append progress notes every 10 minutes. No prompts unless a hard failure requires attention.

@@ -32,7 +32,8 @@ def load_env(env_path: Path) -> dict:
 
 
 def smoke_check(dry_run: bool = True) -> int:
-    env_file = ROOT / '.tmp' / 'telegram.env'
+    from scripts.env_utils import preferred_env_path
+    env_file = preferred_env_path(ROOT)
     print('Smoke check: env file ->', env_file)
     if not env_file.exists():
         print('  WARNING: env file not found (expected for dry-run)')
@@ -99,7 +100,8 @@ def env_checks_report(env_path: Path | None = None) -> dict:
 
     The report contains pass/fail counts and sample values (tokens redacted).
     """
-    env_file = Path(env_path) if env_path else ROOT / '.tmp' / 'telegram.env'
+    from scripts.env_utils import preferred_env_path
+    env_file = Path(env_path) if env_path else preferred_env_path(ROOT)
     report = {'env_file_exists': env_file.exists(), 'entries': {}, 'redacted': []}
     if env_file.exists():
         data = load_env(env_file)

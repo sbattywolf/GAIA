@@ -1,0 +1,8 @@
+{
+  "epic": "EPC_Telegram",
+  "feature_id": "F-permanent-failed-ui",
+  "feature_name": "Permanent-failed UI & requeue",
+  "story_key": "stoy_auto",
+  "agent": "assistant",
+  "tasks": []
+}

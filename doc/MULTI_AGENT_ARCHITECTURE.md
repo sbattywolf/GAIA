@@ -2,6 +2,95 @@
 
 Goal
 
+Design a safe, auditable multi-agent system for GAIA where small agents perform focused tasks (tests, PRs, issue triage, Telegram notifications) under strict security and review controls. Start with Telegram as the first channel and iterate.
+
+Core idea
+
+Multiple input channels (Telegram, email, local GUI) feed a single Orchestrator/Controller that centralizes validation, backlog management, and dispatching to agents. Agents (local or online) perform tasks and return events; the Orchestrator is the canonical source of truth.
+
+Responsibilities (concise)
+
+- **Orchestrator:** accept commands/events, validate, persist backlog/epics/stories, resolve conflicts, enforce permissions, and record audit traces.
+- **Agents:** perform focused work (create issues, run checks, send notifications). Prefer asynchronous events and require orchestrator approval for state changes that affect backlog or production.
+- **Channel adapters:** thin translators that convert channel-specific messages into normalized orchestrator commands/events.
+
+Design primitives (schemas & contracts)
+
+- Event / Command schema (JSON):
+
+```json
+{
+  "id": "uuid",
+  "type": "command|event",
+  "action": "create_issue|notify|scaffold_project",
+  "source": "telegram|email|gui|agent_name",
+  "actor": "user:alice|agent:ci-bot",
+  "payload": { },
+  "timestamp": "2026-02-04T12:34:56Z",
+  "trace_id": "uuid",
+  "idempotency_key": "optional-string"
+}
+```
+
+- Orchestrator↔Agent contract:
+  - Small synchronous RPCs for low-latency checks (authorize, validate).
+  - Async event bus for work items: agents subscribe to events, publish results/events back with `trace_id`.
+  - All messages must include `trace_id` and `idempotency_key` for dedupe and audit.
+
+- Auth & trust model:
+  - Agents hold short-lived credentials; only orchestrator stores authoritative secrets.
+  - Use `ALLOW_COMMAND_EXECUTION` and `PROTOTYPE_USE_LOCAL_EVENTS` flags to gate side effects.
+
+Audit & observability
+
+- Append-only events: `events.ndjson` (one JSON object per line) is the event sink.
+- Persist concise traces in `gaia.db` (`audit` table) for critical actions with references to `trace_id`.
+
+Safety controls
+
+- Default simulation: `PROTOTYPE_USE_LOCAL_EVENTS=1` in PRs and CI.
+- Production secrets stored in `production` GitHub Environment and require `REVIEWERS` for access.
+- Critical workflows (real sends, merges) require explicit human approval and environment gating.
+
+Telegram-first prototype plan (practical steps)
+
+1) Channel adapter
+  - Implement a Telegram adapter that converts messages and commands into normalized events and POSTs them to the orchestrator API or appends to `events.ndjson`.
+
+2) Minimal Orchestrator API
+  - Provide a small HTTP endpoint to accept events, validate, persist backlog items, and return `trace_id`.
+
+3) Backlog management
+  - Orchestrator stores backlog items (epic/story/feature) in a simple SQLite table and exposes read endpoints.
+
+4) Agent prototype
+  - One online agent (Actions or bot) that reads events and creates scaffolded GitHub issues or repo scaffolding in dry-run mode, posting results back to orchestrator and `events.ndjson`.
+
+5) Tests and mocks
+  - Reuse `scripts/mock_telegram_server.py` and `tests/conftest.py` to run integration tests locally and in CI.
+
+6) Audit & approvals
+  - Each action that reaches production writes an audit row to `gaia.db` and requires environment-level approval.
+
+Risks & mitigations
+
+- Conflicting updates: always route state changes through the Orchestrator; avoid agent-to-agent direct writes except when orchestrator-authorized.
+- Privilege escalation: prefer short-lived tokens, limit scopes, and require reviewers for production secrets.
+- Test drift between local and Actions: keep CI deterministic, set `PYTHONPATH` in workflows, and optional editable install (`pip install -e .`) for consistent imports.
+
+Next steps I can take (pick one):
+
+- Update `doc/MULTI_AGENT_ARCHITECTURE.md` with diagrams and the JSON schema as machine-readable files.
+- Scaffold the Telegram adapter and minimal orchestrator HTTP endpoint plus a test harness.
+- Create a minimal GitHub App manifest and CI workflow to exercise the backlog agent in dry-run mode.
+
+---
+
+Files referenced: `events.ndjson`, `gaia.db`, `scripts/mock_telegram_server.py`, `tests/conftest.py`, `.private/.env`, `.github/workflows/ci.yml`.
+# Multi-Agent Architecture — GAIA
+
+Goal
+
 Design a safe, auditable multi-agent system for GAIA where small agents perform focused tasks (tests, PRs, issue triage, Telegram notifications) under strict security and review controls.
 
 Principles

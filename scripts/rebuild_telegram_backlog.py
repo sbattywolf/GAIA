@@ -18,7 +18,8 @@ import json, argparse, datetime, time
 
 ROOT = Path(__file__).resolve().parents[1]
 PENDING = ROOT / '.tmp' / 'pending_commands.json'
-ENV = ROOT / '.tmp' / 'telegram.env'
+from scripts.env_utils import preferred_env_path
+ENV = preferred_env_path(ROOT)
 EVENTS = ROOT / 'events.ndjson'
 
 

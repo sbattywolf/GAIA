@@ -1,3 +1,78 @@
+#!/usr/bin/env python3
+"""Read `.tmp/metrics.json` and post alerts to admin chat when thresholds are crossed.
+
+This is a small scaffold: it supports `--dry-run` and a `--threshold` override.
+"""
+from __future__ import annotations
+import argparse
+from pathlib import Path
+import json
+import requests
+import os
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def load_env(path: Path) -> dict:
+    env = {}
+    if not path.exists():
+        return env
+    for line in path.read_text(encoding='utf-8').splitlines():
+        line = line.strip()
+        if not line or line.startswith('#'):
+            continue
+        if '=' in line:
+            k, v = line.split('=', 1)
+            env[k.strip()] = v.strip()
+    return env
+
+
+def send_telegram(token: str, chat: str, text: str) -> bool:
+    url = f'https://api.telegram.org/bot{token}/sendMessage'
+    try:
+        r = requests.post(url, json={'chat_id': chat, 'text': text})
+        r.raise_for_status()
+        return True
+    except Exception:
+        return False
+
+
+def main() -> None:
+    p = argparse.ArgumentParser()
+    p.add_argument('--metrics', default=str(ROOT / '.tmp' / 'metrics.json'))
+    p.add_argument('--threshold', type=int, default=100)
+    p.add_argument('--dry-run', action='store_true')
+    args = p.parse_args()
+
+    mfile = Path(args.metrics)
+    if not mfile.exists():
+        print('metrics file not found:', mfile)
+        return
+    data = json.loads(mfile.read_text(encoding='utf-8'))
+    # naive check: sum counters
+    total = sum(int(v) for v in data.get('counters', {}).values()) if isinstance(data.get('counters'), dict) else 0
+    print('metrics total counters:', total)
+    if total < args.threshold:
+        print('below threshold')
+        return
+
+    from scripts.env_utils import load_preferred_env
+    env = load_preferred_env(ROOT)
+    token = env.get('TELEGRAM_BOT_TOKEN')
+    chat = env.get('CHAT_ID')
+    msg = f'Alert: metrics total {total} crossed threshold {args.threshold}'
+    print(msg)
+    if args.dry_run:
+        return
+    if token and chat:
+        ok = send_telegram(token, chat, msg)
+        print('alert sent:', ok)
+    else:
+        print('telegram env missing; cannot send')
+
+
+if __name__ == '__main__':
+    main()
 """Alert script that checks persisted metrics and notifies when thresholds exceeded.
 
 Usage:
@@ -13,7 +88,8 @@ from typing import Dict, Tuple
 
 ROOT = Path(__file__).resolve().parents[1]
 METRICS_FILE = ROOT / '.tmp' / 'metrics.json'
-ENV_FILE = ROOT / '.tmp' / 'telegram.env'
+from scripts.env_utils import preferred_env_path
+ENV_FILE = preferred_env_path(ROOT)
 
 
 def read_metrics() -> Dict[str, int]:
