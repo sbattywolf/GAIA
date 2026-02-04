@@ -1,0 +1,35 @@
+name: Automerge Agent (dry-run)
+
+on:
+  schedule:
+    - cron: '0 * * * *' # run hourly
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry-run mode?'
+        required: false
+        default: 'true'
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Run automerge agent
+        env:
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'true' }}
+        run: |
+          echo "DRY_RUN=$DRY_RUN"
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
+          if [ "${DRY_RUN}" = "true" ]; then
+            python agents/automerge_agent.py --dry-run
+          else
+            python agents/automerge_agent.py
+          fi
