@@ -13,6 +13,7 @@ import time
 from datetime import datetime, timedelta
 from pathlib import Path
 import requests
+import difflib
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -89,7 +90,9 @@ def run_validator() -> str:
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('--duration-hours', type=float, default=8.0)
-    p.add_argument('--interval-minutes', type=int, default=5)
+    p.add_argument('--interval-minutes', type=int, default=10)
+    p.add_argument('--diff-only', action='store_true', help='send only lines added since last message')
+    p.add_argument('--once', action='store_true', help='run a single iteration and exit')
     p.add_argument('--top-n', type=int, default=6)
     args = p.parse_args()
 
@@ -122,11 +125,56 @@ def main():
         msg = '\n'.join(lines)
         # write local note
         (note_dir / f'status_{ts}.txt').write_text(msg, encoding='utf-8')
+
+        # avoid sending duplicate messages — compare with last sent content
+        last_path = note_dir / 'last_sent.txt'
+        last_msg = None
+        if last_path.exists():
+            try:
+                last_msg = last_path.read_text(encoding='utf-8')
+            except Exception:
+                last_msg = None
+
         sent = False
-        if token and chat:
-            sent = send_telegram(token, chat, msg)
+        # choose whether to send full message or only diffs
+        if msg != last_msg:
+            send_text = msg
+            if args.diff_only and last_msg:
+                # compute added lines using ndiff
+                try:
+                        old_lines = last_msg.splitlines()
+                    new_lines = msg.splitlines()
+                    diffs = list(difflib.ndiff(old_lines, new_lines))
+                    added = [d[2:] for d in diffs if d.startswith('+ ')]
+                    if not added:
+                        print(f'[{ts}] no new lines to send; skipping')
+                        # still update last_sent
+                        try:
+                            last_path.write_text(msg, encoding='utf-8')
+                        except Exception:
+                            pass
+                        if args.once:
+                            break
+                        time.sleep(args.interval_minutes * 60)
+                        continue
+                    send_text = '\n'.join([f'GAIA updates {ts} (diff-only)'] + added)
+                except Exception:
+                    send_text = msg
+
+            if token and chat:
+                sent = send_telegram(token, chat, send_text)
+            # update last sent regardless
+            try:
+                last_path.write_text(msg, encoding='utf-8')
+            except Exception:
+                pass
+        else:
+            print(f'[{ts}] duplicate message detected; skipping send')
+
         print(f'[{ts}] sent={sent} todo_count={len(tasks)}')
         time.sleep(args.interval_minutes * 60)
+        if args.once:
+            break
 
 
 if __name__ == '__main__':

@@ -3223,8 +3223,8 @@ If you need the backend to receive the prefixed path, set
 
 The Gateway serves a directory of HTML/CSS/JS over HTTP so iOS/Android nodes can simply `canvas.navigate` to it.
 
-Default root: `~/.openclaw/workspace/canvas`  
-Default port: `18793` (chosen to avoid the openclaw browser CDP port `18792`)  
+Default root: `~/.openclaw/workspace/canvas`
+Default port: `18793` (chosen to avoid the openclaw browser CDP port `18792`)
 The server listens on the **gateway bind host** (LAN or Tailnet) so nodes can reach it.
 
 The server:

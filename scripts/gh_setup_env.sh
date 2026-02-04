@@ -91,7 +91,7 @@ if [ -n "$REVIEWERS_VAL" ]; then
     if [ "$first" = true ]; then
       first=false
     else
-      reviewers_json+="," 
+      reviewers_json+=","
     fi
     reviewers_json+="{\"type\":\"User\",\"login\":\"$r_trimmed\"}"
   done

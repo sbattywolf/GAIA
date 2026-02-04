@@ -168,4 +168,3 @@ Below is an example showing how classification fields were applied to the active
 	- `acceptance`: part2 draft created under `doc/` and referenced from the parent story
 
 Include a one-line acceptance criteria when adding these fields so reviewers and automated tools can quickly triage the work and the CI/test scope for each task.
-
