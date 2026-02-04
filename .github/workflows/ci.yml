@@ -69,6 +69,11 @@ jobs:
           python -m pip install -e . || true
         shell: bash
 
+      - name: Smoke - import check
+        run: |
+          python -c "import agents, scripts, orchestrator"
+        shell: bash
+
       - name: Smoke - online agent dry_run
         run: |
           python -u scripts/online_agent.py --command dry_run

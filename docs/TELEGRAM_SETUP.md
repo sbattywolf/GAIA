@@ -11,8 +11,9 @@ python -m pip install --upgrade pip
 python -m pip install requests
 
 # set env vars for this session (do NOT commit these)
-$env:TELEGRAM_CHAT_ID='123456789'
-$env:TELEGRAM_BOT_TOKEN='your_new_token_here'
+# prefer GAIA-prefixed names locally for consistency
+$env:GAIA_TELEGRAM_CHAT_ID='123456789'
+$env:GAIA_TELEGRAM_BOT_TOKEN='your_new_token_here'
 
 # run the summary (prints to stdout and sends Telegram if token+chat present)
 python .\scripts\telegram_summary.py
@@ -23,9 +24,10 @@ python .\scripts\telegram_summary.py
 Use the GitHub CLI from your machine (recommended) or the GitHub UI.
 
 ```powershell
-# replace OWNER/REPO with your repo path (e.g. sbatt/GAIA)
-gh secret set TELEGRAM_BOT_TOKEN --repo OWNER/REPO --body 'your_new_token_here'
-gh secret set TELEGRAM_CHAT_ID --repo OWNER/REPO --body '123456789'
+# replace OWNER/REPO with your repo path (e.g. sbattywolf/GAIA)
+# store GAIA-prefixed secrets for clarity in workflows
+gh secret set GAIA_TELEGRAM_BOT_TOKEN --repo OWNER/REPO --body 'your_new_token_here'
+gh secret set GAIA_TELEGRAM_CHAT_ID --repo OWNER/REPO --body '123456789'
 ```
 
 Notes:
@@ -36,10 +38,10 @@ Notes:
 
 ```powershell
 # trigger the workflow on the default branch (e.g. main)
-gh workflow run telegram-summary.yml --repo OWNER/REPO --ref main
+gh workflow run notify-telegram-summary.yml --repo OWNER/REPO --ref main
 
 # list recent runs and get the run id
-gh run list --workflow telegram-summary.yml --repo OWNER/REPO
+gh run list --workflow notify-telegram-summary.yml --repo OWNER/REPO
 
 # view logs
 gh run view <run-id> --log --repo OWNER/REPO
@@ -49,7 +51,7 @@ gh run view <run-id> --log --repo OWNER/REPO
 
 - Local test printed the summary or you received a Telegram message.
 - `gh secret list --repo OWNER/REPO` shows the two secrets.
-- The scheduled Action runs every 30 minutes; check Actions → `Telegram summary` for recent runs.
+-- The scheduled Action runs every 30 minutes; check Actions → `Notify - Telegram summary` for recent runs.
 
 5) Security notes
 
