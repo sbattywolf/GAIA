@@ -7,6 +7,8 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+    env:
+      PYTHONPATH: '.'
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -15,6 +17,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: false
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -45,12 +50,17 @@ on:
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+    env:
+      PYTHONPATH: ${{ github.workspace }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
         python-version: [3.11]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: false
 
       - name: Set up Python
         uses: actions/setup-python@v4
