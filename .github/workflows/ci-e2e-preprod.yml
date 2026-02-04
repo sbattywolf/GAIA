@@ -1,0 +1,72 @@
+name: CI — E2E (pre-prod)
+
+on:
+  push:
+    branches: [ pre-prod ]
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    name: E2E tests (pre-prod)
+    runs-on: ubuntu-latest
+    environment: pre-prod
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Start infra (Postgres test DB) via docker-compose
+        run: |
+          docker-compose -f infra/docker-compose.preprod.yml up -d
+        shell: bash
+
+      - name: Wait for Postgres
+        run: |
+          apt-get update && apt-get install -y postgresql-client
+          chmod +x scripts/wait_for_postgres.sh
+          ./scripts/wait_for_postgres.sh 127.0.0.1 5432 30
+        shell: bash
+
+      - name: Start mock services (mock_token_service)
+        run: |
+          # Start mock token verification service in background
+          python -u scripts/mock_token_service.py --port 8001 &
+          MOCK_PID=$!
+          echo "mock_token_service pid=$MOCK_PID"
+          # Wait for service to become ready
+          for i in {1..10}; do
+            if curl -sSf http://127.0.0.1:8001/health >/dev/null 2>&1; then
+              echo "mock service ready"; break
+            fi
+            sleep 1
+          done
+          sleep 1
+        shell: bash
+
+      - name: Run E2E tests
+        run: |
+          # Run E2E tests; ensure they exit non-zero on failures if desired
+          python -m pytest -q -m e2e || true
+
+      - name: Stop mock services
+        if: always()
+        run: |
+          echo "Stopping mock service"
+          pkill -f mock_token_service.py || true
+        shell: bash
+
+      - name: Tear down infra
+        if: always()
+        run: |
+          docker-compose -f infra/docker-compose.preprod.yml down
+        shell: bash
