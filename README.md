@@ -211,6 +211,8 @@ Secrets testing and unhappy-paths
 
 The repository includes guidance and templates for testing secret-related failure modes locally. See `doc/SECRETS_TESTING.md` for recommended workflows (invalid/revoked tokens, wrong chat id, network outages). Use `.tmp/test_secrets/invalid_tokens.env.template` as a starting point for reproducible demos.
 
+Telegram summary setup: see [docs/TELEGRAM_SETUP.md](docs/TELEGRAM_SETUP.md) for testing and repository secret steps.
+
 Telegram improvements trace
 --------------------------
 
