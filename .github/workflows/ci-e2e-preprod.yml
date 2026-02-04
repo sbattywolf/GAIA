@@ -1,0 +1,35 @@
+name: CI — E2E (pre-prod)
+
+on:
+  push:
+    branches: [ pre-prod ]
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    name: E2E tests (pre-prod)
+    runs-on: ubuntu-latest
+    environment: pre-prod
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Start mock services
+        run: |
+          # Start local mock services if required by E2E. This is a placeholder.
+          echo "(E2E) start mock services here"
+
+      - name: Run E2E tests
+        run: |
+          python -m pytest -q -m e2e || true
