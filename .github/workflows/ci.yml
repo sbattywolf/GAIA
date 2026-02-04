@@ -75,8 +75,16 @@ jobs:
         shell: bash
 
       - name: Run tests
-        run: |
-            # ensure repo path is available to python via .pth
-            python -c "import site,os; p=site.getsitepackages()[0] if hasattr(site,'getsitepackages') else site.getusersitepackages(); open(os.path.join(p,'gaia_repo_path.pth'),'w').write(os.getenv('GITHUB_WORKSPACE')+os.linesep); print('wrote .pth to',p)"
-            python -m pytest -q --basetemp .tmp/pytest
         shell: bash
+        run: |
+          # ensure repo path is available to python via .pth in the user site-packages (cross-platform)
+          python - <<'PY'
+            import os,site,pathlib
+            user_site = site.getusersitepackages()
+            path = pathlib.Path(user_site)
+            path.mkdir(parents=True, exist_ok=True)
+            pth_file = path / 'gaia_repo_path.pth'
+            pth_file.write_text(os.environ.get('GITHUB_WORKSPACE','') + os.linesep)
+            print('wrote .pth to', user_site)
+            PY
+          python -m pytest -q --basetemp .tmp/pytest
