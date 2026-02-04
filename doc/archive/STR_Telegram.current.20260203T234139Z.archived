@@ -1,0 +1,84 @@
+MERGED: content moved into `.tmp/todolists/EPC_Telegraf.stoy1.assistant.stoylist.current` on 2026-02-03T00:00:00Z.
+
+This document has been merged and can be deleted or archived. See `.tmp/todolists/EPC_Telegraf.stoy1.assistant.stoylist.current` -> `merged_docs` for full content.
+- Auto-requeue: conservative defaults with dry-run and env-configurable policy
+- Retryer: worker that processes failed queue and re-sends messages; initial HTTP error classification
+- Audit traces: `gaia.db` traces for major actions
+- Enforce finalization: `scripts/enforce_todolist_final.py` to mark `.current` as finalized
+- Tests: unit + concurrency + some end-to-end tests present under `tests/`
+
+Planned features (merged from draft) — grouped & prioritized
+
+High priority
+
+- Secure env & secret handling
+	- TODOs:
+		1. Document recommended file permissions and storage for `.tmp/telegram.env` and provide a secure `.env.template`.
+		2. Add `scripts/rotate_admin_token.py` scaffold and CLI to regenerate and revoke admin tokens.
+		3. Add CI pre-check to prevent accidental secrets in commits and a `git` pre-commit hook example.
+
+- Harden command execution safety
+	- TODOs:
+		1. Enforce `ALLOW_COMMAND_EXECUTION=0` by default; require explicit confirmation and opt-in for live execution.
+		2. Add UI confirmation modal / explicit approval step for destructive commands and a dry‑run toggle.
+		3. Add safe-quoting helpers and update `scripts/tg_command_manager.py` to use them; add tests.
+
+- Integration tests: approval listener end-to-end
+	- TODOs:
+		1. Implement a mocked Telegram API harness for local and CI integration tests.
+		2. Add an integration test that exercises: fake update → `approval_listener.py` → monitor UI → approve → `claim_cli.py` → audit trace.
+		3. Assert idempotency by replaying the same update and ensuring no duplicate side-effects.
+
+Medium priority
+
+- STR: Decide default claim TTL
+	- TODOs:
+		1. Finalize TTL choice (proposal: 300s) and document tradeoffs for operators.
+		2. Add `CLAIM_DEFAULT_TTL` env var and update `scripts/claims.py` default value and tests.
+		3. Add automated tests for TTL expiry and takeover semantics.
+
+- STR: Decide requeue policy
+	- TODOs:
+		1. Finalize defaults for `AUTO_REQUEUE_MAX_RETRIES`, `AUTO_REQUEUE_MAX_AGE_HOURS`, `AUTO_REQUEUE_MAX_PER_RUN`.
+		2. Add a manual-gating option (`--require-approval`) for requeueing sensitive items.
+		3. Add policy unit tests and documentation examples.
+
+- Improve retryer error classification
+	- TODOs:
+		1. Handle `requests.exceptions.HTTPError` with mapping: 5xx -> retryable, 429 -> rate-limit handling, 4xx -> permanent.
+		2. Implement exponential backoff with jitter for retry attempts.
+		3. Add tests simulating 429 and 5xx responses with `response` objects.
+
+Lower priority
+
+- Metrics instrumentation
+	- TODOs:
+		1. Add counters (`duplicate_skip`, `requeue_attempt`, `retry_attempt`, `permanent_failed_size`) and persist to `.tmp/metrics.json`.
+		2. Emit `gaia.db` traces when thresholds are crossed.
+		3. Wire `scripts/alert_on_metrics.py` to read metrics and notify the admin chat by default.
+
+- Permanent-failed UI & one-click requeue
+	- TODOs:
+		1. Add monitor page to list `telegram_queue_failed_permanent.json` entries.
+		2. Implement one-click requeue action calling `telegram_queue_admin.py --requeue` with token protection.
+		3. Record audit traces for UI-initiated requeues and add a confirmation modal.
+
+- Backup & retention for `.tmp` and `gaia.db`
+	- TODOs:
+		1. Implement `scripts/backup_tmp.py` to create timestamped archives (tar/zip) of `.tmp` and `gaia.db`.
+		2. Add retention policy config and `scripts/cleanup_backups.py`.
+		3. Document backup cadence and include backup in the release checklist.
+
+Other planned items (short list)
+- CLI examples (populate `doc/STR_Telegram.current#CLI-Examples` with sample commands and outputs).
+- Example workflows (manual requeue, safe dry-run, admin requeue sequence diagrams).
+- Admin token rotation script & UI integration (tie to Secure env work).
+- Release checklist & CI badge (CI config + README updates).
+
+Exceptions / items left unassigned
+- Large UI redesigns (full monitor UI rewrite) — scope too large for this iteration.
+- External monitoring integration (PagerDuty / Prometheus exporters) — requires infra decisions and access.
+
+Status
+- Draft items merged into this `STR_Telegram.current` document. The actionable feature todos are tracked in the managed todo list under `STR:` prefixed entries.
+

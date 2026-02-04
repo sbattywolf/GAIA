@@ -1,0 +1,70 @@
+name: Auto PR If Tests Pass
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  test-and-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies (if present)
+        run: |
+          if [ -f requirements.txt ]; then
+            python -m pip install --upgrade pip
+            python -m pip install -r requirements.txt
+          fi
+
+      - name: Run tests
+        id: run_tests
+        run: |
+          export PYTHONPATH='.'
+          pytest -q
+
+      - name: Create branch and make change
+        id: make_change
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          git config user.name "gaia-bot"
+          git config user.email "gaia-bot@example.com"
+          BRANCH="auto/pr-$(date +%s)"
+          git checkout -b "$BRANCH"
+          echo "Auto PR generated at $(date -u --iso-8601=seconds)" >> .auto_pr_log
+          git add .auto_pr_log
+          set +e
+          git commit -m "chore: auto PR update" || true
+          set -e
+          git push --set-upstream origin "$BRANCH"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+
+      - name: Create Pull Request
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const branch = "${{ steps.make_change.outputs.branch }}";
+            const title = `Auto PR: small maintenance (${branch})`;
+            const body = "This PR was opened by the GAIA auto-PR bot after tests passed.";
+            const pr = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              head: branch,
+              base: 'main',
+              body,
+            });
+            core.info(`PR created: ${pr.data.html_url}`);

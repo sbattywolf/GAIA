@@ -1,3 +1,4 @@
 click
 requests
 psutil>=5.9.0  # optional: resource monitor (dry-run suggestion)
+Flask>=2.0

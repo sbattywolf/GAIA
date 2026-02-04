@@ -1,0 +1,20 @@
+[
+  {
+    "id": "t-approve-1",
+    "chat_id": "test_chat",
+    "message_id": "m1",
+    "command": "echo hi",
+    "from": {
+      "first_name": "tester"
+    },
+    "status": "executed_dryrun",
+    "created": "2026-02-03T23:52:28.930581Z",
+    "options": {
+      "exec_request": true
+    },
+    "approved_at": "2026-02-03T23:52:28.936200Z",
+    "approved_by": "unit-test",
+    "executed_at": "2026-02-03T23:52:28.946013Z",
+    "_note": "dry-run (no real execution)"
+  }
+]
