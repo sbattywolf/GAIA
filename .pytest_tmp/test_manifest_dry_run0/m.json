@@ -1,0 +1,1 @@
+{"name": "test-manifest", "steps": [{"id": "s1", "cmd": "echo step1"}, {"id": "s2", "cmd": "echo step2"}]}
