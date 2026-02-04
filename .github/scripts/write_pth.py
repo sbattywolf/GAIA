@@ -1,14 +1,12 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """Write a .pth file into a site-packages directory pointing to the repo.
 
-This script is defensive: CI runners may have old Python where
-`site.getusersitepackages()` or other helpers are missing. Try several
-strategies to find a writable site-packages path.
+This script is defensive: CI runners may be very old. Try several
+strategies to find a writable site-packages path without failing on
+missing stdlib modules.
 """
 import os
 import sys
-import site
-import sysconfig
 
 
 def _makedirs(path):
@@ -20,45 +18,86 @@ def _makedirs(path):
 
 
 def find_site_packages():
-    # 1) Prefer the user site directory when available
+    # Try importing site and preferred helpers first, but don't fail
+    site = None
     try:
-        return site.getusersitepackages()
+        import site as _site
+        site = _site
+    except Exception:
+        site = None
+
+    if site is not None:
+        try:
+            val = site.getusersitepackages()
+            if val:
+                return val
+        except Exception:
+            pass
+
+        user_site = getattr(site, 'USER_SITE', None)
+        if user_site:
+            return user_site
+
+        try:
+            packs = site.getsitepackages()
+            if packs:
+                return packs[0]
+        except Exception:
+            pass
+
+    # Try sysconfig if available
+    try:
+        import sysconfig as _sysconfig
+        try:
+            purelib = _sysconfig.get_path('purelib')
+            if purelib:
+                return purelib
+        except Exception:
+            pass
     except Exception:
         pass
 
-    # 2) Fallback to site.USER_SITE if present
-    user_site = getattr(site, 'USER_SITE', None)
-    if user_site:
-        return user_site
-
-    # 3) Try the system site-packages
+    # Try distutils.sysconfig
     try:
-        packs = site.getsitepackages()
-        if packs:
-            return packs[0]
+        from distutils import sysconfig as _distro
+        try:
+            lib = _distro.get_python_lib()
+            if lib:
+                return lib
+        except Exception:
+            pass
     except Exception:
         pass
 
-    # 4) Use sysconfig to get a purelib path
-    try:
-        purelib = sysconfig.get_path('purelib')
-        if purelib:
-            return purelib
-    except Exception:
-        pass
+    # Try to pick an existing site-packages-like entry from sys.path
+    for p in sys.path:
+        if not p:
+            continue
+        if os.path.isdir(p) and ('site-packages' in p or 'dist-packages' in p):
+            return p
 
-    # 5) Platform-specific sensible default
+    # Last-resort sensible defaults
+    try:
+        base = getattr(sys, 'base_prefix', sys.prefix)
+    except Exception:
+        base = sys.prefix
+
     if os.name == 'nt':
-        return os.path.join(sys.base_prefix, 'Lib', 'site-packages')
+        return os.path.join(base, 'Lib', 'site-packages')
     else:
-        ver = 'python%s' % (sys.version_info[0],)
-        return os.path.join(sys.base_prefix, 'lib', ver, 'site-packages')
+        ver = 'python%d' % (getattr(sys, 'version_info')[0],)
+        return os.path.join(base, 'lib', ver, 'site-packages')
 
 
 def main():
     repo = os.environ.get('GITHUB_WORKSPACE') or os.getcwd()
     site_dir = find_site_packages()
-    _makedirs(site_dir)
+    try:
+        _makedirs(site_dir)
+    except Exception:
+        print('unable to create site-packages directory:', site_dir)
+        sys.exit(2)
+
     pth_file = os.path.join(site_dir, 'gaia_repo_path.pth')
     try:
         with open(pth_file, 'w') as fh:
