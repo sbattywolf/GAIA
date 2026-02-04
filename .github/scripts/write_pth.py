@@ -5,14 +5,21 @@ This avoids relying on shell heredocs and is cross-platform.
 """
 import os
 import site
-from pathlib import Path
+
+def _makedirs(path):
+    try:
+        os.makedirs(path, exist_ok=True)
+    except TypeError:
+        # Python < 3.2 doesn't support exist_ok
+        if not os.path.isdir(path):
+            os.makedirs(path)
 
 def main():
     user_site = site.getusersitepackages()
-    p = Path(user_site)
-    p.mkdir(parents=True, exist_ok=True)
-    pth_file = p / 'gaia_repo_path.pth'
-    pth_file.write_text(os.environ.get('GITHUB_WORKSPACE', '') + os.linesep)
+    _makedirs(user_site)
+    pth_file = os.path.join(user_site, 'gaia_repo_path.pth')
+    with open(pth_file, 'w') as fh:
+        fh.write(os.environ.get('GITHUB_WORKSPACE', '') + os.linesep)
     print('wrote .pth to', user_site)
 
 if __name__ == '__main__':
