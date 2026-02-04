@@ -9,7 +9,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: [3.10]
+        python-version: ['3.10']
 
     steps:
       - uses: actions/checkout@v4
@@ -24,6 +24,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest
+
+      - name: Ensure repo importable
+        run: python .github/scripts/write_pth.py
+
+      - name: Smoke - import check
+        run: python -c "import agents, scripts, orchestrator"
 
       - name: Run tests
         run: pytest -q

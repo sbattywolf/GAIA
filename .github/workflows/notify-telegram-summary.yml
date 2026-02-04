@@ -1,0 +1,31 @@
+name: Notify - Telegram summary
+
+on:
+  schedule:
+    # every 30 minutes
+    - cron: '*/30 * * * *'
+  workflow_dispatch: {}
+
+jobs:
+  send_summary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Telegram summary
+        env:
+          GAIA_TELEGRAM_BOT_TOKEN: ${{ secrets.GAIA_TELEGRAM_BOT_TOKEN }}
+          GAIA_TELEGRAM_CHAT_ID: ${{ secrets.GAIA_TELEGRAM_CHAT_ID }}
+          GAIA_PROTOTYPE_USE_LOCAL_EVENTS: 1
+        run: python scripts/telegram_summary.py
