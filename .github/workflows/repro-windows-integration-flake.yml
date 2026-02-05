@@ -28,7 +28,7 @@ jobs:
           for ($i=1; $i -le 20; $i++) {
             $file = "flake-logs/run_$i.txt"
             "--- RUN $i ---" | Out-File -FilePath $file -Encoding utf8
-            pytest tests/e2e -k preprod_infra -q 2>&1 | Tee-Object -FilePath $file -Append
+            python -m pytest tests/e2e -k preprod_infra -q 2>&1 | Tee-Object -FilePath $file -Append
             if ($LASTEXITCODE -ne 0) { "FAILED with exit $LASTEXITCODE" | Out-File -FilePath $file -Append; $failed = $true; break }
           }
           if (-not (Test-Path flake-logs/summary.txt)) { "runs_completed=$i; failed=$failed" | Out-File flake-logs/summary.txt -Encoding utf8 }
