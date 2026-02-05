@@ -16,6 +16,9 @@ from datetime import datetime
 import importlib.util
 from pathlib import Path
 import uuid
+import json
+
+SESSION_STATE = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.copilot', 'session_state.json')
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
 TASKS_FILE = os.path.join(ROOT, 'tasks.json')
@@ -98,6 +101,23 @@ def handle_task(task):
     time.sleep(2)
     append_event({"type": "task.complete", "task_id": task_id, "action": task.get('action')})
     task['status'] = 'done'
+    # persist session state after completing a task (micro-step persistence)
+    try:
+        if os.path.exists(SESSION_STATE):
+            with open(SESSION_STATE, 'r', encoding='utf-8') as sf:
+                ss = json.load(sf)
+        else:
+            ss = {}
+        ss['last_sync'] = datetime.utcnow().isoformat() + 'Z'
+        ss['current_task_id'] = task_id
+        sc = ss.get('steps_completed', [])
+        sc.append(f"completed:{task_id}")
+        ss['steps_completed'] = sc
+        # write back
+        with open(SESSION_STATE, 'w', encoding='utf-8') as sf:
+            json.dump(ss, sf, indent=2)
+    except Exception:
+        pass
     return True
 
 
