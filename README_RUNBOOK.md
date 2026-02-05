@@ -78,3 +78,33 @@ python -m pytest -q --basetemp .tmp/pytest
 
 ---
 Keep this file handy for operator copy-paste. Update `doc/HANDOFF.md` for longer procedures.
+
+Runbook excerpt: auto-triage (Part 3)
+----------------------------------
+
+Short description: The auto-triage automation enumerates failed GitHub Actions runs, extracts logs, creates follow-up issues, and uploads run logs for traceability. Part 3 focuses on stabilizing and verifying this automation.
+
+Quick links:
+
+- Plan: `doc/sprints/PLAN.md`
+- Backlog item template: `doc/sprints/backlog_item_template.md`
+- Analysis artifacts: `doc/sprints/analysis/`
+
+Operator steps (common tasks):
+
+- Manually run triage (PowerShell):
+
+```powershell
+pwsh -File scripts/auto_triage_issues.ps1 --dry-run
+```
+
+- Force a full run (non-dry):
+
+```powershell
+pwsh -File scripts/auto_triage_issues.ps1
+```
+
+- If `gh auth` fails in automation runs, verify the Action secret `AUTOMATION_GITHUB_TOKEN` and inspect the workflow step that performs `gh auth login` (the workflow uses a tolerant login invocation).
+- If gist uploads fail, check `doc/sprints/analysis/created_gists.txt` and the release `auto-triage-archive-2026-02-05` for archived logs.
+
+Monitoring: during Part 3, collect per-run metrics into `doc/sprints/analysis/triage-metrics.ndjson` and review daily for 7 days.
