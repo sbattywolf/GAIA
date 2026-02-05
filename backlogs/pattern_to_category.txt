@@ -1,0 +1,24 @@
+# Pattern to Issue Type Mapping
+
+# Format: regex_pattern → issue_category
+
+# Stories (user-focused)
+as\s+a\s+.+i\s+want → story
+user\s+can → story
+should\s+allow → story
+
+# Tasks (technical work)
+setup → task
+configure → task
+install → task
+deploy → task
+
+# Spikes (research)
+research → spike
+investigate → spike
+explore → spike
+evaluate → spike
+poc → spike
+
+# Default
+.* → feature

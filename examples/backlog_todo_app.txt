@@ -1,0 +1,14 @@
+# Example: Todo Application Requirements
+
+Build a todo application with:
+- User registration and authentication
+- Create, edit, delete todos  
+- Mark todos as complete
+- REST API backend
+- Docker deployment
+- Investigate best database for scale
+
+Additional requirements:
+- Setup CI/CD pipeline
+- Configure monitoring
+- Research authentication providers

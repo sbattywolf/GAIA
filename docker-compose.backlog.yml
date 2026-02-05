@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  gaia-backlog-worker:
+    image: python:3.12-slim
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+      - ./backlogs:/workspace/backlogs
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - GH_TOKEN=${GH_TOKEN}
+    command: >
+      bash -c "
+      apt-get update && apt-get install -y gh git curl &&
+      pip install -q -r requirements.txt &&
+      python scripts/automation_runner.py
+      "
+    restart: unless-stopped
