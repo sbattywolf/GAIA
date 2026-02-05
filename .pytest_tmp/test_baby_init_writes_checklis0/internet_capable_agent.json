@@ -1,1 +1,0 @@
-{"required_packages": ["packageA==1.2.3", "packageB>=4.0"]}
