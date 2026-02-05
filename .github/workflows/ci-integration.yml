@@ -34,7 +34,10 @@ jobs:
           # Prefer running tests that are not marked as E2E. Adjust marker as needed.
           # ensure repo importable via .pth fallback
           if [ -f .github/scripts/write_pth.py ]; then python .github/scripts/write_pth.py; fi
-          python -m pytest -q -m "not e2e" || true
+          # ensure pytest has a writable basetemp directory to avoid FileNotFoundError
+          mkdir -p ./.tmp/pytest
+          PYTEST_BASETMP=./.tmp/pytest
+          python -m pytest -q -m "not e2e" --basetemp="$PYTEST_BASETMP" || true
 name: CI — Integration Tests (simulated)
 
 on:
@@ -84,4 +87,6 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest -q
+          # ensure pytest has a writable basetemp directory to avoid FileNotFoundError
+          mkdir -p ./.tmp/pytest
+          pytest -q --basetemp=./.tmp/pytest

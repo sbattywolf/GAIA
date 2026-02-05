@@ -63,7 +63,9 @@ jobs:
           export RUN_E2E=1
           # ensure repo importable via .pth fallback
           if [ -f .github/scripts/write_pth.py ]; then python .github/scripts/write_pth.py; fi
-          python -m pytest -q -m e2e || true
+          # ensure pytest has a writable basetemp directory
+          mkdir -p ./.tmp/pytest
+          python -m pytest -q -m e2e --basetemp=./.tmp/pytest || true
 
       - name: Stop mock services
         if: always()
