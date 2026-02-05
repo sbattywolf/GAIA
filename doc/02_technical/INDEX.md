@@ -1,6 +1,6 @@
 # Technical Summaries
 
-Generated on 2026-02-05T16:38:24.522173Z from archive pre_restructure_20260205T163407Z
+Generated on 2026-02-05T16:39:36.294301Z by reclassification script.
 
 - [AGENT_BEST_PRACTICES-summary.md](AGENT_BEST_PRACTICES-summary.md)
 - [ALBY_0_2_SUMMARY-summary.md](ALBY_0_2_SUMMARY-summary.md)
@@ -9,10 +9,8 @@ Generated on 2026-02-05T16:38:24.522173Z from archive pre_restructure_20260205T1
 - [ARCHITECTURE_STRATEGY-summary.md](ARCHITECTURE_STRATEGY-summary.md)
 - [AUTOMATION_ROADMAP-summary.md](AUTOMATION_ROADMAP-summary.md)
 - [AUTOMERGE-summary.md](AUTOMERGE-summary.md)
-- [BACKLOG_CONSOLIDATED-summary.md](BACKLOG_CONSOLIDATED-summary.md)
 - [CHECKPOINT_1-summary.md](CHECKPOINT_1-summary.md)
 - [CHECKPOINT_2-summary.md](CHECKPOINT_2-summary.md)
-- [CI_AUDIT-summary.md](CI_AUDIT-summary.md)
 - [DOCS_STRATEGY-summary.md](DOCS_STRATEGY-summary.md)
 - [ENVIRONMENTS-summary.md](ENVIRONMENTS-summary.md)
 - [EPC_Telegram_Report-summary.md](EPC_Telegram_Report-summary.md)
@@ -24,9 +22,6 @@ Generated on 2026-02-05T16:38:24.522173Z from archive pre_restructure_20260205T1
 - [GAIA_DETAILED_DOC-summary.md](GAIA_DETAILED_DOC-summary.md)
 - [GITHUB_ENV_SETUP-summary.md](GITHUB_ENV_SETUP-summary.md)
 - [HANDOFF-summary.md](HANDOFF-summary.md)
-- [HISTORY_REWRITE_NOTICE-summary.md](HISTORY_REWRITE_NOTICE-summary.md)
-- [HISTORY_REWRITE_PLAN-summary.md](HISTORY_REWRITE_PLAN-summary.md)
-- [HISTORY_TRACING-summary.md](HISTORY_TRACING-summary.md)
 - [MASTER_DOC_INDEX-summary.md](MASTER_DOC_INDEX-summary.md)
 - [MULTI_AGENT_ARCHITECTURE-summary.md](MULTI_AGENT_ARCHITECTURE-summary.md)
 - [ONLINE_AGENT_README-summary.md](ONLINE_AGENT_README-summary.md)
@@ -45,15 +40,6 @@ Generated on 2026-02-05T16:38:24.522173Z from archive pre_restructure_20260205T1
 - [SECRETS_HANDLING-summary.md](SECRETS_HANDLING-summary.md)
 - [SECRETS_TESTING-summary.md](SECRETS_TESTING-summary.md)
 - [SEQUENCE_ARCHIVE-summary.md](SEQUENCE_ARCHIVE-summary.md)
-- [STORY_ALBY-summary.md](STORY_ALBY-summary.md)
-- [STORY_ALBY_EXTRA-summary.md](STORY_ALBY_EXTRA-summary.md)
-- [STORY_CONTROLLERS-summary.md](STORY_CONTROLLERS-summary.md)
-- [STORY_CONTROLLERS_EXTRA-summary.md](STORY_CONTROLLERS_EXTRA-summary.md)
-- [STORY_GISE-summary.md](STORY_GISE-summary.md)
-- [STORY_GISE_EXTRA-summary.md](STORY_GISE_EXTRA-summary.md)
-- [STORY_GUI-summary.md](STORY_GUI-summary.md)
-- [STORY_GUI_EXTRA-summary.md](STORY_GUI_EXTRA-summary.md)
-- [STORY_TELEGRAM_PROPOSAL-summary.md](STORY_TELEGRAM_PROPOSAL-summary.md)
 - [SUPERVISOR_NOTES-summary.md](SUPERVISOR_NOTES-summary.md)
 - [TELEGRAM_AS_IS_AND_ROADMAP-summary.md](TELEGRAM_AS_IS_AND_ROADMAP-summary.md)
 - [TELEGRAM_ENV_TEMPLATE-summary.md](TELEGRAM_ENV_TEMPLATE-summary.md)
@@ -61,7 +47,6 @@ Generated on 2026-02-05T16:38:24.522173Z from archive pre_restructure_20260205T1
 - [TELEGRAM_REALTIME_SPEC-summary.md](TELEGRAM_REALTIME_SPEC-summary.md)
 - [TELEGRAM_SETUP-summary.md](TELEGRAM_SETUP-summary.md)
 - [TELEGRAM_STATS_SUMMARY-summary.md](TELEGRAM_STATS_SUMMARY-summary.md)
-- [TELEGRAM_STORY-summary.md](TELEGRAM_STORY-summary.md)
 - [TELEGRAM_TRACE_LOG-summary.md](TELEGRAM_TRACE_LOG-summary.md)
 - [TEMPLATE_SOFTWARE_DOC-summary.md](TEMPLATE_SOFTWARE_DOC-summary.md)
 - [branch_approval_process-summary.md](branch_approval_process-summary.md)
