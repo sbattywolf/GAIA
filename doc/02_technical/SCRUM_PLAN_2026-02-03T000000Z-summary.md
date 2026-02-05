@@ -1,0 +1,5 @@
+# Summary: SCRUM_PLAN_2026-02-03T000000Z.md
+
+Source: `doc/archive/pre_restructure_20260205T163407Z/SCRUM_PLAN_2026-02-03T000000Z.md`
+
+# SCRUM Plan (draft) - 2026-02-03T000000Z
