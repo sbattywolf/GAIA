@@ -23,13 +23,13 @@ Legend: Status values used (`completed`, `in-progress`, `pending`). Time fields 
 
 | Epic | Features | Tasks | Total Score | Est Hours | Hours Spent | % Completed | Scrum Points | Last Updated |
 |---|---:|---:|---:|---:|---:|---:|---:|---|
-| CI & Testing | CI Stability, Integration Tests | 7 | 360 | 112h | 36h | 30% | 56pt | 2026-02-05 14:00 |
-| Security & Secrets | Secret Scanning, Token Rotation | 6 | 245 | 96h | 4h | 4% | 38pt | 2026-02-05 14:00 |
-| Telegram Integration | Realtime + Harness + Runbooks | 12 | 520 | 200h | 8h | 2% | 88pt | 2026-02-05 14:00 |
-| Agent Automation | alby_agent prototype, automation runners | 6 | 200 | 72h | 0h | 0% | 32pt | 2026-02-05 14:00 |
-| Backlog & Docs | Docs restructure, OVERVIEWs, Index | 10 | 140 | 56h | 30h | 54% | 22pt | 2026-02-05 14:00 |
-| Operations & Monitoring | Metrics, backups, monitor UI | 7 | 125 | 56h | 8h | 6% | 35pt | 2026-02-05 14:00 |
-| **Project Totals** | 7 epics | 48 tasks | **1590** | **592h** | **86h** | **14%** | **271pt** | 2026-02-05 14:00 |
+| CI & Testing | CI Stability, Integration Tests | 7 | 360 | 112h | 36h | 30% | 56pt | 2026-02-05 14:40 |
+| Security & Secrets | Secret Scanning, Token Rotation | 6 | 245 | 96h | 4h | 4% | 38pt | 2026-02-05 14:40 |
+| Telegram Integration | Realtime + Harness + Runbooks | 12 | 520 | 200h | 8h | 2% | 88pt | 2026-02-05 14:40 |
+| Agent Automation | alby_agent prototype, automation runners | 6 | 200 | 72h | 0h | 0% | 32pt | 2026-02-05 14:40 |
+| Backlog & Docs | Docs restructure, OVERVIEWs, Index | 10 | 140 | 56h | 30h | 54% | 22pt | 2026-02-05 14:40 |
+| Operations & Monitoring | Metrics, backups, monitor UI | 7 | 125 | 56h | 8h | 6% | 35pt | 2026-02-05 14:40 |
+| **Project Totals** | 7 epics | 48 tasks | **1590** | **592h** | **86h** | **14%** | **271pt** | 2026-02-05 14:40 |
 
 Notes: totals are derived by summing the representative tasks below; this is a synthesized snapshot—not every repository todo is expanded into an explicit task here but the major workstreams are represented.
 
@@ -44,7 +44,7 @@ Purpose: stabilize CI, add deterministic smoke, and create integration test harn
 | CI Stability | Fix CI workflow | Open PR to fix CI workflow | high | 50 | 16 | completed | 16 | 8 | 2026-02-03 10:00 |
 | CI Stability | Write .pth helper | Patch CI to write .pth | high | 50 | 16 | completed | 16 | 8 | 2026-02-03 11:00 |
 | CI Stability | Replace heredoc on Windows | Replace heredoc with helper script | medium | 20 | 8 | completed | 8 | 5 | 2026-02-03 11:30 |
-| Integration tests | Mocked Telegram harness | Implement mocked Telegram API harness | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:00 |
+| Integration tests | Mocked Telegram harness | Implement mocked Telegram API harness ([#61](https://github.com/sbattywolf/GAIA/issues/61)) | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:10 |
 | Integration tests | Approval flow test | Add integration test approval→claim_cli | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:00 |
 | Testing | TTL & takeover tests | Add automated tests for TTL expiry and takeover | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:00 |
 | Testing | Idempotency & replay tests | Add idempotency/replay tests | high | 40 | 24 | pending | 0 | 8 | 2026-02-05 14:00 |
@@ -59,8 +59,8 @@ Purpose: remove leaked tokens, add scanning and rotation, protect production sec
 
 | Feature | Story | Task | Priority | Score | Est Hrs | Status | Hours Spent | Scrum Pt | Added |
 |---|---|---|---:|---:|---:|---|---:|---|---|
-| Secrets Cleanup | Purge tokens from history | Purge leaked tokens (filter-repo plan) | critical | 100 | 24 | pending | 0 | 13 | 2026-02-05 14:00 |
-| Secrets Tools | Secret scanning & pre-commit | Add detect-secrets + pre-commit | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:00 |
+| Secrets Cleanup | Purge tokens from history | Purge leaked tokens (filter-repo plan) ([#59](https://github.com/sbattywolf/GAIA/issues/59)) | critical | 100 | 24 | pending | 0 | 13 | 2026-02-05 14:10 |
+| Secrets Tools | Secret scanning & pre-commit | Add detect-secrets + pre-commit ([#60](https://github.com/sbattywolf/GAIA/issues/60)) | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:10 |
 | Rotation | Token rotation & env templates | Create .env.template + rotate_admin_token scaffold | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:00 |
 | Ops | Create protected production env | Create GitHub Environment `production` & reviewers | medium | 20 | 8 | pending | 0 | 5 | 2026-02-05 14:00 |
 | Secrets Ops | Remove leaked token occurrences | remove files with tokens & placeholders | completed | 25 | 12 | completed | 4 | 2 | 2026-02-04 09:00 |
@@ -76,10 +76,10 @@ Purpose: finalize realtime spec, add a mocked harness, implement retry/backoff, 
 | Feature | Story | Task | Priority | Score | Est Hrs | Status | Hours Spent | Scrum Pt | Added |
 |---|---|---|---:|---:|---:|---|---:|---|---|
 | Realtime & Spec | Telegram realtime spec | Finalize realtime spec & docs | medium | 20 | 8 | completed | 8 | 5 | 2026-02-02 16:00 |
-| Retryer | Implement backoff & map error codes | Exponential backoff, tests for 429/5xx | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:00 |
+| Retryer | Implement backoff & map error codes | Exponential backoff, tests for 429/5xx ([#62](https://github.com/sbattywolf/GAIA/issues/62)) | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:10 |
 | Monitoring | Metrics + dashboard | Add counters, persist metrics, alerts wiring | medium | 20 | 8 | pending | 0 | 5 | 2026-02-05 14:00 |
 | Runbooks | One-click requeue & audit traces | Implement secure UI actions + audit traces | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:00 |
-| Tooling | Mocked Telegram harness (CI/local) | see CI epic (duplicate) | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:00 |
+| Tooling | Mocked Telegram harness (CI/local) | see CI epic (duplicate) ([#61](https://github.com/sbattywolf/GAIA/issues/61)) | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:10 |
 | Documentation | CLI examples & workflows | Add CLI examples and release checklist | low | 5 | 4 | pending | 0 | 2 | 2026-02-05 14:00 |
 | Backups | Backup & retention scripts | Implement backup_tmp.py and cleanup | medium | 20 | 8 | pending | 0 | 5 | 2026-02-05 14:00 |
 | Story: acceptance flow | Acceptance: claim→approve→archive | Run acceptance scenario, record gaia.db traces | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:00 |
@@ -94,7 +94,7 @@ Purpose: prototype alby_agent to automate doc merges, validations, and targeted 
 
 | Feature | Story | Task | Priority | Score | Est Hrs | Status | Hours Spent | Scrum Pt | Added |
 |---|---|---|---:|---:|---:|---|---:|---|---|
-| Prototype | alby_agent dry-run | Scaffold and run dry-run prototype | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:00 |
+| Prototype | alby_agent dry-run | Scaffold and run dry-run prototype ([#63](https://github.com/sbattywolf/GAIA/issues/63)) | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:10 |
 | Prototype | alby_agent live local | Run alby_agent local-only | high | 50 | 16 | pending | 0 | 8 | 2026-02-05 14:00 |
 | Metrics | Collect prototype timings | Collect metrics and update estimates | medium | 20 | 8 | pending | 0 | 5 | 2026-02-05 14:00 |
 | Integration | Acceptance & idempotency tests | Add idempotency and replay tests | high | 50 | 24 | pending | 0 | 8 | 2026-02-05 14:00 |
