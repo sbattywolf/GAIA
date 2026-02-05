@@ -1,0 +1,39 @@
+﻿{"number":70,"title":"Run full local pytest and produce failing-tests report","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"high;testing"}
+{"number":69,"title":"Add detect-secrets + pre-commit integration (dry run)","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"high;security"}
+{"number":68,"title":"Filter-repo purge plan + playbook for token purge (dry-run)","priority":"critical","est_hours":24,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"security;critical"}
+{"number":67,"title":"Implement mocked Telegram harness and CI-local runner","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"high;integration"}
+{"number":66,"title":"Guard/remove TTY/ioctl calls from scripts used in CI","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"ci;medium"}
+{"number":65,"title":"Add DB test fixture / migration to provide audit.timestamp","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"high;testing"}
+{"number":64,"title":"Ensure pytest basetemp/writable path in CI","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"ci;high"}
+{"number":63,"title":"alby_agent dry-run prototype","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":""}
+{"number":62,"title":"Exponential backoff \u0026 tests for 429/5xx","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":""}
+{"number":61,"title":"Implement mocked Telegram API harness","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":""}
+{"number":60,"title":"Add detect-secrets + pre-commit","priority":"critical","est_hours":24,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":""}
+{"number":59,"title":"Purge leaked tokens (filter-repo plan)","priority":"critical","est_hours":24,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":""}
+{"number":52,"title":"Epic: Docs \u0026 Playbooks","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"backlog"}
+{"number":51,"title":"Add CI job-level logging for artifact folder contents before `upload-artifact`.","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"backlog"}
+{"number":50,"title":"Validate artifact upload/download end-to-end; fix upload step when no files found.","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"backlog"}
+{"number":49,"title":"Harden repro workflow (pip/pytest retries) and deterministic smoke artifact (done).","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"backlog"}
+{"number":48,"title":"Epic: CI \u0026 Repro (flake triage)","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"backlog"}
+{"number":47,"title":"Systemd/service deployment artifacts and MyNAS deploy acceptance.","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"backlog"}
+{"number":46,"title":"Add UI controls to `monitor/templates/sequences.html`.","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"backlog"}
+{"number":45,"title":"Implement Controller HTTP API endpoints (`/api/controller/*`).","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"backlog"}
+{"number":44,"title":"Epic: Controller + Sequences (from `doc/TASKS.md`)","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"backlog"}
+{"number":43,"title":"Add `.env.template` and secrets handling guidance.","priority":"critical","est_hours":24,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"backlog"}
+{"number":42,"title":"Unit tests for merge heuristics and safety guards.","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"backlog"}
+{"number":41,"title":"Scaffold `scripts/alby_agent.py` with `--dry-run` and `--confirm` safe modes.","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"backlog"}
+{"number":40,"title":"Scan repo and collect examples; produce design docs.","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"backlog"}
+{"number":39,"title":"Epic: F-helper-gise-part1 (Foundation)","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"backlog"}
+{"number":38,"title":"Add idempotency and replay tests; document results.","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"backlog"}
+{"number":37,"title":"Build mocked Telegram harness for acceptance; run end-to-end acceptance scenarios.","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"backlog"}
+{"number":36,"title":"Run live archive+validate with local-only events.","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"backlog"}
+{"number":35,"title":"Run prototype dry-runs and generate merge-candidate JSONs.","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"backlog"}
+{"number":34,"title":"Epic: F-helper-gise-part2 (Prototype \u0026 Acceptance)","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"backlog"}
+{"number":25,"title":"Windows integration test flake: subprocess handle error","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"bug;priority:medium;estimate:2"}
+{"number":22,"title":"Cleanup archived docs (2pt)","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"sprint/1;priority:low;estimate:2"}
+{"number":21,"title":"Telegram notifications: stats \u0026 frequency (3pt)","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"sprint/1;priority:low;estimate:3"}
+{"number":20,"title":"Implement rotation pilot runner (8pt)","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"sprint/1;priority:medium;estimate:8"}
+{"number":19,"title":"Audit \u0026 update key docs (5pt)","priority":"medium","est_hours":8,"suggested_assignee":"","sprint_suggestion":"backlog","labels":"sprint/1;priority:medium;estimate:5"}
+{"number":18,"title":"Coordinate secret rotation runbook (5pt)","priority":"critical","est_hours":24,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"sprint/1;priority:high;estimate:5"}
+{"number":17,"title":"Create GitHub Environments \u0026 secret separation (5pt)","priority":"critical","est_hours":24,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"sprint/1;priority:high;estimate:5"}
+{"number":16,"title":"Stabilize pre-prod E2E (8pt)","priority":"high","est_hours":16,"suggested_assignee":"sbattywolf","sprint_suggestion":"Sprint 1","labels":"sprint/1;priority:high;estimate:8"}

@@ -1,0 +1,40 @@
+﻿number,title,priority,est_hours,suggested_assignee,sprint_suggestion
+70,"Run full local pytest and produce failing-tests report",high,16,sbattywolf,Sprint 1
+69,"Add detect-secrets + pre-commit integration (dry run)",high,16,sbattywolf,Sprint 1
+68,"Filter-repo purge plan + playbook for token purge (dry-run)",critical,24,sbattywolf,Sprint 1
+67,"Implement mocked Telegram harness and CI-local runner",high,16,sbattywolf,Sprint 1
+66,"Guard/remove TTY/ioctl calls from scripts used in CI",medium,8,,backlog
+65,"Add DB test fixture / migration to provide audit.timestamp",high,16,sbattywolf,Sprint 1
+64,"Ensure pytest basetemp/writable path in CI",high,16,sbattywolf,Sprint 1
+63,"alby_agent dry-run prototype",medium,8,,backlog
+62,"Exponential backoff & tests for 429/5xx",high,16,sbattywolf,Sprint 1
+61,"Implement mocked Telegram API harness",high,16,sbattywolf,Sprint 1
+60,"Add detect-secrets + pre-commit",critical,24,sbattywolf,Sprint 1
+59,"Purge leaked tokens (filter-repo plan)",critical,24,sbattywolf,Sprint 1
+52,"Epic: Docs & Playbooks",medium,8,,backlog
+51,"Add CI job-level logging for artifact folder contents before `upload-artifact`.",high,16,sbattywolf,Sprint 1
+50,"Validate artifact upload/download end-to-end; fix upload step when no files found.",medium,8,,backlog
+49,"Harden repro workflow (pip/pytest retries) and deterministic smoke artifact (done).",high,16,sbattywolf,Sprint 1
+48,"Epic: CI & Repro (flake triage)",high,16,sbattywolf,Sprint 1
+47,"Systemd/service deployment artifacts and MyNAS deploy acceptance.",medium,8,,backlog
+46,"Add UI controls to `monitor/templates/sequences.html`.",medium,8,,backlog
+45,"Implement Controller HTTP API endpoints (`/api/controller/*`).",medium,8,,backlog
+44,"Epic: Controller + Sequences (from `doc/TASKS.md`)",medium,8,,backlog
+43,"Add `.env.template` and secrets handling guidance.",critical,24,sbattywolf,Sprint 1
+42,"Unit tests for merge heuristics and safety guards.",high,16,sbattywolf,Sprint 1
+41,"Scaffold `scripts/alby_agent.py` with `--dry-run` and `--confirm` safe modes.",medium,8,,backlog
+40,"Scan repo and collect examples; produce design docs.",medium,8,,backlog
+39,"Epic: F-helper-gise-part1 (Foundation)",medium,8,,backlog
+38,"Add idempotency and replay tests; document results.",high,16,sbattywolf,Sprint 1
+37,"Build mocked Telegram harness for acceptance; run end-to-end acceptance scenarios.",high,16,sbattywolf,Sprint 1
+36,"Run live archive+validate with local-only events.",medium,8,,backlog
+35,"Run prototype dry-runs and generate merge-candidate JSONs.",medium,8,,backlog
+34,"Epic: F-helper-gise-part2 (Prototype & Acceptance)",medium,8,,backlog
+25,"Windows integration test flake: subprocess handle error",high,16,sbattywolf,Sprint 1
+22,"Cleanup archived docs (2pt)",medium,8,,backlog
+21,"Telegram notifications: stats & frequency (3pt)",medium,8,,backlog
+20,"Implement rotation pilot runner (8pt)",medium,8,,backlog
+19,"Audit & update key docs (5pt)",medium,8,,backlog
+18,"Coordinate secret rotation runbook (5pt)",critical,24,sbattywolf,Sprint 1
+17,"Create GitHub Environments & secret separation (5pt)",critical,24,sbattywolf,Sprint 1
+16,"Stabilize pre-prod E2E (8pt)",high,16,sbattywolf,Sprint 1
