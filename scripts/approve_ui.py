@@ -83,6 +83,11 @@ def enable_autonomy(require_approved: bool = True) -> None:
 
 
 def main() -> None:
+    # If not running in a TTY, the interactive UI cannot proceed.
+    if not sys.stdin.isatty():
+        print('Approval UI requires a TTY. Use non-interactive scripts (e.g. --yes) in CI or run locally.')
+        return
+
     while True:
         print_menu()
         choice = input('\nSelect an option: ').strip()
