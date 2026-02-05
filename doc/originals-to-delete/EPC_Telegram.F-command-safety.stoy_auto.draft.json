@@ -1,0 +1,9 @@
+{
+  "epic": "EPC_Telegram",
+  "feature_id": "F-command-safety",
+  "feature_name": "Command execution safety",
+  "story_key": "stoy_auto",
+  "agent": "assistant",
+  "tasks": [],
+  "impediments": []
+}

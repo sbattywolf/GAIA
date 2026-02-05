@@ -1,0 +1,17 @@
+{
+  "epic": "EPC_Telegram",
+  "feature_id": "F-helper-gise-part2",
+  "feature_name": "Helper Gise — Prototype & Acceptance",
+  "story_key": "stoy_alby_prototype",
+  "agent": "assistant",
+  "tasks": [
+    { "id": "t41", "title": "Run alby_agent prototype in dry-run", "status": "todo", "priority": "high" },
+    { "id": "t41a", "title": "Run alby_agent live (local-only)", "status": "todo", "priority": "high" },
+    { "id": "t41b", "title": "Collect timings and metrics for prototype runs", "status": "todo", "priority": "medium" },
+    { "id": "t42", "title": "Implement mocked Telegram harness for acceptance tests", "status": "todo", "priority": "high" },
+    { "id": "t43", "title": "Run acceptance scenario: create claim → approve → archive event", "status": "todo", "priority": "high" },
+    { "id": "t44", "title": "Add idempotency and replay tests", "status": "todo", "priority": "high" },
+    { "id": "t45", "title": "Document prototype results and update scoring", "status": "todo", "priority": "medium" }
+  ],
+  "impediments": []
+}

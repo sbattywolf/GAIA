@@ -1,0 +1,13 @@
+{
+  "id": "todolist-rebuild-20260205T101500Z",
+  "created_at": "2026-02-05T10:15:00Z",
+  "source": "rebuild-from-backlog",
+  "items": [
+    {"id": "T1", "title": "Fix auto-mode toggle enforcement", "status": "pending", "priority": "high"},
+    {"id": "T2", "title": "Ensure env_loader used by background jobs", "status": "pending", "priority": "high"},
+    {"id": "T3", "title": "Make approval matching deterministic", "status": "pending", "priority": "high"},
+    {"id": "T4", "title": "Create missing ack files", "status": "done", "priority": "medium"},
+    {"id": "T5", "title": "Add unit tests for approval extractor", "status": "pending", "priority": "medium"},
+    {"id": "T6", "title": "Archive housekeeping & retention", "status": "done", "priority": "low"}
+  ]
+}
