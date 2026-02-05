@@ -5,13 +5,13 @@ Overview
 - Purpose: integrate durable claim primitives into operator flows and deliver safe, auditable approval UI/CLI with test coverage and runbook updates.
 
 Sub-stories (detailed docs)
-- Claims integration: [doc/STR_TODO_stoybl_bl_bl_1_claims.md](doc/STR_TODO_stoybl_bl_bl_1_claims.md)
-- Tests: [doc/STR_TODO_stoybl_bl_bl_1_tests.md](doc/STR_TODO_stoybl_bl_bl_1_tests.md)
-- Runbook: [doc/STR_TODO_stoybl_bl_bl_1_runbook.md](doc/STR_TODO_stoybl_bl_bl_1_runbook.md)
-- CLI / UI: [doc/STR_TODO_stoybl_bl_bl_1_cli_ui.md](doc/STR_TODO_stoybl_bl_bl_1_cli_ui.md)
-- Classification: [doc/STR_TODO_stoybl_bl_bl_1_classification.md](doc/STR_TODO_stoybl_bl_bl_1_classification.md)
-- Part2 plan: [doc/STR_TODO_stoybl_bl_bl_1_part2.md](doc/STR_TODO_stoybl_bl_bl_1_part2.md)
-- Governance: [doc/STR_TODO_stoybl_bl_bl_1_governance.md](doc/STR_TODO_stoybl_bl_bl_1_governance.md)
+- Claims integration: [doc/STR_TODO_stoybl_bl_bl_1_claims.md](STR_TODO_stoybl_bl_bl_1_claims.md)
+- Tests: [doc/STR_TODO_stoybl_bl_bl_1_tests.md](STR_TODO_stoybl_bl_bl_1_tests.md)
+- Runbook: [doc/STR_TODO_stoybl_bl_bl_1_runbook.md](STR_TODO_stoybl_bl_bl_1_runbook.md)
+- CLI / UI: [doc/STR_TODO_stoybl_bl_bl_1_cli_ui.md](STR_TODO_stoybl_bl_bl_1_cli_ui.md)
+- Classification: [doc/STR_TODO_stoybl_bl_bl_1_classification.md](STR_TODO_stoybl_bl_bl_1_classification.md)
+- Part2 plan: [doc/STR_TODO_stoybl_bl_bl_1_part2.md](STR_TODO_stoybl_bl_bl_1_part2.md)
+- Governance: [doc/STR_TODO_stoybl_bl_bl_1_governance.md](STR_TODO_stoybl_bl_bl_1_governance.md)
 
 Quick operator commands (examples)
 - Inspect an item (JSON):
