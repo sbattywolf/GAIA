@@ -29,7 +29,18 @@ def main():
         print(f"No open pull request found for branch: {branch}")
         sys.exit(0)
 
-    print(f"Found PR #{pr_num} for branch {branch}, approving...")
+    print(f"Found PR #{pr_num} for branch {branch}.")
+    # Simple confirmation prompt to avoid accidental approvals
+    try:
+        resp = input(f"Approve PR #{pr_num}? [y/N]: ").strip().lower()
+    except (KeyboardInterrupt, EOFError):
+        print("Aborted by user.")
+        sys.exit(1)
+
+    if resp not in ("y", "yes"):
+        print("Approval cancelled.")
+        sys.exit(0)
+
     try:
         out = run(f"gh pr review {pr_num} --approve --body \"Auto-approved via VS Code task\"")
         print(out)
