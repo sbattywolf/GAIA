@@ -89,6 +89,13 @@ def write_approval(payload):
     os.makedirs(os.path.dirname(APPR_FILE), exist_ok=True)
     with open(APPR_FILE, 'w', encoding='utf-8') as f:
         json.dump(payload, f, indent=2)
+    # emit realtime notification when approvals are written (respect env toggles)
+    try:
+        from scripts import notify
+        send_flag = (os.environ.get('PERIODIC_NOTIFICATIONS_ENABLED') == '1') or (os.environ.get('ALLOW_COMMAND_EXECUTION') == '1')
+        notify.notify_event('approval_listener', 'approved', f"Approval written: {payload.get('id') or payload.get('approved_by')}", send=send_flag)
+    except Exception:
+        pass
 
 
 def _cleanup():

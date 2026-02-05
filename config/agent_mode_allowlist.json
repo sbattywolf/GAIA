@@ -1,0 +1,12 @@
+{
+  "allowed_commands": [
+    "send_telegram",
+    "send_notification",
+    "micro_commit",
+    "create_issue"
+  ],
+  "allowed_paths": [
+    ".tmp/",
+    "logs/"
+  ]
+}

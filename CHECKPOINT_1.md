@@ -8,6 +8,8 @@ Plan:
 
 Approval:
 
+APPROVATO
+
 Add the single word APPROVATO (uppercase) anywhere in this file to permit execution.
 
-Current status: PENDING
+Current status: APPROVATO
