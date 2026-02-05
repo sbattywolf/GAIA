@@ -50,6 +50,13 @@ def append_event(ev: dict):
         orchestrator.write_audit(actor, action, details)
     except Exception:
         pass
+    # persist approval-specific events to approvals table (best-effort)
+    try:
+        if ev.get('type', '').startswith('approval'):
+            import orchestrator
+            orchestrator.write_approval(ev)
+    except Exception:
+        pass
 
 
 def load_tasks():
