@@ -1,0 +1,49 @@
+name: Automated CI Triage
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # daily at 03:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  triage:
+    name: Run automated triage
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (gh, zip)
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release zip
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+          sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt-get update -y
+          sudo apt-get install -y gh
+
+      - name: Configure gh auth using token
+        run: |
+          echo "$GH_TOKEN" | gh auth login --with-token
+
+      - name: Run triage script
+        shell: pwsh
+        run: |
+          Set-StrictMode -Version Latest
+          $script = Join-Path $env:GITHUB_WORKSPACE 'scripts' 'auto_triage_issues.ps1'
+          if (Test-Path $script) {
+            pwsh -NoProfile -ExecutionPolicy Bypass -File $script
+          } else {
+            Write-Error "Triage script not found: $script"
+            exit 2
+          }
