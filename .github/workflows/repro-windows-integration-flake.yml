@@ -39,6 +39,10 @@ jobs:
 
       - name: Run repeated e2e test runs
         run: |
+          # smoke artifact to validate upload pathway
+          if (-not (Test-Path flake-logs)) { mkdir flake-logs }
+          "smoke: ok" | Out-File -FilePath flake-logs/test-ok.txt -Encoding utf8
+
           mkdir flake-logs
           # collect runner environment and tool info for triage
           "[RUNNER INFO]" | Out-File -FilePath flake-logs/runner_info.txt -Encoding utf8
