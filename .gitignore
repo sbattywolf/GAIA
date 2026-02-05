@@ -1,4 +1,13 @@
-.venv/
+# Python
+__pycache__/
+*.py[cod]
+
+# Local SQLite DB
+gaia.db
+
+# IDE / editor
+.vscode/
+*.swp.venv/
 __pycache__/
 *.pyc
 events.ndjson
