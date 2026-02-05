@@ -1,0 +1,39 @@
+name: Collect Triage Metrics
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # daily at 06:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Run metrics collector
+        run: |
+          python scripts/collect_triage_metrics.py
+
+      - name: Commit metrics if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            git add doc/sprints/analysis/triage-metrics.ndjson
+            git commit -m "chore(metrics): append triage metrics"
+            git push
+          else
+            echo "No changes to commit"
+          fi
