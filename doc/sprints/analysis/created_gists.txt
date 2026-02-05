@@ -1,0 +1,12 @@
+﻿Created gists mapping placeholder
+
+Created: 2026-02-05 19:34:07Z
+
+Summary: Automated triage uploaded many run logs as private gists and commented the corresponding follow-up issues with gist links. Some large logs may not have been uploaded due to API limits. The full per-issue mapping is recorded as comments on the issues listed in doc/sprints/analysis/created_followup_issues.txt.
+
+Files of interest:
+- doc/sprints/analysis/created_followup_issues.txt (list of created issue URLs)
+- doc/sprints/analysis/created_gists_pr.txt (PR info recorded during upload)
+- doc/sprints/analysis/logs/ (local logs and zips)
+
+If you want a fully expanded run->gist->issue mapping committed here, I can reconstruct it by querying each issue for gist links and write them into this file. Proceed if you want the full mapping committed.
