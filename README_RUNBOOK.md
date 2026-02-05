@@ -107,4 +107,6 @@ pwsh -File scripts/auto_triage_issues.ps1
 - If `gh auth` fails in automation runs, verify the Action secret `AUTOMATION_GITHUB_TOKEN` and inspect the workflow step that performs `gh auth login` (the workflow uses a tolerant login invocation).
 - If gist uploads fail, check `doc/sprints/analysis/created_gists.txt` and the release `auto-triage-archive-2026-02-05` for archived logs.
 
+- Upload helper: use `scripts/upload_gist_if_not_empty.ps1` to safely upload run logs. It skips empty files, retries on failure, and appends a mapping line to `doc/sprints/analysis/created_gists.txt`.
+
 Monitoring: during Part 3, collect per-run metrics into `doc/sprints/analysis/triage-metrics.ndjson` and review daily for 7 days.
