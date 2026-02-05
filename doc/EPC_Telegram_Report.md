@@ -212,7 +212,7 @@ Using these quick prototypes and the existing backlog scope, I reduced several e
 
 **Detailed variants added**
 
-- **File**: [doc/EPC_Telegram_detail_variants.md](doc/EPC_Telegram_detail_variants.md)
+- **File**: [doc/EPC_Telegram_detail_variants.md](EPC_Telegram_detail_variants.md)
 
 Summary: A new decision-aid document was added that presents two concrete variants for handling `STR_TestGise`:
 
