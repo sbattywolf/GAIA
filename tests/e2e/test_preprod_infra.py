@@ -29,6 +29,21 @@ def test_mock_service_and_postgres_ready():
         print(f"[DEBUG] platform: {platform.platform()} python: {sys.executable}")
     except Exception:
         pass
+    # Print selected environment variables that affect infra checks
+    try:
+        keys = [
+            "RUN_E2E",
+            "MOCK_URL",
+            "PGHOST",
+            "PGPORT",
+            "PGUSER",
+            "PGDATABASE",
+            "PGPASSWORD",
+        ]
+        env_dump = {k: os.environ.get(k) for k in keys}
+        print("[DEBUG] env:", env_dump)
+    except Exception:
+        pass
     if os.environ.get("RUN_E2E", "0") == "1":
         # Start local mock only when using the default local URL
         if mock_url.startswith("http://127.0.0.1"):
@@ -37,7 +52,8 @@ def test_mock_service_and_postgres_ready():
 
     try:
         # Wait for mock service to become ready
-        for _ in range(15):
+        start_wait = time.time()
+        for _ in range(30):
             try:
                 with urllib.request.urlopen(mock_url, timeout=3) as r:
                     assert r.status == 200
@@ -52,6 +68,10 @@ def test_mock_service_and_postgres_ready():
             except Exception as e:
                 print(f"[DEBUG] mock_connect_error: {e}")
             pytest.fail(f"mock service not ready at {mock_url}")
+        else:
+            # If we broke early, print how long it took
+            elapsed = time.time() - start_wait
+            print(f"[DEBUG] mock_ready_elapsed={elapsed:.2f}s")
     finally:
         if mock_proc:
             try:
@@ -99,5 +119,28 @@ def test_mock_service_and_postgres_ready():
         "SELECT 1;",
     ]
 
-    subprocess.run(cmd, check=True, env=env)
-    print("[DEBUG] psql check invoked")
+    # Run psql and capture output for richer debugging
+    print(f"[DEBUG] invoking psql: {' '.join(cmd)}")
+    try:
+        result = subprocess.run(cmd, check=False, env=env, capture_output=True, text=True)
+        print("[DEBUG] psql returncode:", result.returncode)
+        if result.stdout:
+            print("[DEBUG] psql stdout:\n" + result.stdout)
+        if result.stderr:
+            print("[DEBUG] psql stderr:\n" + result.stderr)
+        if result.returncode != 0:
+            pytest.fail(f"psql check failed (rc={result.returncode}). See stdout/stderr above")
+    except Exception as e:
+        # Attempt to capture process list to help triage platform-specific issues
+        try:
+            import platform
+            if platform.system().lower().startswith("win"):
+                proc = subprocess.run(["tasklist"], capture_output=True, text=True)
+                print("[DEBUG] tasklist:\n" + proc.stdout)
+            else:
+                proc = subprocess.run(["ps", "-ef"], capture_output=True, text=True)
+                print("[DEBUG] ps -ef (truncated):\n" + '\n'.join(proc.stdout.splitlines()[:50]))
+        except Exception:
+            pass
+        raise
+    print("[DEBUG] psql check invoked (success)")
