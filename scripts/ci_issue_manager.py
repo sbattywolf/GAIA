@@ -232,13 +232,15 @@ class CIIssueManager:
             title = issue.get('title', '')
             body = issue.get('body', '')
             
-            # Check for explicit run ID
-            if str(run_id) in title or str(run_id) in body:
+            # Check for explicit run ID in title (pattern: "CI failure: run 123456")
+            if f"run {run_id}" in title:
                 return issue['number']
             
-            # Check for workflow name pattern
-            if f"CI failure: run {run_id}" == title:
-                return issue['number']
+            # Check for run ID in body
+            if str(run_id) in body:
+                # Verify it's actually referring to this run
+                if f"Run ID: {run_id}" in body or f"runs/{run_id}" in body:
+                    return issue['number']
         
         return None
 
