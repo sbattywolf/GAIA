@@ -11,4 +11,14 @@
   "capacity_notes": "Small focused sprint for this interactive session",
   "status": "started",
   "started_at": "2026-02-05T09:30:27.137325+00:00"
+  ,
+  "todolist_ref": ".tmp/todolist_rebuild_20260205T101500Z.json",
+  "items": [
+    {"id": "T1", "title": "Fix auto-mode toggle enforcement", "owner": null, "status": "pending"},
+    {"id": "T2", "title": "Ensure env_loader used by background jobs", "owner": null, "status": "pending"},
+    {"id": "T3", "title": "Make approval matching deterministic", "owner": null, "status": "pending"},
+    {"id": "T4", "title": "Create missing ack files", "owner": "session-agent", "status": "done"},
+    {"id": "T5", "title": "Add unit tests for approval extractor", "owner": null, "status": "pending"},
+    {"id": "T6", "title": "Archive housekeeping & retention", "owner": "session-agent", "status": "done"}
+  ]
 }
