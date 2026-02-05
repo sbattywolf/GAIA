@@ -104,6 +104,20 @@ def handle_task(task):
         # proceed
         append_event({"type": "approval.received", "task_id": task_id, "source": "automation_runner"})
 
+        # High-impact actions require an explicit checkpoint approval.
+        try:
+            spec = importlib.util.spec_from_file_location('checkpoint', str(Path(__file__).resolve().parent / 'checkpoint.py'))
+            cp = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(cp)
+            cp.require_checkpoint(1, action=f'automation task {task_id}')
+        except SystemExit:
+            # propagate clean exit to stop runner safely
+            raise
+        except Exception:
+            # on failure to load checkpoint helper, abort for safety
+            print('Failed to load checkpoint helper — aborting for safety')
+            raise SystemExit(0)
+
     # Simulate work
     append_event({"type": "task.start", "task_id": task_id, "action": task.get('action')})
     print(f"Processing {task_id} ...")
