@@ -2,16 +2,21 @@ import os
 import tempfile
 import json
 from pathlib import Path
-import orchestrator
+import importlib.util
+import sys
+
+
+def load_orchestrator_module(tmp_path: Path):
+    spec = importlib.util.spec_from_file_location('orchestrator', str(Path('orchestrator.py').resolve()))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    # set DB path to a temp file for isolation
+    mod.DB_PATH = str(tmp_path / 'gaia.db')
+    return mod
 
 
 def test_write_approval_creates_row(tmp_path: Path):
-    # use temp DB path
-    dbpath = tmp_path / 'gaia.db'
-    # monkeypatch DB_PATH by setting environment variable for test run
-    # orchestrator uses relative path; copy module and adjust DB_PATH
-    orchestrator.DB_PATH = str(dbpath)
-    # ensure DB initialized
+    orchestrator = load_orchestrator_module(tmp_path)
     orchestrator.init_db()
 
     ev = {
