@@ -11,6 +11,11 @@ Structure (top-level folders):
 - `05_backlog` — consolidated backlog and prioritized stories/tasks mapped to features.
 - `06_archives` — pointers to archived material (large/old docs) and historical notes.
 
+Quick start Overviews:
+
+- `02_technical/OVERVIEW.md` — curated reading order for the most important technical summaries.
+- `03_procedural/OVERVIEW.md` — curated reading order for core runbooks and procedural summaries.
+
 Naming convention (filename slug):
 
 `<category>-<feature-or-area>-<short-description>.md`
