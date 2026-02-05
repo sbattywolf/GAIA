@@ -37,6 +37,15 @@ def init_db():
     conn = _connect()
     cur = conn.cursor()
     cur.execute('''CREATE TABLE IF NOT EXISTS audit (id INTEGER PRIMARY KEY, timestamp TEXT, actor TEXT, action TEXT, details TEXT)''')
+    cur.execute('''CREATE TABLE IF NOT EXISTS approvals (
+        id INTEGER PRIMARY KEY,
+        timestamp TEXT,
+        event_type TEXT,
+        task_id TEXT,
+        request_id TEXT,
+        trace_id TEXT,
+        payload TEXT
+    )''')
     cur.execute('''CREATE TABLE IF NOT EXISTS queue (
         id INTEGER PRIMARY KEY,
         created_at TEXT,
@@ -80,6 +89,31 @@ def write_audit(actor: str, action: str, details: str):
     except Exception as e:
         try:
             logger.exception('write_audit failed: %s', e)
+        except Exception:
+            pass
+
+
+def write_approval(event: dict):
+    """Persist an approval event (request/received) into the approvals table.
+
+    Best-effort: does not raise on failure.
+    """
+    try:
+        init_db()
+        conn = _connect()
+        cur = conn.cursor()
+        ts = event.get('timestamp') or (datetime.utcnow().isoformat() + 'Z')
+        et = event.get('type')
+        task_id = event.get('task_id')
+        request_id = event.get('request_id') or (event.get('payload') or {}).get('request_id')
+        trace_id = event.get('trace_id') or (event.get('payload') or {}).get('trace_id')
+        payload = json.dumps(event.get('payload') or {}, ensure_ascii=False)
+        cur.execute('INSERT INTO approvals (timestamp, event_type, task_id, request_id, trace_id, payload) VALUES (?, ?, ?, ?, ?, ?)', (ts, et, task_id, request_id, trace_id, payload))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        try:
+            logger.exception('write_approval failed: %s', e)
         except Exception:
             pass
 
