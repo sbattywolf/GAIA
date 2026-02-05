@@ -26,6 +26,9 @@ SCRIPTS = {
     'periodic_runner': ROOT / '.tmp' / 'periodic_job.ps1'
 }
 
+# pid files are kept in .tmp as <service>_pid.txt when services write them
+PID_DIR = ROOT / '.tmp'
+
 
 def run_script(ps_path):
     if not ps_path.exists():
@@ -41,6 +44,41 @@ def run_script(ps_path):
         return False
 
 
+def _pidfile_for(service):
+    return PID_DIR / f"{service}_pid.txt"
+
+
+def _read_pid(service):
+    p = _pidfile_for(service)
+    if not p.exists():
+        return None
+    try:
+        with open(p, 'r', encoding='utf-8') as f:
+            txt = f.read().strip()
+        return int(txt)
+    except Exception:
+        return None
+
+
+def _is_pid_running(pid):
+    if pid is None:
+        return False
+    try:
+        # Windows-friendly check using tasklist
+        out = subprocess.check_output(['tasklist', '/FI', f'PID eq {pid}'], stderr=subprocess.DEVNULL, text=True)
+        return str(pid) in out
+    except Exception:
+        return False
+
+
+def _kill_pid(pid):
+    try:
+        subprocess.check_call(['taskkill', '/PID', str(pid), '/F'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return True
+    except Exception:
+        return False
+
+
 def main(loop_interval=60):
     print('Scheduler starting, reading', SCHEDULE_FILE)
     while True:
@@ -51,9 +89,28 @@ def main(loop_interval=60):
                 for entry in sched:
                     svc = entry.get('service')
                     action = entry.get('action')
-                    if entry.get('start_immediately') and action == 'start':
+                    # allow schedule entries to be enabled/disabled
+                    if action == 'enable':
+                        entry['enabled'] = True
+                    elif action == 'disable':
+                        entry['enabled'] = False
+
+                    enabled = entry.get('enabled', True)
+
+                    if entry.get('start_immediately') and action == 'start' and enabled:
                         s = SCRIPTS.get(svc)
                         if s:
+                            # optionally ensure single instance by killing previous pid
+                            if entry.get('ensure_single'):
+                                pid = _read_pid(svc)
+                                if pid and _is_pid_running(pid):
+                                    print(f'Killing previous {svc} pid {pid}')
+                                    ok = _kill_pid(pid)
+                                    if ok:
+                                        try:
+                                            _pidfile_for(svc).unlink()
+                                        except Exception:
+                                            pass
                             run_script(s)
                             # clear flag so we don't restart endlessly
                             entry['start_immediately'] = False

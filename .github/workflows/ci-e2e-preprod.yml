@@ -56,6 +56,7 @@ jobs:
       - name: Run E2E tests
         run: |
           # Run E2E tests; ensure they exit non-zero on failures if desired
+          export RUN_E2E=1
           python -m pytest -q -m e2e || true
 
       - name: Stop mock services

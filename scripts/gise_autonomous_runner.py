@@ -20,6 +20,7 @@ import time
 from datetime import datetime, timedelta
 from pathlib import Path
 import requests
+import importlib.util
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -147,6 +148,21 @@ def main():
     p.add_argument('--nogise', action='store_true', help='Do not run Gise helper tasks; run validator and send updates only')
     args = p.parse_args()
 
+    # enforce autonomy guard early to avoid accidental external side-effects
+    try:
+        mod_path = Path(__file__).resolve().parent / 'autonomy_guard.py'
+        if mod_path.exists():
+            spec = importlib.util.spec_from_file_location('autonomy_guard', str(mod_path))
+            ag = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(ag)
+            ag.require_autonomy_or_exit('periodic notifications and helpers')
+    except SystemExit:
+        raise
+    except Exception:
+        # if guard loading fails, prefer safe behaviour and exit
+        print('Failed to load autonomy guard — aborting for safety')
+        raise SystemExit(0)
+
     env = load_preferred_env()
     token = env.get('TELEGRAM_BOT_TOKEN')
     chat = env.get('CHAT_ID')
@@ -208,3 +224,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    

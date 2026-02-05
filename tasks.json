@@ -1,0 +1,8 @@
+[
+  {
+    "id": "task-smoke",
+    "action": "noop",
+    "requires_approval": true,
+    "status": "done"
+  }
+]
