@@ -4,7 +4,7 @@
   "current_task_id": "TASK-001",
   "status": "IN_PROGRESS",
   "plan_approved": false,
-  "steps_completed": ["session_state template", "copilot instruction prompt", "autonomy guard"],
-  "next_immediate_step": "Review PLAN.md and mark APPROVATO to permit execution",
+  "steps_completed": ["session_state template", "copilot instruction prompt", "autonomy guard", "sprint rebuild (todolist created)"],
+  "next_immediate_step": "Execute T1: Fix auto-mode toggle enforcement (run tests locally)",
   "crash_recovery_point": "HEAD"
 }
