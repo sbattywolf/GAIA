@@ -10,6 +10,14 @@ Usage examples:
 import argparse
 import json
 import sys
+import os
+
+# Ensure repo root is on sys.path so `from scripts import ...` works when
+# running this file directly (subprocess runs set sys.path[0] to the
+# scripts/ directory which prevents importing the top-level `scripts` package).
+ROOT = os.path.dirname(os.path.dirname(__file__))
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
 
 from scripts import claims
 
