@@ -36,6 +36,11 @@ import base64
 from cryptography.fernet import Fernet
 
 
+# Timestamp format constants
+TIMESTAMP_ISO_FORMAT = '%Y-%m-%dT%H:%M:%SZ'  # For audit logs
+TIMESTAMP_COMPACT_FORMAT = '%Y%m%dT%H%M%SZ'  # For backup filenames
+
+
 class SecretProvider:
     """Base class for secret providers."""
     
@@ -292,7 +297,7 @@ class SecretsManager:
     
     def _log_audit(self, action: str, key: str, provider: str, success: bool):
         """Log secret access for audit."""
-        timestamp = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
+        timestamp = datetime.now(timezone.utc).strftime(TIMESTAMP_ISO_FORMAT)
         log_entry = {
             'timestamp': timestamp,
             'action': action,
@@ -396,7 +401,7 @@ class SecretsManager:
             old_value = self.get(key)
             if old_value:
                 # Store backup with timestamp
-                timestamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+                timestamp = datetime.now(timezone.utc).strftime(TIMESTAMP_COMPACT_FORMAT)
                 backup_key = f"{key}_backup_{timestamp}"
                 self.set(backup_key, old_value, provider='encrypted_file')
         
