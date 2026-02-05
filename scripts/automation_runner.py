@@ -41,6 +41,15 @@ def append_event(ev: dict):
             lf.write(f"{ev['timestamp']} {ev.get('type','event')} {ev.get('task_id','')}\n")
     except Exception:
         pass
+    # also persist important events to orchestrator audit table where possible
+    try:
+        import orchestrator
+        actor = ev.get('source', 'automation_runner')
+        action = ev.get('type', 'event')
+        details = json.dumps(ev, ensure_ascii=False)
+        orchestrator.write_audit(actor, action, details)
+    except Exception:
+        pass
 
 
 def load_tasks():
@@ -116,6 +125,15 @@ def handle_task(task):
         # write back
         with open(SESSION_STATE, 'w', encoding='utf-8') as sf:
             json.dump(ss, sf, indent=2)
+    except Exception:
+        pass
+    # attempt micro-commit for this completed micro-step
+    try:
+        # only attempt when environment explicitly allows it
+        if os.environ.get('AUTOCOMMIT_ENABLED') == '1' and os.environ.get('ALLOW_COMMAND_EXECUTION') == '1':
+            import subprocess
+            msg = f"chore(micro-commit): completed {task_id}"
+            subprocess.run([sys.executable, os.path.join(os.path.dirname(__file__), 'micro_commit.py'), '--message', msg], check=False)
     except Exception:
         pass
     return True
