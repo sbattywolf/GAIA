@@ -24,6 +24,9 @@ if (-not (Test-Path $logDir)) { New-Item -Path $logDir -ItemType Directory | Out
 $out = Join-Path $logDir 'approval_listener.out.log'
 $err = Join-Path $logDir 'approval_listener.err.log'
 # start detached: run long-lived (1 day) with 5-minute poll to reduce polling frequency
-Start-Process -FilePath python -ArgumentList 'scripts\approval_listener.py','--timeout','86400','--poll','300' -RedirectStandardOutput $out -RedirectStandardError $err -WindowStyle Hidden
+# Use env_loader so the process inherits the env file reliably
+$launcher = Join-Path $root 'scripts\env_loader.py'
+$argList = @($launcher, '--env', $envFile, '--', 'python', 'scripts\approval_listener.py', '--timeout', '86400', '--poll', '300')
+Start-Process -FilePath python -ArgumentList $argList -RedirectStandardOutput $out -RedirectStandardError $err -WindowStyle Hidden
 Write-Output "Approval listener started (logs -> $out , $err)"
 Pop-Location

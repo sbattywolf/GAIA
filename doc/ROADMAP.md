@@ -1,20 +1,37 @@
 # ROADMAP — Short-term roadmap (next 3 sprints)
 
 Purpose
-- High-level roadmap for the rotation pilot, docs consolidation, and CI stabilization work.
 
 Now → Sprint 1 (2 weeks)
-- Stabilize pre-prod E2E and make mock service reliable (blocking CI). Updated: 2026-02-05 00:00
-- Complete docs consolidation and master index. Updated: 2026-02-05 00:00
-- Create `dev` and `pre-prod` GitHub Environments and migrate secrets. Updated: 2026-02-05 00:00
+# Roadmap (Updated)
 
-Sprint 2
-- Execute opt-in history-rewrite after owners approve and secrets rotated.
-- Finalize auto-merge policy and branch protection.
+This roadmap is tuned for incremental, low-risk delivery. Each entry is split into small tasks and estimated roughly in hours.
 
-Sprint 3
-- Expand rotation pilot to include a token rotation runner and canary rollout.
-- Add monitoring and alerting for secret-rotation failures.
+1) CI & E2E stability — In Progress
+	- Estimate: 4h
+	- State: in-progress
+	- Next: run two CI E2E runs; collect logs in `events.ndjson` and `gaia.db`.
 
-Notes
-- All dates/times must use `YYYY-MM-DD HH:MM` (UTC preferred). Preserve older `Created:` timestamps when updating docs.
+2) Sprint Onboarding Automation — In Progress
+	- Estimate: 6h
+	- State: in-progress
+	- Next: test `sprint_onboard.yml` on a labeled staging issue; add to Projects V2 using `PROJECT_V2_NUMBER=3`.
+
+3) Automation Runner & Approval — In Progress
+	- Estimate: 3h
+	- State: in-progress
+	- Next: run `scripts/run_20h.ps1` to supervise `automation_runner.py` for 20 hours (smoke tests first).
+
+4) Secrets & Rotation Pilot — Planned
+	- Estimate: 6h
+	- State: planned
+	- Next: complete `scripts/set_repo_tokens.ps1` dry-run and document rotation steps in `doc/SECRETS_HANDLING.md`.
+
+5) Observability and Notifier — Planned
+	- Estimate: 4h
+	- State: planned
+	- Next: enable `PERIODIC_NOTIFICATIONS_ENABLED=1` for heartbeat and implement `scripts/telegram_notifier.py`.
+
+Notes:
+- Work in small slices; prefer operator approvals and idempotent automation.
+- Projects V2 is in use (project number 3). Classic Projects column id usage is deprecated in this repo.

@@ -1,0 +1,10 @@
+{
+  "last_sync": "2026-02-05T10:11:00Z",
+  "sprint_goal": "Stabilize automation guards and approval flow",
+  "current_task_id": "TASK-001",
+  "status": "IN_PROGRESS",
+  "plan_approved": false,
+  "steps_completed": ["session_state template", "copilot instruction prompt", "autonomy guard"],
+  "next_immediate_step": "Review PLAN.md and mark APPROVATO to permit execution",
+  "crash_recovery_point": "HEAD"
+}

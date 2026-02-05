@@ -1,0 +1,76 @@
+name: Sprint Onboard Automation
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  onboard:
+    # only run when label name starts with "sprint/"
+    if: contains(github.event.label.name, 'sprint/')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Add checklist to issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = context.payload.issue.number;
+            const { data: issue } = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber
+            });
+            const checklist = '\n\n- [ ] Confirm scope and acceptance criteria\n- [ ] Break into sub-tasks\n- [ ] Add owner and final estimate';
+            if (!issue.body || !issue.body.includes('Confirm scope and acceptance criteria')) {
+              const body = (issue.body || '') + checklist;
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body
+              });
+            }
+
+      - name: Add to Projects V2 (optional)
+        uses: actions/github-script@v7
+        env:
+          PROJECT_V2_NUMBER: ${{ secrets.PROJECT_V2_NUMBER }}
+        with:
+          script: |
+            const projNumber = Number(process.env.PROJECT_V2_NUMBER || 0);
+            if (!projNumber) {
+              console.log('No PROJECT_V2_NUMBER provided; skipping project add.');
+              return;
+            }
+            const owner = context.repo.owner;
+            const issueNodeId = context.payload.issue.node_id;
+            // Resolve the projectV2 node id via GraphQL (user or organization)
+            const queryUser = `query ($login:String!, $number:Int!){ user(login:$login){ projectV2(number:$number){ id } } }`;
+            const queryOrg = `query ($login:String!, $number:Int!){ organization(login:$login){ projectV2(number:$number){ id } } }`;
+            let projectId = null;
+            try {
+              const resUser = await github.graphql(queryUser, { login: owner, number: projNumber });
+              projectId = resUser.user && resUser.user.projectV2 && resUser.user.projectV2.id;
+            } catch (e) {
+              // ignore and try org
+            }
+            if (!projectId) {
+              try {
+                const resOrg = await github.graphql(queryOrg, { login: owner, number: projNumber });
+                projectId = resOrg.organization && resOrg.organization.projectV2 && resOrg.organization.projectV2.id;
+              } catch (e) {
+                // ignore
+              }
+            }
+            if (!projectId) {
+              console.log('Could not resolve Projects V2 project for owner:', owner, 'number:', projNumber);
+              return;
+            }
+            // Add the issue to the project V2
+            const mutation = `mutation($projectId:ID!, $contentId:ID!){ addProjectV2Item(input:{projectId:$projectId, contentId:$contentId}){ item{ id } } }`;
+            await github.graphql(mutation, { projectId: projectId, contentId: issueNodeId });
