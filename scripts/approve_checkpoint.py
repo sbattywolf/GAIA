@@ -13,6 +13,7 @@ Behavior:
 from __future__ import annotations
 
 import argparse
+import sys
 import os
 import json
 from datetime import datetime
@@ -79,6 +80,11 @@ def main():
     print('-----------------------')
 
     signer = args.signer or os.environ.get('USER') or os.environ.get('USERNAME') or getpass.getuser()
+
+    # Non-interactive CI safety: require --yes when stdin is not a TTY
+    if not args.yes and not sys.stdin.isatty():
+        print('Non-interactive environment detected: pass --yes to approve non-interactively or run locally.')
+        raise SystemExit(2)
 
     if not args.yes:
         confirm = input("Type APPROVATO to confirm approval (case-sensitive): ")
