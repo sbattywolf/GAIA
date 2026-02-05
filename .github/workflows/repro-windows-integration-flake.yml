@@ -26,6 +26,12 @@ jobs:
       - name: Run repeated e2e test runs
         run: |
           mkdir flake-logs
+          # collect runner environment and tool info for triage
+          "[RUNNER INFO]" | Out-File -FilePath flake-logs/runner_info.txt -Encoding utf8
+          Get-ChildItem env: | Sort-Object Name | Out-String | Out-File flake-logs/runner_info.txt -Append -Encoding utf8
+          python --version 2>&1 | Out-File -FilePath flake-logs/runner_info.txt -Append -Encoding utf8
+          python -m pip freeze 2>&1 | Out-File -FilePath flake-logs/runner_info.txt -Append -Encoding utf8
+          if (Get-Command psql -ErrorAction SilentlyContinue) { Get-Command psql | Out-String | Out-File flake-logs/runner_info.txt -Append -Encoding utf8 }
           $failed = $false
           for ($i=1; $i -le 20; $i++) {
             $file = "flake-logs/run_$i.txt"
