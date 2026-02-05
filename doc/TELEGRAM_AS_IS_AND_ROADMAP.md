@@ -17,11 +17,11 @@ This document summarizes the current Telegram integration in the GAIA repo, evid
 - `.env` present in repo with sample token variable (local convenience) and `.tmp/telegram.env` used at runtime.
 
 **Evidence of Working Features (observed in `events.ndjson` and files)**
-- Bot can send messages: multiple `alert.sent` events with successful `resp.ok: true` (see events.ndjson timestamps around 2026-02-03). [events.ndjson](events.ndjson)
-- Approval flow works: `alert.requested` → user replies → `approval.received` events recorded. (Multiple `approval.received` entries). [events.ndjson](events.ndjson)
-- Message ingestion pipeline: `telegram.enqueued` and `telegram.processed` events exist for many inbound messages (IDs and replies recorded). [events.ndjson](events.ndjson)
-- Command lifecycle implemented: `command.enqueued`, `approval.requested`, `command.approved`, `command.executed.dryrun`, and occasional `command.executed` events present. [events.ndjson](events.ndjson)
-- Periodic status posting: `scripts/gise_autonomous_runner.py` exists and writes `.tmp/gise_status/status_TIMESTAMP.txt`. [scripts/gise_autonomous_runner.py](scripts/gise_autonomous_runner.py)
+- Bot can send messages: multiple `alert.sent` events with successful `resp.ok: true` (see events.ndjson timestamps around 2026-02-03). [events.ndjson](../events.ndjson)
+- Approval flow works: `alert.requested` → user replies → `approval.received` events recorded. (Multiple `approval.received` entries). [events.ndjson](../events.ndjson)
+- Message ingestion pipeline: `telegram.enqueued` and `telegram.processed` events exist for many inbound messages (IDs and replies recorded). [events.ndjson](../events.ndjson)
+- Command lifecycle implemented: `command.enqueued`, `approval.requested`, `command.approved`, `command.executed.dryrun`, and occasional `command.executed` events present. [events.ndjson](../events.ndjson)
+- Periodic status posting: `scripts/gise_autonomous_runner.py` exists and writes `.tmp/gise_status/status_TIMESTAMP.txt`. [scripts/gise_autonomous_runner.py](../scripts/gise_autonomous_runner.py)
 
 **Current Feature List (ordered by current plan / feature scores)**
 1. F-helper-gise-part2 (epic: prototype & acceptance) — backlog and STR_TestGise acceptance items (high priority). Source: `doc/EPC_Telegram.current`.
@@ -34,15 +34,15 @@ This document summarizes the current Telegram integration in the GAIA repo, evid
 8. F-permanent-failed-ui — monitor and requeue UI (todo).
 9. F-metrics-alerts, F-backup-retention, F-runbook-docs — metrics, backups, docs (todo).
 
-See `doc/EPC_Telegram.current` and `doc/EPC_Telegram_all_todos.md` for all feature/task details. [doc/EPC_Telegram.current](doc/EPC_Telegram.current) [doc/EPC_Telegram_all_todos.md](doc/EPC_Telegram_all_todos.md)
+See `doc/EPC_Telegram.current` and `doc/EPC_Telegram_all_todos.md` for all feature/task details. [doc/EPC_Telegram.current](EPC_Telegram.current) [doc/EPC_Telegram_all_todos.md](EPC_Telegram_all_todos.md)
 
 **Completed / Implemented Items (summary & evidence)**
-- Basic Telegram client (send/get updates, edit, answer callbacks): `scripts/telegram_client.py` (implemented). [scripts/telegram_client.py](scripts/telegram_client.py)
-- Alerts wrapper that records events and traces: `gaia/alerts.py` (implemented). [gaia/alerts.py](gaia/alerts.py)
-- Approval observation & recording: `approval.received` events in `events.ndjson` (evidence of human approvals). [events.ndjson](events.ndjson)
-- Command enqueue/approval/dryrun: event stream shows enqueued/approved/dryrun/executed flows. [events.ndjson](events.ndjson)
-- Periodic status poster and helper runner scaffold: `scripts/gise_autonomous_runner.py` (implemented). [scripts/gise_autonomous_runner.py](scripts/gise_autonomous_runner.py)
-- Controller agent can read `.tmp/telegram.env` and send messages (code path present). [agents/controller_agent.py](agents/controller_agent.py)
+- Basic Telegram client (send/get updates, edit, answer callbacks): `scripts/telegram_client.py` (implemented). [scripts/telegram_client.py](../scripts/telegram_client.py)
+- Alerts wrapper that records events and traces: `gaia/alerts.py` (implemented). [gaia/alerts.py](../gaia/alerts.py)
+- Approval observation & recording: `approval.received` events in `events.ndjson` (evidence of human approvals). [events.ndjson](../events.ndjson)
+- Command enqueue/approval/dryrun: event stream shows enqueued/approved/dryrun/executed flows. [events.ndjson](../events.ndjson)
+- Periodic status poster and helper runner scaffold: `scripts/gise_autonomous_runner.py` (implemented). [scripts/gise_autonomous_runner.py](../scripts/gise_autonomous_runner.py)
+- Controller agent can read `.tmp/telegram.env` and send messages (code path present). [agents/controller_agent.py](../agents/controller_agent.py)
 
 **Pending / Missing or TODO (gap analysis)**
 - Secrets & token hygiene
@@ -98,10 +98,10 @@ If you want, I can implement task (1) immediately and run a quick local validati
 ---
 
 Files referenced in this summary:
-- [doc/EPC_Telegram.current](doc/EPC_Telegram.current)
-- [doc/EPC_Telegram_all_todos.md](doc/EPC_Telegram_all_todos.md)
-- [scripts/telegram_client.py](scripts/telegram_client.py)
-- [gaia/alerts.py](gaia/alerts.py)
-- [scripts/gise_autonomous_runner.py](scripts/gise_autonomous_runner.py)
-- [agents/controller_agent.py](agents/controller_agent.py)
-- [events.ndjson](events.ndjson)
+- [doc/EPC_Telegram.current](EPC_Telegram.current)
+- [doc/EPC_Telegram_all_todos.md](EPC_Telegram_all_todos.md)
+- [scripts/telegram_client.py](../scripts/telegram_client.py)
+- [gaia/alerts.py](../gaia/alerts.py)
+- [scripts/gise_autonomous_runner.py](../scripts/gise_autonomous_runner.py)
+- [agents/controller_agent.py](../agents/controller_agent.py)
+- [events.ndjson](../events.ndjson)
