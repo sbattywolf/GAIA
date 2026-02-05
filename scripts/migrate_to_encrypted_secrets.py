@@ -24,7 +24,7 @@ import argparse
 import sys
 import shutil
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -111,7 +111,7 @@ def parse_env_file(path: Path) -> dict:
 
 def create_backup(source: Path) -> Path:
     """Create backup of source file."""
-    timestamp = datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')
+    timestamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
     backup_path = source.with_suffix(f'.backup_{timestamp}')
     shutil.copy2(source, backup_path)
     return backup_path
