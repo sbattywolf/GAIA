@@ -12,7 +12,7 @@
   "status": "started",
   "started_at": "2026-02-05T09:30:27.137325+00:00"
   ,
-  "todolist_ref": ".tmp/todolist_rebuild_20260205T101500Z.json",
+  "todolist_ref": "backlogs/todolist_rebuild_20260205T101500Z.json",
   "items": [
     {"id": "T1", "title": "Fix auto-mode toggle enforcement", "owner": null, "status": "pending"},
     {"id": "T2", "title": "Ensure env_loader used by background jobs", "owner": null, "status": "pending"},
