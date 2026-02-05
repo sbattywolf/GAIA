@@ -198,7 +198,16 @@ def main():
             prototype_local = env_flag_true(env, 'PROTOTYPE_USE_LOCAL_EVENTS')
 
             if enabled and token and chat and allow_exec and not prototype_local:
-                sent = send_telegram(token, chat, msg)
+                # consult allowlist for telegram sends
+                try:
+                    spec_ag = importlib.util.spec_from_file_location('autonomy_guard', str(Path(__file__).resolve().parent / 'autonomy_guard.py'))
+                    ag = importlib.util.module_from_spec(spec_ag)
+                    spec_ag.loader.exec_module(ag)
+                    allow_tg = ag.is_command_allowed('send_telegram')
+                except Exception:
+                    allow_tg = allow_exec
+                if allow_tg:
+                    sent = send_telegram(token, chat, msg)
             else:
                 # If prototype local events enabled, treat as simulated send
                 if enabled and prototype_local:

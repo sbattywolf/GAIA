@@ -17,6 +17,7 @@ import importlib.util
 from pathlib import Path
 import uuid
 import json
+import importlib
 
 SESSION_STATE = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.copilot', 'session_state.json')
 
@@ -87,6 +88,26 @@ def handle_task(task):
         with open(req_path, 'w', encoding='utf-8') as f:
             json.dump(req_obj, f)
         append_event({"type": "approval.request", "task_id": task_id, "request_id": request_id, "trace_id": trace_id, "source": "automation_runner"})
+        # emit a realtime notification (dry-run) about approval request
+        try:
+            try:
+                from scripts import notify
+            except Exception:
+                spec = importlib.util.spec_from_file_location('notify', str(Path(__file__).resolve().parent / 'notify.py'))
+                notify = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(notify)
+            # consult allowlist for notifications
+            try:
+                spec_ag = importlib.util.spec_from_file_location('autonomy_guard', str(Path(__file__).resolve().parent / 'autonomy_guard.py'))
+                ag = importlib.util.module_from_spec(spec_ag)
+                spec_ag.loader.exec_module(ag)
+                allow_notify = ag.is_command_allowed('send_notification')
+            except Exception:
+                allow_notify = (os.environ.get('PERIODIC_NOTIFICATIONS_ENABLED') == '1') or (os.environ.get('ALLOW_COMMAND_EXECUTION') == '1')
+            send_flag = allow_notify
+            notify.notify_event('automation_runner', 'waiting_for_approval', f'Approval required for {task_id}', metrics={'request_id': request_id}, send=send_flag)
+        except Exception:
+            pass
         print(f"Approval required for {task_id}; waiting for ack file {ack_path}")
         # wait for ack — accept either task-specific ack or a global approval file
         global_appr = os.path.join(TMP_DIR, 'approval.json')
@@ -110,6 +131,18 @@ def handle_task(task):
             return False
         # proceed
         append_event({"type": "approval.received", "task_id": task_id, "source": "automation_runner"})
+        try:
+            from scripts import notify
+            try:
+                spec_ag = importlib.util.spec_from_file_location('autonomy_guard', str(Path(__file__).resolve().parent / 'autonomy_guard.py'))
+                ag = importlib.util.module_from_spec(spec_ag)
+                spec_ag.loader.exec_module(ag)
+                allow_notify = ag.is_command_allowed('send_notification')
+            except Exception:
+                allow_notify = (os.environ.get('PERIODIC_NOTIFICATIONS_ENABLED') == '1') or (os.environ.get('ALLOW_COMMAND_EXECUTION') == '1')
+            notify.notify_event('automation_runner', 'approved', f'Approval received for {task_id}', send=allow_notify)
+        except Exception:
+            pass
 
         # High-impact actions require an explicit checkpoint approval.
         try:
@@ -127,9 +160,33 @@ def handle_task(task):
 
     # Simulate work
     append_event({"type": "task.start", "task_id": task_id, "action": task.get('action')})
+    try:
+        from scripts import notify
+        try:
+            spec_ag = importlib.util.spec_from_file_location('autonomy_guard', str(Path(__file__).resolve().parent / 'autonomy_guard.py'))
+            ag = importlib.util.module_from_spec(spec_ag)
+            spec_ag.loader.exec_module(ag)
+            allow_notify = ag.is_command_allowed('send_notification')
+        except Exception:
+            allow_notify = (os.environ.get('PERIODIC_NOTIFICATIONS_ENABLED') == '1') or (os.environ.get('ALLOW_COMMAND_EXECUTION') == '1')
+        notify.notify_event('automation_runner', 'task_start', f'Starting {task_id}', send=allow_notify)
+    except Exception:
+        pass
     print(f"Processing {task_id} ...")
     time.sleep(2)
     append_event({"type": "task.complete", "task_id": task_id, "action": task.get('action')})
+    try:
+        from scripts import notify
+        try:
+            spec_ag = importlib.util.spec_from_file_location('autonomy_guard', str(Path(__file__).resolve().parent / 'autonomy_guard.py'))
+            ag = importlib.util.module_from_spec(spec_ag)
+            spec_ag.loader.exec_module(ag)
+            allow_notify = ag.is_command_allowed('send_notification')
+        except Exception:
+            allow_notify = (os.environ.get('PERIODIC_NOTIFICATIONS_ENABLED') == '1') or (os.environ.get('ALLOW_COMMAND_EXECUTION') == '1')
+        notify.notify_event('automation_runner', 'task_complete', f'Completed {task_id}', send=allow_notify)
+    except Exception:
+        pass
     task['status'] = 'done'
     # persist session state after completing a task (micro-step persistence)
     try:
@@ -204,6 +261,18 @@ def main():
             break
     if changed:
         save_tasks(tasks)
+    try:
+        from scripts import notify
+        try:
+            spec_ag = importlib.util.spec_from_file_location('autonomy_guard', str(Path(__file__).resolve().parent / 'autonomy_guard.py'))
+            ag = importlib.util.module_from_spec(spec_ag)
+            spec_ag.loader.exec_module(ag)
+            allow_notify = ag.is_command_allowed('send_notification')
+        except Exception:
+            allow_notify = (os.environ.get('PERIODIC_NOTIFICATIONS_ENABLED') == '1') or (os.environ.get('ALLOW_COMMAND_EXECUTION') == '1')
+        notify.notify_event('automation_runner', 'exiting', 'Runner exiting', send=allow_notify)
+    except Exception:
+        pass
     print('Runner exiting')
 
 
