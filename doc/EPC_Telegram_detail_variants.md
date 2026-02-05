@@ -6,7 +6,7 @@ This document provides two concrete implementation/workflow variants for the `ST
 - "With Gise": assume the `Gise` agent handles claim/merge automation and some validation steps.
 - "Without Gise": assume maintainers perform claim/merge/validation manually; automation is minimal.
 
-File note: canonical epic remains at [doc/EPC_Telegram.current](doc/EPC_Telegram.current). This variants document is a decision aid for planning and sprint scoping.
+File note: canonical epic remains at [doc/EPC_Telegram.current](EPC_Telegram.current). This variants document is a decision aid for planning and sprint scoping.
 
 ---
 
@@ -64,7 +64,7 @@ Risks & notes
 - Choose "With Gise" when you expect frequent agent-produced drafts and want to minimize maintainer time; invest in test coverage and safe-guards first.
 - Choose "Without Gise" for low-frequency drafts or when you need strict human control over merges and audit insertion.
 
-**File**: [doc/EPC_Telegram_detail_variants.md](doc/EPC_Telegram_detail_variants.md)
+**File**: [doc/EPC_Telegram_detail_variants.md](EPC_Telegram_detail_variants.md)
 
 ---
 
