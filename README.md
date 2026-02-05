@@ -17,7 +17,28 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-2. Copy or create a `.env` from `.env.example` and keep local secrets out of git.
+2. Configure secrets using the GAIA secrets manager (recommended):
+
+```powershell
+# Set your GitHub token (for API access with 2FA)
+python scripts/secrets_cli.py set GITHUB_TOKEN your_token_here
+
+# Set Telegram credentials (if using Telegram integration)
+python scripts/secrets_cli.py set TELEGRAM_BOT_TOKEN your_bot_token
+python scripts/secrets_cli.py set TELEGRAM_CHAT_ID your_chat_id
+
+# Validate setup
+python scripts/secrets_cli.py validate GITHUB_TOKEN
+```
+
+**OR** copy `.env.example` to `.env` and add your secrets (less secure):
+
+```powershell
+copy .env.example .env
+# Edit .env to add tokens (keep this file out of git!)
+```
+
+See [Secrets Management Guide](doc/SECRETS_MANAGEMENT_GUIDE.md) for details.
 
 3. Recommended: add `.venv` and `.env` to `.gitignore` (if not present).
 
@@ -107,7 +128,11 @@ If you need me to change visibility or create an organization-owned remote, tell
 
 ## Notes
 - Agents use `gh` to create issues; if you don't want that, run in `PROTOTYPE_USE_LOCAL_EVENTS=1` mode or remove the `gh` calls.
-- Keep secrets in Bitwarden or `.env`; avoid committing secrets.
+- Secrets are managed using the GAIA secrets manager (see [Secrets Management Guide](doc/SECRETS_MANAGEMENT_GUIDE.md))
+  - Encrypted storage by default
+  - Supports token rotation with automatic backup
+  - Works with environment variables, `.env` files, and Bitwarden
+- For GitHub 2FA users: see [GitHub 2FA Guide](doc/GITHUB_2FA_GUIDE.md) for token management
 
 Periodic Telegram summary
 -------------------------
