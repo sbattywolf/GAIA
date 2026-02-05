@@ -16,6 +16,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Create early smoke artifact
+        run: |
+          if (-not (Test-Path flake-logs)) { mkdir flake-logs }
+          "smoke: ok" | Out-File -FilePath flake-logs/test-ok.txt -Encoding utf8
+
       - name: Install requirements
         run: |
           python -m pip install --upgrade pip
