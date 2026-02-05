@@ -1,0 +1,37 @@
+name: Reproduce Windows integration flake
+
+on:
+  workflow_dispatch:
+
+jobs:
+  repro-flake:
+    name: Reproduce flake on windows-latest
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install requirements
+        run: |
+          python -m pip install --upgrade pip
+          if (Test-Path requirements.txt) { pip install -r requirements.txt }
+
+      - name: Run repeated e2e test runs
+        run: |
+          mkdir flake-logs
+          for ($i=1; $i -le 20; $i++) {
+            Write-Output "--- RUN $i ---" | Out-File -FilePath flake-logs/run_$i.txt -Encoding utf8
+            pytest tests/e2e -k preprod_infra -q 2>&1 | Tee-Object -FilePath flake-logs/run_$i.txt -Append
+            if ($LASTEXITCODE -ne 0) { Write-Output "FAILED with exit $LASTEXITCODE" | Out-File -FilePath flake-logs/run_$i.txt -Append; break }
+          }
+
+      - name: Upload logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: flake-logs
+          path: flake-logs
