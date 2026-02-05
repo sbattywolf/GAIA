@@ -13,8 +13,8 @@ Structure (top-level folders):
 
 Quick start Overviews:
 
-- `02_technical/OVERVIEW.md` — curated reading order for the most important technical summaries.
-- `03_procedural/OVERVIEW.md` — curated reading order for core runbooks and procedural summaries.
+- `02_technical/OVERVIEW.md` — curated reading order for core technical topics: architecture, multi-agent patterns, Telegram integration, secrets handling, and CI setup.
+- `03_procedural/OVERVIEW.md` — curated reading order for operational runbooks: CI/audit capture, scheduler runbooks, deployment, alerts, and session procedures.
 
 Naming convention (filename slug):
 
