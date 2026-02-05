@@ -53,14 +53,16 @@ def test_mock_service_and_postgres_ready():
     try:
         # Wait for mock service to become ready
         start_wait = time.time()
+        ready = False
         for _ in range(30):
             try:
                 with urllib.request.urlopen(mock_url, timeout=3) as r:
                     assert r.status == 200
+                    ready = True
                     break
             except Exception:
                 time.sleep(1)
-        else:
+        if not ready:
             # Capture a last attempt response for debugging
             try:
                 with urllib.request.urlopen(mock_url, timeout=3) as r:
