@@ -34,7 +34,11 @@ jobs:
 
       - name: Configure gh auth using token
         run: |
-          echo "$GH_TOKEN" | gh auth login --with-token
+          # In GitHub Actions the GH_TOKEN is already available in the environment.
+          # Running `gh auth login --with-token` can fail when GH_TOKEN is present
+          # (it attempts to write credentials). Make this step tolerant so the job
+          # continues even if `gh auth login` exits non-zero.
+          echo "$GH_TOKEN" | gh auth login --with-token || true
 
       - name: Run triage script
         shell: pwsh
