@@ -4,6 +4,7 @@ import subprocess
 import shutil
 import urllib.request
 import pytest
+import sys
 
 
 @pytest.mark.e2e
@@ -12,18 +13,51 @@ def test_mock_service_and_postgres_ready():
 
     This test is intentionally minimal to verify infrastructure readiness in CI.
     """
+    # Only run E2E tests when explicitly enabled in CI (avoid running on regular integration jobs)
+    if os.environ.get("RUN_E2E", "0") != "1":
+        pytest.skip("E2E tests disabled (set RUN_E2E=1 to enable)")
+
     mock_url = os.environ.get("MOCK_URL", "http://127.0.0.1:8001/health")
 
-    # Wait for mock service to become ready
-    for _ in range(15):
-        try:
-            with urllib.request.urlopen(mock_url, timeout=3) as r:
-                assert r.status == 200
-                break
-        except Exception:
-            time.sleep(1)
-    else:
-        pytest.fail(f"mock service not ready at {mock_url}")
+    # If CI/workflow didn't start the mock, start it from the test to make this
+    # check self-contained and OS-independent.
+    mock_proc = None
+    if os.environ.get("RUN_E2E", "0") == "1":
+        # Start local mock only when using the default local URL
+        if mock_url.startswith("http://127.0.0.1"):
+            cmd = [sys.executable, "scripts/mock_token_service.py", "--port", "8001"]
+            mock_proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    try:
+        # Wait for mock service to become ready
+        for _ in range(15):
+            try:
+                with urllib.request.urlopen(mock_url, timeout=3) as r:
+                    assert r.status == 200
+                    break
+            except Exception:
+                time.sleep(1)
+        else:
+            pytest.fail(f"mock service not ready at {mock_url}")
+    finally:
+        if mock_proc:
+            try:
+                mock_proc.terminate()
+                mock_proc.wait(timeout=5)
+            except Exception:
+                try:
+                    mock_proc.kill()
+                except Exception:
+                    pass
+            # Attempt to surface any captured mock logs for CI debugging
+            try:
+                out, err = mock_proc.communicate(timeout=1)
+                if out:
+                    print(out.decode(errors="ignore"))
+                if err:
+                    print(err.decode(errors="ignore"))
+            except Exception:
+                pass
 
     # Check Postgres using psql if available
     if shutil.which("psql") is None:

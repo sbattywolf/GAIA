@@ -32,12 +32,15 @@ if (-not (Test-Path $logDirFull)) { New-Item -Path $logDirFull -ItemType Directo
 function Start-PythonModule {
   param($module, $argsStr, $name)
   $python = 'python'
+  # Use env_loader to load .private/.env for scheduled services
+  $launcher = Join-Path $repoRoot 'scripts\env_loader.py'
   # build ArgumentList as an array to avoid quoting issues
-  $argArray = @('-m', $module)
+  $inner = @('-m', $module)
   if ($argsStr) {
-    # simple split on spaces - arguments here are simple flags
-    $argArray += $argsStr -split ' '
+    $inner += $argsStr -split ' '
   }
+  # Final argument list: env_loader.py --env .private/.env -- python -m <module> <args...>
+  $argArray = @($launcher, '--env', '.private\.env', '--', 'python') + $inner
   $ts = Get-Date -Format "yyyyMMdd_HHmmss"
   $outLog = Join-Path $logDirFull ("{0}.{1}.out.log" -f $name, $ts)
   $errLog = Join-Path $logDirFull ("{0}.{1}.err.log" -f $name, $ts)

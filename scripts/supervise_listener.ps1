@@ -11,7 +11,10 @@ if (Test-Path $envFile) {
 }
 
 # start the listener and capture the process
-$proc = Start-Process -FilePath python -ArgumentList 'scripts/approval_listener.py','--poll','5','--continue-on-approve' -PassThru
+# Use env_loader so listener reliably inherits envs from .tmp/telegram.env
+$launcher = Join-Path $PWD 'scripts\env_loader.py'
+$argList = @($launcher, '--env', '.tmp/telegram.env', '--', 'python', 'scripts\approval_listener.py', '--poll', '5', '--continue-on-approve')
+$proc = Start-Process -FilePath python -ArgumentList $argList -PassThru
 # write pid file
 $pidFile = Join-Path -Path $PWD -ChildPath '.tmp/approval_listener.pid'
 New-Item -ItemType Directory -Path (Split-Path $pidFile) -Force | Out-Null
