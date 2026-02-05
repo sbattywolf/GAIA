@@ -1,12 +1,31 @@
-# MASTER_DOC_INDEX — GAIA documentation index
+# MASTER_DOC_INDEX
 
-This file is a curated index of important documentation in the `doc/` folder. Use this as the first stop when looking for runbooks, plans, and policies.
+This document defines the new concise documentation structure, naming conventions and where archived material lives.
 
-- HISTORY_REWRITE_PLAN.md — Safe history-rewrite plan and checklist.
-- ROTATION_PILOT_README.md — Token rotation pilot usage notes and smoke-check steps.
-- ENVIRONMENTS.md — Dev vs pre-prod environment guidance.
-- DOCS_STRATEGY.md — Documentation policy, timestamp format, and migration guidance.
-- SECRETS.md (if present) — Secrets handling and detect-secrets usage.
-- CHANGELOG.md — User-visible change history (create if missing).
+Structure (top-level folders):
 
-If you add or update docs, please update this index (or run the index generator script) and include `Created:` / `Updated:` headers in the document.
+- `01_onboarding` — what new contributors or agents need to get started. Minimal runnable steps.
+- `02_technical` — API specs, architecture, data models, design decisions.
+- `03_procedural` — runbooks, playbooks, operational procedures, approvals.
+- `04_reference` — configs, schemas, examples, CLI usage.
+- `05_backlog` — consolidated backlog and prioritized stories/tasks mapped to features.
+- `06_archives` — pointers to archived material (large/old docs) and historical notes.
+
+Naming convention (filename slug):
+
+`<category>-<feature-or-area>-<short-description>.md`
+
+Examples:
+
+- `technical-api-auth.md`
+- `procedural-deploy-release-checklist.md`
+- `onboarding-agent-quickstart.md`
+
+Archive policy:
+
+- All existing docs are moved to `doc/archive/pre_restructure_<timestamp>/` and left intact.
+- New documents should be concise, focused, and cross-referenced to archived originals when needed.
+
+Backlog approach:
+
+- The `05_backlog/MASTER_BACKLOG.md` will contain a single consolidated backlog grouped by feature, with links to archived detail documents and referenced GitHub issues.
