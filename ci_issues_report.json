@@ -1,0 +1,232 @@
+{
+  "timestamp": "2026-02-05T23:56:25.741866",
+  "summary": {
+    "total_runs": 30,
+    "failed_runs": 23,
+    "open_issues": 67
+  },
+  "failures_by_urgency": {
+    "critical": 3,
+    "high": 15,
+    "medium": 5,
+    "low": 0
+  },
+  "failures_by_type": {
+    "unknown": 3,
+    "security": 3,
+    "ci": 13,
+    "test": 2,
+    "triage": 2
+  },
+  "fixed_failures": [],
+  "unfixed_failures": [
+    {
+      "run_id": 21733140079,
+      "workflow": "Periodic Telegram Status (diff-only)",
+      "branch": "master",
+      "urgency": "medium",
+      "type": "unknown",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733140079",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733102731,
+      "workflow": "Secret scanning",
+      "branch": "copilot/collect-ci-issues-and-fix",
+      "urgency": "critical",
+      "type": "security",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733102731",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733102719,
+      "workflow": "CI",
+      "branch": "copilot/collect-ci-issues-and-fix",
+      "urgency": "high",
+      "type": "ci",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733102719",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733102705,
+      "workflow": "CI (fixed)",
+      "branch": "copilot/collect-ci-issues-and-fix",
+      "urgency": "high",
+      "type": "ci",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733102705",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733102693,
+      "workflow": "CI",
+      "branch": "copilot/collect-ci-issues-and-fix",
+      "urgency": "high",
+      "type": "ci",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733102693",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733063138,
+      "workflow": "CI",
+      "branch": "master",
+      "urgency": "high",
+      "type": "ci",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733063138",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733063133,
+      "workflow": "CI (fixed)",
+      "branch": "master",
+      "urgency": "high",
+      "type": "ci",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733063133",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733063131,
+      "workflow": "Allowlist tests",
+      "branch": "master",
+      "urgency": "high",
+      "type": "test",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733063131",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733062793,
+      "workflow": ".github/workflows/collect-triage-metrics.yml",
+      "branch": "master",
+      "urgency": "medium",
+      "type": "triage",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733062793",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733062646,
+      "workflow": ".github/workflows/ci-integration.yml",
+      "branch": "master",
+      "urgency": "high",
+      "type": "ci",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733062646",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733062438,
+      "workflow": ".github/workflows/auto-merge.yml",
+      "branch": "master",
+      "urgency": "medium",
+      "type": "unknown",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733062438",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733053638,
+      "workflow": "CI",
+      "branch": "feat/sprint-2026-02-06",
+      "urgency": "high",
+      "type": "ci",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733053638",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733053597,
+      "workflow": "Secret scanning",
+      "branch": "feat/sprint-2026-02-06",
+      "urgency": "critical",
+      "type": "security",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733053597",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733053592,
+      "workflow": "CI (fixed)",
+      "branch": "feat/sprint-2026-02-06",
+      "urgency": "high",
+      "type": "ci",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733053592",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733053587,
+      "workflow": "Allowlist tests",
+      "branch": "feat/sprint-2026-02-06",
+      "urgency": "high",
+      "type": "test",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733053587",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733046442,
+      "workflow": ".github/workflows/collect-triage-metrics.yml",
+      "branch": "feat/sprint-2026-02-06",
+      "urgency": "medium",
+      "type": "triage",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733046442",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733046305,
+      "workflow": ".github/workflows/ci-integration.yml",
+      "branch": "feat/sprint-2026-02-06",
+      "urgency": "high",
+      "type": "ci",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733046305",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21733046166,
+      "workflow": ".github/workflows/auto-merge.yml",
+      "branch": "feat/sprint-2026-02-06",
+      "urgency": "medium",
+      "type": "unknown",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21733046166",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21732744378,
+      "workflow": "CI (fixed)",
+      "branch": "copilot/create-backlog-builder-agent",
+      "urgency": "high",
+      "type": "ci",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21732744378",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21732744376,
+      "workflow": "CI",
+      "branch": "copilot/create-backlog-builder-agent",
+      "urgency": "high",
+      "type": "ci",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21732744376",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21732744360,
+      "workflow": "CI",
+      "branch": "copilot/create-backlog-builder-agent",
+      "urgency": "high",
+      "type": "ci",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21732744360",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21732744358,
+      "workflow": "Secret scanning",
+      "branch": "copilot/create-backlog-builder-agent",
+      "urgency": "critical",
+      "type": "security",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21732744358",
+      "status": "unfixed"
+    },
+    {
+      "run_id": 21732743229,
+      "workflow": "CI",
+      "branch": "copilot/create-backlog-builder-agent",
+      "urgency": "high",
+      "type": "ci",
+      "url": "https://github.com/sbattywolf/GAIA/actions/runs/21732743229",
+      "status": "unfixed"
+    }
+  ],
+  "duplicate_issues": []
+}
