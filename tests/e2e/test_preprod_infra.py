@@ -22,6 +22,13 @@ def test_mock_service_and_postgres_ready():
     # If CI/workflow didn't start the mock, start it from the test to make this
     # check self-contained and OS-independent.
     mock_proc = None
+    # Temporary debug info to aid intermittent flake triage
+    print("[DEBUG] test_mock_service_and_postgres_ready starting")
+    try:
+        import platform
+        print(f"[DEBUG] platform: {platform.platform()} python: {sys.executable}")
+    except Exception:
+        pass
     if os.environ.get("RUN_E2E", "0") == "1":
         # Start local mock only when using the default local URL
         if mock_url.startswith("http://127.0.0.1"):
@@ -38,6 +45,12 @@ def test_mock_service_and_postgres_ready():
             except Exception:
                 time.sleep(1)
         else:
+            # Capture a last attempt response for debugging
+            try:
+                with urllib.request.urlopen(mock_url, timeout=3) as r:
+                    print(f"[DEBUG] last_status={r.status}")
+            except Exception as e:
+                print(f"[DEBUG] mock_connect_error: {e}")
             pytest.fail(f"mock service not ready at {mock_url}")
     finally:
         if mock_proc:
@@ -53,11 +66,11 @@ def test_mock_service_and_postgres_ready():
             try:
                 out, err = mock_proc.communicate(timeout=1)
                 if out:
-                    print(out.decode(errors="ignore"))
+                    print("[DEBUG] mock stdout:\n", out.decode(errors="ignore"))
                 if err:
-                    print(err.decode(errors="ignore"))
-            except Exception:
-                pass
+                    print("[DEBUG] mock stderr:\n", err.decode(errors="ignore"))
+            except Exception as e:
+                print(f"[DEBUG] mock_communicate_error: {e}")
 
     # Check Postgres using psql if available
     if shutil.which("psql") is None:
@@ -87,3 +100,4 @@ def test_mock_service_and_postgres_ready():
     ]
 
     subprocess.run(cmd, check=True, env=env)
+    print("[DEBUG] psql check invoked")
