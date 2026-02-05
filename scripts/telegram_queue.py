@@ -8,6 +8,7 @@ from pathlib import Path
 import json
 import os
 import tempfile
+import time
 from typing import Optional
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -67,12 +68,27 @@ def append_dedup(update: dict) -> bool:
 
 
 def pop_next() -> Optional[dict]:
+    """Pop the next available update respecting `_next_attempt` and
+    increment the `_attempts` counter. This avoids processing items
+    scheduled for later and provides a simple cooperative retry count.
+    """
     q = _safe_load(Q_PATH, [])
     if not q:
         return None
-    item = q.pop(0)
-    _safe_save(Q_PATH, q)
-    return item
+    now = int(time.time())
+    for idx, item in enumerate(q):
+        next_at = item.get('_next_attempt', 0) or 0
+        if next_at and next_at > now:
+            # skip items scheduled in the future
+            continue
+        # remove item from queue
+        it = q.pop(idx)
+        # increment attempts
+        it['_attempts'] = int(it.get('_attempts', 0)) + 1
+        it['_last_popped'] = now
+        _safe_save(Q_PATH, q)
+        return it
+    return None
 
 
 def list_queue() -> list:
@@ -110,3 +126,19 @@ def requeue(update: dict, front: bool = True) -> bool:
         return True
     except Exception:
         return False
+
+
+def requeue_with_backoff(update: dict, base_delay: int = 30, max_delay: int = 3600, front: bool = True) -> bool:
+    """Re-queue an update and set a `_next_attempt` timestamp using
+    exponential backoff based on `_attempts`.
+    """
+    attempts = int(update.get('_attempts', 0))
+    # exponential backoff: base_delay * 2^(attempts-1)
+    if attempts <= 0:
+        delay = base_delay
+    else:
+        delay = base_delay * (2 ** (attempts - 1))
+    if delay > max_delay:
+        delay = max_delay
+    update['_next_attempt'] = int(time.time()) + int(delay)
+    return requeue(update, front=front)
