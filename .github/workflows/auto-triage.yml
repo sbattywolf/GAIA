@@ -16,8 +16,8 @@ jobs:
     name: Run automated triage
     runs-on: ubuntu-latest
     env:
-      GH_TOKEN: ${{ secrets.GAIA_GITHUB_TOKEN }}
-      GITHUB_TOKEN: ${{ secrets.GAIA_GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
