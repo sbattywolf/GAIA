@@ -32,8 +32,9 @@ def main():
         except Exception:
             pass
 
-    # Prefer automation-specific token variables used by repo tooling
+    # Prefer canonical GAIA token name, then fall back to legacy names
     token = (
+        os.environ.get('GAIA_GITHUB_TOKEN') or
         os.environ.get('AUTOMATION_GITHUB_TOKEN') or
         os.environ.get('AUTOMATION_GITHUB_TOKEN_ORG') or
         os.environ.get('GITHUB_PAT') or
