@@ -47,7 +47,11 @@ gaia.db
 coverage/
 
 # Editor directories
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 .idea/
 
 # OS files
