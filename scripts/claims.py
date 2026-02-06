@@ -33,7 +33,7 @@ def _read_claim(path):
         return None
 
 
-def _acquire_lock_for(path, timeout=5.0):
+def _acquire_lock_for(path, timeout=0.5):
     lock_path = path + ".lock"
     start = time.time()
     while time.time() - start < timeout:
@@ -66,7 +66,7 @@ def _write_atomic(path, data):
     # simple file-based lock to avoid concurrent replace races on Windows
     lock_path = path + ".lock"
     start = time.time()
-    timeout = 5.0
+    timeout = 0.5
     got = False
     while time.time() - start < timeout:
         try:
