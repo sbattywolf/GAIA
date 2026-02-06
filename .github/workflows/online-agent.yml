@@ -48,7 +48,7 @@ jobs:
       - name: Run online agent
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GAIA_GITHUB_TOKEN }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           PROTOTYPE_USE_LOCAL_EVENTS: ${{ secrets.PROTOTYPE_USE_LOCAL_EVENTS }}

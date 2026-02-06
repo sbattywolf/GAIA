@@ -41,7 +41,7 @@ jobs:
 
       - name: Create daily summary issue
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GAIA_GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
         run: |
           python - <<'PY'
