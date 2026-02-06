@@ -98,4 +98,8 @@ Enable protected real sends
 - Follow `doc/GITHUB_ENV_SETUP.md` to create the `production` environment and add `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` as secrets.
 - Use the workflow `real-send.yml` to dispatch manual approved sends from GitHub Actions.
 
+Agent backlog guidelines (ENGLISH)
+
+See `doc/AGENT_BACKLOG_GUIDELINES.md` for the official English guidelines that explain how GAIA agents should manage, split, and prioritize backlog items, update sprint documents, and record audit/events when they operate.
+
 ````

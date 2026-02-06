@@ -277,17 +277,29 @@ class SecretsManager:
         self.root_dir = Path(root_dir)
         
         # Initialize providers in priority order.
-        # For encrypted-only workflow we prefer environment (process env) and
-        # the encrypted file store. Env-file fallback is intentionally NOT
-        # included here to avoid reading plaintext files from disk.
+        # Prefer environment first. If a .env file exists in the project
+        # root (useful for tests and local development), include an
+        # EnvFileProvider so local env files are read. Encrypted store is
+        # preferred over Bitwarden for persisted secrets.
         self.providers: List[SecretProvider] = [
             EnvironmentProvider(),
+        ]
+
+        # include env file provider if a .env exists in the provided root_dir
+        env_path = self.root_dir / '.env'
+        if env_path.exists():
+            self.providers.append(EnvFileProvider(str(env_path), priority=20))
+
+        # encrypted storage provider
+        self.providers.append(
             EncryptedFileProvider(
                 str(self.root_dir / ".private" / "secrets.enc"),
                 str(self.root_dir / ".private" / "secrets.key")
-            ),
-            BitwardenProvider(),
-        ]
+            )
+        )
+
+        # fallback provider
+        self.providers.append(BitwardenProvider())
         
         # Sort by priority
         self.providers.sort(key=lambda p: p.priority)
@@ -295,6 +307,19 @@ class SecretsManager:
         # Audit log
         self.audit_file = self.root_dir / ".private" / "secrets_audit.log"
         self.audit_file.parent.mkdir(parents=True, exist_ok=True)
+
+        # Alias map: canonical -> fallbacks to maintain backward compatibility
+        # When requesting a canonical key (left), the manager will try
+        # each alias in order until a value is found.
+        self.aliases = {
+            'GAIA_GITHUB_TOKEN': ['GAIA_GITHUB_TOKEN', 'AUTOMATION_GITHUB_TOKEN', 'GITHUB_TOKEN']
+        }
+
+        # When setting a canonical key, also mirror to these secondary keys
+        # to preserve older consumers if desired.
+        self._set_mirror = {
+            'GAIA_GITHUB_TOKEN': ['AUTOMATION_GITHUB_TOKEN']
+        }
     
     def _log_audit(self, action: str, key: str, provider: str, success: bool):
         """Log secret access for audit."""
@@ -322,14 +347,20 @@ class SecretsManager:
         Returns:
             Secret value or default
         """
-        for provider in self.providers:
-            try:
-                value = provider.get(key)
-                if value is not None:
-                    self._log_audit('get', key, provider.name, True)
-                    return value
-            except Exception:
-                continue
+        # If key has aliases defined, try them in order
+        keys_to_try = [key]
+        if key in self.aliases:
+            keys_to_try = self.aliases[key]
+
+        for k in keys_to_try:
+            for provider in self.providers:
+                try:
+                    value = provider.get(k)
+                    if value is not None:
+                        self._log_audit('get', k, provider.name, True)
+                        return value
+                except Exception:
+                    continue
         
         self._log_audit('get', key, 'none', False)
         return default
@@ -353,6 +384,14 @@ class SecretsManager:
                 try:
                     success = p.set(key, value)
                     self._log_audit('set', key, p.name, success)
+                    # Mirror to secondary keys if configured
+                    if success and key in self._set_mirror:
+                        for mirror_key in self._set_mirror[key]:
+                            try:
+                                p.set(mirror_key, value)
+                                self._log_audit('set', mirror_key, p.name, True)
+                            except Exception:
+                                self._log_audit('set', mirror_key, p.name, False)
                     return success
                 except Exception:
                     self._log_audit('set', key, p.name, False)

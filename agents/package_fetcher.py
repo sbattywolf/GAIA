@@ -17,7 +17,9 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 
-from .agent_utils import build_event, append_event_atomic, is_dry_run, idempotency_key
+from .agent_utils import build_event, append_event_atomic, is_dry_run, idempotency_key, run_script
+import shlex
+import sys
 import orchestrator
 
 
@@ -75,12 +77,40 @@ def process_request(req_file: Path, shared: Path, dry: bool):
                     # attempt to use pip to download the distribution into cache
                     if not dry:
                         try:
+                            # prefer safe runner for local script files; otherwise run via subprocess
                             cmd = ['python', '-m', 'pip', 'download', '--no-deps', '-d', str(cache), pkg]
-                            proc = subprocess.run(cmd, capture_output=True, text=True, check=False, timeout=120)
-                            if proc.returncode == 0:
+                            # if command refers to an existing file, use run_script; else run subprocess
+                            def _run_cmd(cmd_obj, timeout=120):
+                                if isinstance(cmd_obj, (list, tuple)):
+                                    proc = subprocess.run(cmd_obj, capture_output=True, text=True, check=False, timeout=timeout)
+                                    return proc.returncode, proc.stdout, proc.stderr
+                                # string path: split
+                                try:
+                                    tokens = shlex.split(cmd_obj)
+                                except Exception:
+                                    tokens = [cmd_obj]
+                                first = tokens[0] if tokens else ''
+                                p = Path(first)
+                                if not p.is_absolute():
+                                    repo_root = Path(__file__).resolve().parents[1]
+                                    cand1 = repo_root / first
+                                    cand2 = Path.cwd() / first
+                                    if cand1.exists():
+                                        p = cand1
+                                    elif cand2.exists():
+                                        p = cand2
+                                if p.exists() and p.is_file():
+                                    res = run_script(str(p), args=tokens[1:], timeout=timeout)
+                                    return res.get('rc', 255), res.get('stdout', ''), res.get('stderr', '')
+                                # fallback
+                                proc = subprocess.run(tokens, capture_output=True, text=True, check=False, timeout=timeout)
+                                return proc.returncode, proc.stdout, proc.stderr
+
+                            rc, out, err = _run_cmd(cmd, timeout=120)
+                            if rc == 0:
                                 status = 'downloaded'
                             else:
-                                status = f'pip-error: {proc.returncode} {proc.stderr.strip()[:200]}'
+                                status = f'pip-error: {rc} {err.strip()[:200]}'
                         except Exception as e:
                             status = f'pip-exception: {e}'
                     else:

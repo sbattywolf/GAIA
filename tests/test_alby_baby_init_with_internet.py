@@ -24,7 +24,7 @@ def test_baby_init_writes_checklist_and_package_request(tmp_path, monkeypatch):
 
     try:
         # ensure tokens not present
-        for k in ('ALBY_INTERNET_TOKEN', 'CI_TOKEN', 'GITHUB_TOKEN'):
+        for k in ('ALBY_INTERNET_TOKEN', 'CI_TOKEN', 'AUTOMATION_GITHUB_TOKEN'):
             if k in os.environ:
                 del os.environ[k]
 

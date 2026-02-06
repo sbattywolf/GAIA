@@ -18,7 +18,8 @@ from pathlib import Path
 from datetime import datetime
 
 from .agent_utils import build_event, append_event_atomic, is_dry_run
-from .agent_utils import idempotency_key, retry_with_backoff
+from .agent_utils import idempotency_key, retry_with_backoff, run_script
+import shlex
 import orchestrator
 
 
@@ -184,6 +185,44 @@ def run_cmd(cmd, timeout=300):
         return 1, '', str(e)
 
 
+def execute_command(cmd, timeout=300):
+    """Execute a command string.
+
+    If the first token is a path to an existing file, prefer the safe
+    `agents.agent_utils.run_script` runner which picks the correct
+    interpreter. Otherwise fall back to the shell-based `run_cmd`.
+    Returns tuple (rc, stdout, stderr).
+    """
+    try:
+        tokens = shlex.split(cmd)
+    except Exception:
+        # shlex failure: fallback to raw shell execution
+        return run_cmd(cmd, timeout=timeout)
+
+    if not tokens:
+        return 1, '', 'no command'
+
+    first = tokens[0]
+    p = Path(first)
+    # try resolving relative to repo root and cwd
+    if not p.is_absolute():
+        repo_root = Path(__file__).resolve().parents[1]
+        cand1 = repo_root / first
+        cand2 = Path.cwd() / first
+        if cand1.exists():
+            p = cand1
+        elif cand2.exists():
+            p = cand2
+
+    if p.exists() and p.is_file():
+        # use agent_utils.run_script which invokes scripts/run_script.py
+        res = run_script(str(p), args=tokens[1:], timeout=timeout)
+        return res.get('rc', 255), res.get('stdout', ''), res.get('stderr', '')
+
+    # otherwise run via shell
+    return run_cmd(cmd, timeout=timeout)
+
+
 def main(argv=None):
     p = argparse.ArgumentParser()
     p.add_argument('--task', default='run', help='Task type')
@@ -244,7 +283,7 @@ def main(argv=None):
             step_cmd = step.get('cmd')
             timeout = step.get('timeout', 300)
             allow_fail = step.get('allow_fail', False)
-            rc, out, err = run_cmd(step_cmd, timeout=timeout)
+            rc, out, err = execute_command(step_cmd, timeout=timeout)
             payload = {'job_id': j['job_id'], 'step_id': step.get('id'), 'cmd': step_cmd, 'returncode': rc, 'stdout': out, 'stderr': err}
             payload['idem'] = idempotency_key('alby_agent', payload)
             payload['trace'] = {'manifest': manifest.get('name'), 'started_by': os.getenv('USER') or os.getenv('USERNAME') or 'local'}
@@ -262,7 +301,7 @@ def main(argv=None):
         append_event_atomic(events_path, build_event('alby.manifest.complete', 'alby_agent', manifest_payload))
     else:
         with ThreadPoolExecutor(max_workers=args.concurrency) as ex:
-            futures = {ex.submit(run_cmd, j['cmd']): j for j in jobs}
+            futures = {ex.submit(execute_command, j['cmd']): j for j in jobs}
             for fut in as_completed(futures):
                 j = futures[fut]
                 rc, out, err = fut.result()

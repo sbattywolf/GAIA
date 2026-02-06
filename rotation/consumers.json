@@ -1,0 +1,9 @@
+{
+  "app_id": "<APP_ID>",
+  "consumers": {
+    "publisher": { "installation_id": "<INSTALLATION_ID_PUBLISHER>", "secret_name": "GAIA_GITHUB_TOKEN" },
+    "ci": { "installation_id": "<INSTALLATION_ID_CI>", "secret_name": "GAIA_CI_TOKEN" },
+    "token_cache": { "installation_id": "<INSTALLATION_ID_TOKEN_CACHE>", "secret_name": "GAIA_TOKEN_CACHE_TOKEN" },
+    "online_agent": { "installation_id": "<INSTALLATION_ID_AGENT>", "secret_name": "GAIA_AGENT_TOKEN" }
+  }
+}

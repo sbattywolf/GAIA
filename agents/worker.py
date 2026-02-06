@@ -37,8 +37,16 @@ def handle_job(payload: dict) -> dict:
     if not cmd:
         return {'error': 'no-cmd'}
     try:
-        proc = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=300)
-        return {'rc': proc.returncode, 'stdout': proc.stdout, 'stderr': proc.stderr}
+        # Prefer the standardized script runner to avoid REPL/shell confusion
+        from agents.agent_utils import run_script
+        # If cmd refers to an existing script file, use the runner; otherwise fall back
+        # to shell execution for arbitrary commands.
+        if os.path.exists(cmd.split(' ')[0]):
+            res = run_script(cmd.split(' ')[0], args=cmd.split(' ')[1:], timeout=300)
+            return {'rc': res.get('rc'), 'stdout': res.get('stdout', ''), 'stderr': res.get('stderr', '')}
+        else:
+            proc = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=300)
+            return {'rc': proc.returncode, 'stdout': proc.stdout, 'stderr': proc.stderr}
     except Exception as e:
         return {'error': str(e)}
 

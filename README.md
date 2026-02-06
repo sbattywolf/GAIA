@@ -20,15 +20,15 @@ pip install -r requirements.txt
 2. Configure secrets using the GAIA secrets manager (recommended):
 
 ```powershell
-# Set your GitHub token (for API access with 2FA)
-python scripts/secrets_cli.py set GITHUB_TOKEN your_token_here
+# Set your automation GitHub token (for API access with 2FA)
+python scripts/secrets_cli.py set AUTOMATION_GITHUB_TOKEN your_token_here
 
 # Set Telegram credentials (if using Telegram integration)
 python scripts/secrets_cli.py set TELEGRAM_BOT_TOKEN your_bot_token
 python scripts/secrets_cli.py set TELEGRAM_CHAT_ID your_chat_id
 
 # Validate setup
-python scripts/secrets_cli.py validate GITHUB_TOKEN
+python scripts/secrets_cli.py validate AUTOMATION_GITHUB_TOKEN
 ```
 
 **OR** copy `.env.example` to `.env` and add your secrets (less secure):
@@ -198,6 +198,11 @@ python scripts/claim_cli.py inspect my_story default
 ```powershell
 python scripts/claim_cli.py claim my_story default operator-joe agent-1 fp-123
 ```
+
+## Plans & Approval workflow
+
+See [PLAN.md](PLAN.md) for the short-term minisprint plan and next steps.
+See [doc/AGENT_APPROVAL_WORKFLOW.md](doc/AGENT_APPROVAL_WORKFLOW.md) for the formal CHECKPOINT approval procedure.
 
 - Release a claim:
 

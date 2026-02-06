@@ -17,18 +17,18 @@ function Set-RepoSecret {
 }
 
 # Read values from environment variables or prompt the user interactively
-if ($env:GITHUB_TOKEN_VALUE) {
-    Set-RepoSecret -Name 'GITHUB_TOKEN' -Value $env:GITHUB_TOKEN_VALUE
+if ($env:AUTOMATION_GITHUB_TOKEN_VALUE) {
+    Set-RepoSecret -Name 'AUTOMATION_GITHUB_TOKEN' -Value $env:AUTOMATION_GITHUB_TOKEN_VALUE
 } else {
-    $val = Read-Host -Prompt 'Enter value for GITHUB_TOKEN (leave blank to skip)'
-    if ($val) { Set-RepoSecret -Name 'GITHUB_TOKEN' -Value $val }
+    $val = Read-Host -Prompt 'Enter value for AUTOMATION_GITHUB_TOKEN (leave blank to skip)'
+    if ($val) { Set-RepoSecret -Name 'AUTOMATION_GITHUB_TOKEN' -Value $val }
 }
 
-if ($env:GITHUB_TOKEN_ORG_VALUE) {
-    Set-RepoSecret -Name 'GITHUB_TOKEN_ORG' -Value $env:GITHUB_TOKEN_ORG_VALUE
+if ($env:AUTOMATION_GITHUB_TOKEN_ORG_VALUE) {
+    Set-RepoSecret -Name 'AUTOMATION_GITHUB_TOKEN_ORG' -Value $env:AUTOMATION_GITHUB_TOKEN_ORG_VALUE
 } else {
-    $val = Read-Host -Prompt 'Enter value for GITHUB_TOKEN_ORG (leave blank to skip)'
-    if ($val) { Set-RepoSecret -Name 'GITHUB_TOKEN_ORG' -Value $val }
+    $val = Read-Host -Prompt 'Enter value for AUTOMATION_GITHUB_TOKEN_ORG (leave blank to skip)'
+    if ($val) { Set-RepoSecret -Name 'AUTOMATION_GITHUB_TOKEN_ORG' -Value $val }
 }
 
 Write-Host 'Done.'

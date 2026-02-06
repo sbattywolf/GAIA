@@ -69,11 +69,12 @@ def _github_prs(repo: str, token: str, n: int = 6) -> List[str]:
 def get_top_pending(n: int = 6) -> List[str]:
     """Return a list of top pending items as short strings.
 
-    Strategy: prefer GitHub (requires `AUTOMATION_GITHUB_REPOSITORY` and `AUTOMATION_GITHUB_TOKEN` in env),
+    Strategy: prefer GitHub (requires `AUTOMATION_GITHUB_REPOSITORY` and `GAIA_GITHUB_TOKEN` in env),
     else fallback to `.tmp/backlog.json`.
     """
+    from gaia.env_helpers import get_github_token
     repo = os.environ.get('AUTOMATION_GITHUB_REPOSITORY') or os.environ.get('AUTOMATION_GITHUB_REPO') or os.environ.get('GITHUB_REPOSITORY')
-    token = os.environ.get('GITHUB_TOKEN') or os.environ.get('GH_TOKEN')
+    token = get_github_token()
     if repo and token:
         items = _github_prs(repo, token, n)
         if items:

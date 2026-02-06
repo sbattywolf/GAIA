@@ -33,15 +33,12 @@ def main():
             pass
 
     # Prefer automation-specific token variables used by repo tooling
-    token = (
-        os.environ.get('AUTOMATION_GITHUB_TOKEN_PAI') or
-        os.environ.get('AUTOMATION_GITHUB_TOKEN') or
-        os.environ.get('AUTOMATION_GITHUB_TOKEN_ORG') or
-        os.environ.get('GITHUB_PAT') or
-        os.environ.get('GITHUB_TOKEN') or
-        os.environ.get('GH_PAT') or
-        os.environ.get('GH_TOKEN')
-    )
+    # Use `GAIA_GITHUB_TOKEN` when available, fall back to legacy names.
+    try:
+        from gaia.env_helpers import get_github_token
+        token = get_github_token()
+    except Exception:
+        token = os.environ.get('AUTOMATION_GITHUB_TOKEN')
     if not token:
         print('No GitHub token found in environment (.private/.env or env vars). Aborting.', file=sys.stderr)
         return 2

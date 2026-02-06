@@ -34,7 +34,7 @@ from gaia.secrets import SecretsManager
 
 # Keys that should be encrypted (sensitive)
 SENSITIVE_KEYS = {
-    'GITHUB_TOKEN',
+    'AUTOMATION_GITHUB_TOKEN',
     'TELEGRAM_BOT_TOKEN',
     'TELEGRAM_CHAT_ID',
     'API_KEY',

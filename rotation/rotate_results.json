@@ -1,0 +1,18 @@
+{
+  "publisher": {
+    "ok": false,
+    "error": "Key file not found: .private\\gaia_app.pem\n"
+  },
+  "ci": {
+    "ok": false,
+    "error": "Key file not found: .private\\gaia_app.pem\n"
+  },
+  "token_cache": {
+    "ok": false,
+    "error": "Key file not found: .private\\gaia_app.pem\n"
+  },
+  "online_agent": {
+    "ok": false,
+    "error": "Key file not found: .private\\gaia_app.pem\n"
+  }
+}

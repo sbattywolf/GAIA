@@ -68,10 +68,10 @@ def example_github_integration():
     print("Example 3: GitHub API Integration")
     print("=" * 60)
     
-    github_token = get_secret('GITHUB_TOKEN')
+    github_token = get_secret('AUTOMATION_GITHUB_TOKEN')
     if not github_token:
-        print("GITHUB_TOKEN not configured")
-        print("Set it with: python scripts/secrets_cli.py set GITHUB_TOKEN <your-pat>")
+        print("AUTOMATION_GITHUB_TOKEN not configured")
+        print("Set it with: python scripts/secrets_cli.py set AUTOMATION_GITHUB_TOKEN <your-pat>")
         return
     
     # Simulate API call (don't actually call in example)
@@ -123,7 +123,7 @@ def example_advanced_usage():
     manager = SecretsManager()
     
     # Validate multiple secrets
-    required_secrets = ['TELEGRAM_BOT_TOKEN', 'GITHUB_TOKEN', 'API_KEY']
+    required_secrets = ['TELEGRAM_BOT_TOKEN', 'AUTOMATION_GITHUB_TOKEN', 'API_KEY']
     missing = []
     
     for key in required_secrets:
