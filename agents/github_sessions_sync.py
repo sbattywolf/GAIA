@@ -82,8 +82,14 @@ def main():
             print('  ', body)
         return 0
 
-    token = os.environ.get('GITHUB_TOKEN')
-    repo = os.environ.get('GITHUB_REPO')
+    # Prefer automation-specific tokens to allow rotating scoped automation tokens
+    token = (
+        os.environ.get('AUTOMATION_GITHUB_TOKEN_PAI') or
+        os.environ.get('AUTOMATION_GITHUB_TOKEN') or
+        os.environ.get('AUTOMATION_GITHUB_TOKEN_ORG') or
+        os.environ.get('GITHUB_TOKEN')
+    )
+    repo = os.environ.get('GITHUB_REPO') or os.environ.get('GITHUB_REPOSITORY')
     if not token or not repo:
         print('GITHUB_TOKEN and GITHUB_REPO required when not in --dry-run')
         return 1

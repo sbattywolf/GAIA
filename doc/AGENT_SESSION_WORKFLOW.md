@@ -7,6 +7,9 @@ Principles
 - Use GitHub Projects (view/table) as a human-facing read-only UI materialization of session state.
 - Make any remote, internet-enabled updater optional and approval-gated. Do not let remote updater become primary authority without explicit governance.
 
+Automation tokens
+- For exceptional automation runs, agents and scripts will prefer `AUTOMATION_GITHUB_TOKEN_PAI`, then `AUTOMATION_GITHUB_TOKEN`, then `AUTOMATION_GITHUB_TOKEN_ORG`, and finally `GITHUB_TOKEN` as a fallback. See `doc/AGENT_AUTOMATION_TOKENS.md` for token recommendations and scopes.
+
 Recommended design
 1. One-way sync: implement a read-only sync from `gaia.db` → GitHub Project (cards/rows). Store a `source: gaia` tag on each GitHub item.
 2. Mapping: define a small mapping layer that maps `backlog` rows to Project fields (id, title, status, priority, estimate, link). Keep mapping config in `agents/config/github_sessions.yml` (non-secret).

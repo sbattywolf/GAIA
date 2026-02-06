@@ -34,6 +34,7 @@ def main():
 
     # Prefer automation-specific token variables used by repo tooling
     token = (
+        os.environ.get('AUTOMATION_GITHUB_TOKEN_PAI') or
         os.environ.get('AUTOMATION_GITHUB_TOKEN') or
         os.environ.get('AUTOMATION_GITHUB_TOKEN_ORG') or
         os.environ.get('GITHUB_PAT') or
