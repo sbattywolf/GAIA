@@ -27,7 +27,7 @@
     "id": 5,
     "title": "Add secret scanning & pre-commit",
     "description": "Install `detect-secrets` baseline and `pre-commit` hooks to prevent future leaks; add to CI checks.",
-    "status": "not-started"
+    "status": "completed"
   },
   {
     "id": 6,
@@ -106,5 +106,50 @@
     "title": "Telegram periodic summary",
     "description": "Create scheduled job to send a human-friendly summary (completed/pending/top items) to Telegram every 30 minutes.",
     "status": "in-progress"
+  }
+ ,
+  {
+    "id": 19,
+    "title": "Create sprint snapshot 2026-02-06",
+    "description": "Create today's sprint JSON and snapshot files so agents can resume and work against a recorded session.",
+    "status": "in-progress"
+  }
+ ,
+  {
+    "id": 20,
+    "title": "Security sprint planning (2026-02-06)",
+    "description": "Inventory & draft filter-repo plan, create CHECKPOINT_1.md, rotation plan.",
+    "status": "in-progress"
+  },
+  {
+    "id": 21,
+    "title": "Agent automation sprint (2026-02-06)",
+    "description": "alby_agent dry-run prototype, idempotency keys, metrics.",
+    "status": "in-progress"
+  },
+  {
+    "id": 22,
+    "title": "Backlog & Docs sprint (2026-02-06)",
+    "description": "Enrich MASTER_BACKLOG, draft GH issue bodies, document restore procedure.",
+    "status": "in-progress"
+  }
+ ,
+  {
+    "id": 23,
+    "title": "Security minisprint: Inventory (M001)",
+    "description": "Collect candidate files and scan results for purge planning.",
+    "status": "in-progress"
+  },
+  {
+    "id": 24,
+    "title": "Security minisprint: Draft filter-repo rules (M002)",
+    "description": "Prepare filter-repo mapping and dry-run commands.",
+    "status": "pending"
+  },
+  {
+    "id": 25,
+    "title": "Agent minisprint: Scaffold alby_agent (M101)",
+    "description": "Create minimal scaffold for local dry-run.",
+    "status": "pending"
   }
 ]

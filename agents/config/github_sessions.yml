@@ -1,0 +1,8 @@
+# Mapping config for github_sessions_sync prototype
+# Currently unused by the simple prototype; reserved for future mapping rules.
+# Example:
+# mapping:
+#   title: "[{id}] {title}"
+#   body: "GAIA_ID: {id}\nStatus: {status}\nPriority: {priority}\nEst: {est_hours}"
+#   labels:
+#     - "gaia:{priority}"

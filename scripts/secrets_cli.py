@@ -37,13 +37,11 @@ import json
 import secrets
 from pathlib import Path
 
-# Add parent directory to path for imports
+# Defer importing heavy dependencies (like cryptography) until needed.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from gaia.secrets import SecretsManager
 
-
-def cmd_get(args, manager: SecretsManager):
+def cmd_get(args, manager):
     """Get a secret value."""
     value = manager.get(args.key)
     if value is None:
@@ -60,7 +58,7 @@ def cmd_get(args, manager: SecretsManager):
     return 0
 
 
-def cmd_set(args, manager: SecretsManager):
+def cmd_set(args, manager):
     """Set a secret value."""
     value = args.value
     
@@ -82,7 +80,7 @@ def cmd_set(args, manager: SecretsManager):
     return 0 if success else 1
 
 
-def cmd_delete(args, manager: SecretsManager):
+def cmd_delete(args, manager):
     """Delete a secret."""
     success = manager.delete(args.key, provider=args.provider)
     
@@ -97,7 +95,7 @@ def cmd_delete(args, manager: SecretsManager):
     return 0 if success else 1
 
 
-def cmd_rotate(args, manager: SecretsManager):
+def cmd_rotate(args, manager):
     """Rotate a secret with backup."""
     value = args.new_value
     
@@ -120,7 +118,7 @@ def cmd_rotate(args, manager: SecretsManager):
     return 0 if success else 1
 
 
-def cmd_list(args, manager: SecretsManager):
+def cmd_list(args, manager):
     """List available secrets."""
     secrets_map = manager.list_secrets(provider=args.provider)
     
@@ -139,7 +137,7 @@ def cmd_list(args, manager: SecretsManager):
     return 0
 
 
-def cmd_validate(args, manager: SecretsManager):
+def cmd_validate(args, manager):
     """Validate a secret."""
     result = manager.validate(args.key)
     
@@ -155,7 +153,7 @@ def cmd_validate(args, manager: SecretsManager):
     return 0 if result['found'] else 1
 
 
-def cmd_generate(args, manager: SecretsManager):
+def cmd_generate(args, manager):
     """Generate a secure random token."""
     if args.hex:
         token = secrets.token_hex(args.length)
@@ -230,11 +228,26 @@ def main():
     gen_parser.add_argument('--hex', action='store_true',
                             help='Generate hex token instead of URL-safe')
     gen_parser.set_defaults(func=cmd_generate)
+
+    # import-env command: import keys from an env file into encrypted store
+    imp_parser = subparsers.add_parser('import-env', help='Import an env file into encrypted store')
+    imp_parser.add_argument('--file', '-f', default=str(Path(__file__).resolve().parent.parent / '.secret' / '.env'),
+                            help='Path to env file to import')
+    imp_parser.add_argument('--dry-run', action='store_true', help='Dry run: list keys to import without storing')
+    imp_parser.add_argument('--filter', help='Optional substring filter for keys (e.g. TOKEN, SECRET)')
+    imp_parser.set_defaults(func=lambda args, mgr: cmd_import_env(args, mgr))
     
     args = parser.parse_args()
     
-    # Initialize secrets manager
-    manager = SecretsManager()
+    # Initialize secrets manager unless running a dry-run import (which doesn't require crypto)
+    manager = None
+    if not (args.command == 'import-env' and getattr(args, 'dry_run', False)):
+        try:
+            from gaia.secrets import SecretsManager
+            manager = SecretsManager()
+        except Exception as e:
+            print(f'Warning: failed to initialize SecretsManager: {e}', file=sys.stderr)
+            # For commands that require manager, this will error later if manager is None
     
     # Execute command
     try:
@@ -245,6 +258,50 @@ def main():
         else:
             print(f"Error: {e}", file=sys.stderr)
         return 1
+
+
+def cmd_import_env(args, manager):
+    """Import keys from an env file into the encrypted provider."""
+    path = Path(args.file)
+    if not path.exists():
+        print(f"Env file not found: {path}", file=sys.stderr)
+        return 2
+
+    # Parse file
+    env = {}
+    for line in path.read_text(encoding='utf-8').splitlines():
+        line = line.strip()
+        if not line or line.startswith('#') or '=' not in line:
+            continue
+        k, v = line.split('=', 1)
+        env[k.strip()] = v.strip().strip('"').strip("'")
+
+    # Filter keys if requested
+    keys = sorted(env.keys())
+    if args.filter:
+        keys = [k for k in keys if args.filter in k]
+
+    if args.dry_run:
+        print(f"DRY RUN: would import {len(keys)} keys into encrypted store:")
+        for k in keys:
+            print(' -', k)
+        return 0
+
+    # Perform import
+    success_count = 0
+    for k in keys:
+        v = env[k]
+        try:
+            ok = manager.set(k, v, provider='encrypted_file')
+            if ok:
+                success_count += 1
+            else:
+                print(f"Failed to set {k}", file=sys.stderr)
+        except Exception as e:
+            print(f"Error setting {k}: {e}", file=sys.stderr)
+
+    print(f"Imported {success_count}/{len(keys)} keys into encrypted store (values not shown).")
+    return 0
 
 
 if __name__ == '__main__':

@@ -1,0 +1,10 @@
+{
+  "sprint_id": "session-sprint-20260206-security",
+  "created_at": "2026-02-06T13:10:00Z",
+  "minisprints": [
+    {"id": "M001", "title": "Inventory candidate leaked locations", "status": "started", "est_hours": 1.5, "owner": "planner"},
+    {"id": "M002", "title": "Draft filter-repo dry-run rules", "status": "pending", "est_hours": 3.0, "owner": "planner"},
+    {"id": "M003", "title": "Create CHECKPOINT_1.md", "status": "pending", "est_hours": 2.0, "owner": "planner"},
+    {"id": "M004", "title": "Rotation plan & env template", "status": "pending", "est_hours": 1.5, "owner": "ops"}
+  ]
+}

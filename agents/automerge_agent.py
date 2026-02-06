@@ -29,7 +29,7 @@ def get_repo():
     try:
         url = run(['git', 'remote', 'get-url', 'origin']).strip()
     except Exception:
-        print('Unable to determine git remote origin URL; set GITHUB_REPOSITORY env or run from a git repo.', file=sys.stderr)
+        print('Unable to determine git remote origin URL; set AUTOMATION_GITHUB_REPOSITORY env or run from a git repo.', file=sys.stderr)
         return None
     # parse owner/repo from URL formats
     m = re.search(r'[:/]([^/]+/[^/]+?)(?:\.git)?$', url)

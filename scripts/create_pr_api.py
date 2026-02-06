@@ -34,6 +34,7 @@ def main():
 
     # Prefer automation-specific token variables used by repo tooling
     token = (
+        os.environ.get('AUTOMATION_GITHUB_TOKEN_PAI') or
         os.environ.get('AUTOMATION_GITHUB_TOKEN') or
         os.environ.get('AUTOMATION_GITHUB_TOKEN_ORG') or
         os.environ.get('GITHUB_PAT') or
@@ -45,8 +46,13 @@ def main():
         print('No GitHub token found in environment (.private/.env or env vars). Aborting.', file=sys.stderr)
         return 2
 
-    owner = 'sbattywolf'
-    repo = 'GAIA'
+    # Allow automation to override target repository via env (avoid relying on GITHUB_* vars)
+    repo_override = os.environ.get('AUTOMATION_GITHUB_REPOSITORY') or os.environ.get('AUTOMATION_GITHUB_REPO')
+    if repo_override and '/' in repo_override:
+        owner, repo = repo_override.split('/', 1)
+    else:
+        owner = 'sbattywolf'
+        repo = 'GAIA'
     head = 'feat/copilot-autowork'
     base = 'main'
     title = 'feat: copilot autowork — approvals & notifier'

@@ -308,4 +308,23 @@ def reclaim_and_report(ttl_seconds: int = 300, max_attempts: int = 3, status_pat
 
 if __name__ == '__main__':
     init_db()
+    # Run startup token validation early; fail fast if required tokens are missing
+    try:
+        try:
+            # import the startup check helper from scripts
+            from scripts.agent_startup_check import main as agent_startup_main
+            agent_startup_main()
+        except SystemExit as e:
+            # propagate non-zero exit codes to stop startup
+            if e.code != 0:
+                print('Agent startup check failed; exiting with code', e.code)
+                raise
+        except Exception as e:
+            # log but continue on unexpected errors in startup check
+            logger.exception('agent_startup_check failed: %s', e)
+    except Exception:
+        # If the startup check indicated an impediment, abort startup
+        import sys
+        sys.exit(1)
+
     print('GAIA orchestrator initialized. DB at', DB_PATH)

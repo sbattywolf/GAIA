@@ -8,6 +8,7 @@
       "title": "Fix auto-mode toggle enforcement",
       "desc": "Ensure runners check .tmp/autonomous_mode.json before acting",
       "priority": "high",
+      "status": "pending",
       "trace_id": "c31cea4a-16ee-48c2-b489-5f823c0ea09e"
     },
     {
@@ -29,6 +30,7 @@
       "title": "Create missing ack files",
       "desc": "Create ack files for unmatched approval.requests found in extraction",
       "priority": "medium",
+      "status": "done",
       "trace_id": "9992130a-374f-417b-a844-3fa889d17d95"
     },
     {
@@ -36,6 +38,7 @@
       "title": "Add unit tests for approval extractor",
       "desc": "Test request->received matching logic",
       "priority": "medium",
+      "status": "pending",
       "trace_id": "003a35f9-f291-4178-822f-869fa363b550"
     },
     {
@@ -43,6 +46,7 @@
       "title": "Archive housekeeping & retention",
       "desc": "Remove duplicate double-archived files (completed), update ARCHIVE_POLICY.md",
       "priority": "low",
+      "status": "done",
       "trace_id": "086c3a84-eaa9-4454-aa7c-3c91fce40ab1"
     }
   ]
