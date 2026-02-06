@@ -1,1 +1,0 @@
-{"agent_id": "consumer-1", "requested": ["pkgA"], "results": [{"package": "pkgA", "status": "downloaded"}]}

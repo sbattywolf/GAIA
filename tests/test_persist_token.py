@@ -18,9 +18,12 @@ def test_persist_token_encrypts_and_writes(tmp_path, monkeypatch):
     script_path = scripts_dir / 'persist_token.py'
     assert script_path.exists(), 'persist_token.py must exist'
 
-    # run the script
+    # run the script (it may call sys.exit; allow SystemExit)
     import runpy
-    rc = runpy.run_path(str(script_path), run_name='__main__')
+    try:
+        runpy.run_path(str(script_path), run_name='__main__')
+    except SystemExit:
+        pass
 
     out_file = Path(script_path).resolve().parent.parent / '.private' / 'gaia_github_token.enc'
     assert out_file.exists(), 'encrypted token file was not created'
