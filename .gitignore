@@ -70,3 +70,6 @@ TOBEDELETE__AILocalModelLibrary/**/.venv/
 # node/package caches under external vendors
 external/**/node_modules/
 external/**/pnpm-lock.yaml
+
+# Ephemeral pytest temporary artifacts created during test runs
+.pytest_tmp/
