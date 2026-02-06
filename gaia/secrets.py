@@ -276,11 +276,12 @@ class SecretsManager:
             root_dir = Path(__file__).resolve().parent.parent
         self.root_dir = Path(root_dir)
         
-        # Initialize providers in priority order
+        # Initialize providers in priority order.
+        # For encrypted-only workflow we prefer environment (process env) and
+        # the encrypted file store. Env-file fallback is intentionally NOT
+        # included here to avoid reading plaintext files from disk.
         self.providers: List[SecretProvider] = [
             EnvironmentProvider(),
-            EnvFileProvider(str(self.root_dir / ".private" / ".env")),
-            EnvFileProvider(str(self.root_dir / ".env")),
             EncryptedFileProvider(
                 str(self.root_dir / ".private" / "secrets.enc"),
                 str(self.root_dir / ".private" / "secrets.key")

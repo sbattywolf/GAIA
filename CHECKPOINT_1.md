@@ -1,36 +1,32 @@
-# CHECKPOINT_1: Normalize todos → PR draft
+# CHECKPOINT_1 — Proposed History Rewrite / Secret Removal
 
-Action planned: create branch `feat/normalize-todos`, add `doc/todo-archive.ndjson`, and open a PR to merge into `master`.
+Generated: 2026-02-06T14:00:00Z
 
-Why: this is a repository-visible normalization of high/critical tasks so maintainers can triage and create issues.
+Purpose: propose a controlled, reviewed git history rewrite to remove confirmed sensitive files and provide rotation guidance.
 
-Files changed locally: 
-- `doc/todo-archive.ndjson` (NDJSON archive of prioritized tasks)
+Attached artifacts:
+- doc/sprints/analysis/secrets_inventory_20260206.md
+- .tmp/detect_secrets_scan_20260206.json
+- .tmp/detect_secrets_priority_20260206.csv
 
-Automated steps to run (if you want me to continue automatically):
+High-priority candidates (top 50):
 
-```bash
-git checkout -b feat/normalize-todos
-git add doc/todo-archive.ndjson CHECKPOINT_1.md
-git commit -m "chore(todo): add normalized todo-archive.ndjson"
-git push --set-upstream origin feat/normalize-todos
-# Optionally create PR with gh (requires authentication):
-gh pr create --fill --title "chore(todo): normalize todos" --body-file CHECKPOINT_1.md
-```
+- external\openclaw\.secrets.baseline  (289 findings; types: Hex High Entropy String;Private Key;Secret Keyword)
+- .secrets.baseline  (10 findings; types: Hex High Entropy String;Secret Keyword)
+- external\openclaw\.detect-secrets.cfg  (4 findings; types: Private Key;Secret Keyword)
+- external\openclaw\src\logging\redact.test.ts  (4 findings; types: Base64 High Entropy String;Hex High Entropy String;Private Key)
+- external\openclaw\src\config\config.env-vars.test.ts  (3 findings; types: Secret Keyword)
+- doc\archive\pre_restructure_20260205T163407Z\HISTORY_REWRITE_PLAN.md  (1 findings; types: GitHub Token)
+- external\openclaw\apps\ios\fastlane\Fastfile  (1 findings; types: Private Key)
+- external\openclaw\src\gateway\client.test.ts  (1 findings; types: Private Key)
 
-Notes: I have not yet opened the PR. Creating a PR is a high-impact remote action; if you want full autonomy I can attempt to create it now and handle failures.
-CHECKPOINT 1 — Execute automation runner actions
+Planned steps (dry-run first):
+1. Create a branch `checkpoint/remove-secrets-1` from `main`.
+2. Run `git filter-repo --paths-from-file .tmp/sensitive_files_candidates.txt --replace-text replacements.txt` in dry-run mode on the branch.
+3. Review results and ensure no unrelated files removed.
+4. If confirmed, prepare replacements and open PR for human review.
+5. After merge, rotate any exposed credentials and record rotation steps in `doc/rotation_playbooks/`.
 
-Plan:
+Approval: Add a single-line `APPROVATO` entry below to approve proceeding, and record approver and UTC timestamp.
 
-1. Proceed to execute approved automation tasks from `tasks.json`.
-2. Perform side-effecting actions (create issue, post to external APIs) only after this checkpoint is approved.
-3. After approval, runner will update `.copilot/session_state.json` and perform micro-commit steps.
-
-Approval:
-
-APPROVATO
-
-Add the single word APPROVATO (uppercase) anywhere in this file to permit execution.
-
-Current status: APPROVATO
+APPROVATO: 

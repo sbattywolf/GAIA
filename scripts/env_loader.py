@@ -43,7 +43,12 @@ def main():
         print('No command specified. Use -- to separate command. Example: -- python script.py', file=sys.stderr)
         return 2
 
-    load_env(args.env)
+    # Prefer an externally supplied path via PRIVATE_ENV_PATH to allow secrets
+    # to live outside the repository (Option A).
+    env_path = os.environ.get('PRIVATE_ENV_PATH') or args.env
+    if env_path != args.env:
+        print(f'Using external env path from PRIVATE_ENV_PATH: {env_path}', file=sys.stderr)
+    load_env(env_path)
 
     # If cmd starts with '--', strip it
     cmd = args.cmd
