@@ -39,17 +39,17 @@ GitHub now requires two-factor authentication (2FA) by March 22, 2026. This guid
 
 **Option A: Encrypted Storage (Recommended)**
 ```powershell
-# Store your GitHub PAT securely
-python scripts/secrets_cli.py set GITHUB_TOKEN <your-pat-here>
+# Store your GitHub PAT securely as the automation token
+python scripts/secrets_cli.py set AUTOMATION_GITHUB_TOKEN <your-pat-here>
 
 # Verify it's stored
-python scripts/secrets_cli.py validate GITHUB_TOKEN
+python scripts/secrets_cli.py validate AUTOMATION_GITHUB_TOKEN
 ```
 
 **Option B: Environment Variable**
 ```powershell
 # Add to .private/.env (never commit this file!)
-echo "GITHUB_TOKEN=<your-pat>" >> .private/.env
+echo "AUTOMATION_GITHUB_TOKEN=<your-pat>" >> .private/.env
 ```
 
 ### Step 4: Configure Git to Use Token
@@ -64,7 +64,7 @@ gh auth login
 ### Step 5: Update CI/CD Secrets
 ```powershell
 # Update repository secrets for Actions
-gh secret set GITHUB_TOKEN --body "<your-pat>"
+gh secret set AUTOMATION_GITHUB_TOKEN --body "<your-pat>"
 ```
 
 ## Token Rotation with 2FA
@@ -84,10 +84,10 @@ $env:TEST_TOKEN = "<new-token>"
 gh auth status
 
 # 3. Rotate using GAIA secrets manager (keeps backup)
-python scripts/secrets_cli.py rotate GITHUB_TOKEN <new-token>
+python scripts/secrets_cli.py rotate AUTOMATION_GITHUB_TOKEN <new-token>
 
 # 4. Update CI/CD if needed
-gh secret set GITHUB_TOKEN --body "<new-token>"
+gh secret set AUTOMATION_GITHUB_TOKEN --body "<new-token>"
 
 # 5. Revoke old token on GitHub
 # Go to https://github.com/settings/tokens and delete old token
@@ -116,8 +116,8 @@ gh auth login
 **Solution:** Verify repository secrets are set
 ```powershell
 gh secret list
-# If GITHUB_TOKEN missing:
-gh secret set GITHUB_TOKEN --body "<your-pat>"
+# If AUTOMATION_GITHUB_TOKEN missing:
+gh secret set AUTOMATION_GITHUB_TOKEN --body "<your-pat>"
 ```
 
 ## Security Best Practices with 2FA

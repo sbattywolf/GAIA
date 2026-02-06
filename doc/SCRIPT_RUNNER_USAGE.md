@@ -53,3 +53,35 @@ Security notes:
 - `run_script.py` intentionally does not change environment variables when
   selecting interpreters; agents should use the `SecretsManager` to provide
   credentials securely (not plaintext env files) whenever possible.
+
+REPL vs Shell — common pitfall
+-----------------------------
+
+Be careful not to type shell commands (for example, `git ...` or PowerShell
+invocations like `& .\.venv\Scripts\python.exe -c "..."`) at a Python
+REPL prompt (the `>>>` prompt). Those are invalid Python and will raise
+`SyntaxError`.
+
+Correct ways to run the commands:
+
+- From PowerShell (exit the REPL first if you see `>>>`):
+
+```powershell
+& .\.venv\Scripts\python.exe -c "from gaia.secrets import SecretsManager; sm=SecretsManager(); print('FOUND' if sm.get('AUTOMATION_GITHUB_TOKEN') else 'MISSING')"
+git add doc/SCRIPT_RUNNER_USAGE.md
+git commit -m "docs: add script runner usage examples"
+```
+
+- From inside the Python REPL use valid Python instead of shell syntax:
+
+```python
+import importlib
+m = importlib.import_module('gaia.secrets')
+sm = m.SecretsManager()
+print('FOUND' if sm.get('AUTOMATION_GITHUB_TOKEN') else 'MISSING')
+```
+
+- In IPython you can run shell commands with a leading `!`, e.g. `!git status`.
+
+Adding this short note should reduce accidental `SyntaxError` occurrences when
+operators switch between shells and the Python prompt.

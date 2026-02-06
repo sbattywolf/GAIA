@@ -54,7 +54,7 @@ def main():
     else:
         print('TELEGRAM_BOT_TOKEN not present')
 
-    gh = sm.get('AUTOMATION_GITHUB_TOKEN') or sm.get('GITHUB_TOKEN') or sm.get('GH_TOKEN')
+    gh = sm.get('AUTOMATION_GITHUB_TOKEN')
     if gh:
         print('Testing GitHub token...')
         results['github'] = check_github(gh)

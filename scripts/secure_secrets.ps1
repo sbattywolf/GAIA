@@ -45,7 +45,7 @@ foreach ($line in $lines) {
     }
 }
 
-$keysToHandle = @('TELEGRAM_BOT_TOKEN','TELEGRAM_CHAT_ID','GITHUB_TOKEN')
+$keysToHandle = @('TELEGRAM_BOT_TOKEN','TELEGRAM_CHAT_ID','AUTOMATION_GITHUB_TOKEN')
 
 function Get-GitHubRepoSlug {
     # Parse remote.origin.url

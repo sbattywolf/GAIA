@@ -136,7 +136,11 @@ def main(argv: list[str] | None = None) -> int:
     prototype = os.environ.get("PROTOTYPE_USE_LOCAL_EVENTS", "1") in ("1", "true", "True")
     allow_exec = os.environ.get("ALLOW_COMMAND_EXECUTION", "0") in ("1", "true", "True")
     repo = os.environ.get("GITHUB_REPOSITORY", "")
-    gh_token = os.environ.get("GITHUB_TOKEN")
+    try:
+        from gaia.env_helpers import get_github_token
+        gh_token = get_github_token()
+    except Exception:
+        gh_token = os.environ.get("AUTOMATION_GITHUB_TOKEN")
     bot_token = os.environ.get("TELEGRAM_BOT_TOKEN")
     chat_id = os.environ.get("TELEGRAM_CHAT_ID")
 
@@ -178,7 +182,7 @@ def main(argv: list[str] | None = None) -> int:
 
         if args.command == "create_issue":
             if not repo or not gh_token:
-                raise SystemExit("GITHUB_REPOSITORY or GITHUB_TOKEN not set")
+                raise SystemExit("GITHUB_REPOSITORY or AUTOMATION_GITHUB_TOKEN not set")
             res = create_issue(repo, args.title or "(no title)", args.body or "", gh_token)
             append_event({**event, "note": "issue_created", "result": res})
             write_audit(trace_id, "issue_created", {"issue_url": res.get("html_url")})
