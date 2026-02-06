@@ -1,24 +1,24 @@
 # GAIA Backlog (prioritized)
 
-Last updated: 2026-02-04
+Last updated: 2026-02-06
 
 This file is a human-friendly prioritized backlog. The canonical, machine-tracked todo list is kept in the repository's task tracker (manage_todo_list). Use this file for quick triage.
 
 1. Merge PR & tag
-   - Status: not-started
-   - Notes: After final review, merge `chore/add-smoke-checks` and tag a small release noting CI and Telegram scaffolding fixes.
+   - Status: completed (PR #105 merged)
+   - Notes: PR #105 (`Add centralized secrets management with encryption and rotation support`) merged 2026-02-05; consider tagging a patch release documenting rotation and audit steps.
 
 2. Finalize CI smoke
-   - Status: in-progress
-   - Notes: CI smoke checks added; consider optional `pip install -e .` fallback for any failing runner and add Telegram mock integration tests to the matrix.
+   - Status: completed
+   - Notes: Quick `pytest` smoke run passed (115 passed, 1 skipped). Consider expanding matrix and adding Telegram mock to CI.
 
 3. Add secret scanning
-   - Status: not-started
-   - Notes: Install `detect-secrets` baseline and add pre-commit/CI checks.
+   - Status: in-progress
+   - Notes: `detect-secrets` baseline run performed with a regex fallback; integration into CI/pre-commit is pending final config and reliability fixes.
 
 4. Remove secrets from history
-   - Status: not-started
-   - Notes: If secrets were ever committed, coordinate history rewrite (git filter-repo/BFG) and rotate credentials.
+   - Status: blocked / pending CHECKPOINT approval
+   - Notes: CHECKPOINT process and dry-run migration created; do not perform destructive history rewrite until approvals and communication plan complete.
 
 5. Create `production` environment
    - Status: not-started
@@ -33,8 +33,8 @@ This file is a human-friendly prioritized backlog. The canonical, machine-tracke
    - Notes: Decide whether to vendor, submodule, or package; add a lightweight wrapper and usage docs.
 
 8. Purge leaked tokens plan
-   - Status: not-started
-   - Notes: Draft filter-repo rules and share a one-line plan with collaborators before rewriting history.
+   - Status: in-progress
+   - Notes: Candidate inventory generated (`doc/sprints/analysis/candidates.ndjson`, 14,579 entries). Prioritized CHECKPOINT issues (#110..#129) created for manual triage.
 
 9. Validate CI and imports (monitoring)
    - Status: completed 2026-02-04
