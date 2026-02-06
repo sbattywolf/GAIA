@@ -6,6 +6,8 @@ Recommended tokens to create
 
 - `AUTOMATION_GITHUB_TOKEN` — Primary repo-scoped automation token. Minimal scopes: `repo` (or fine-grained: `Repository contents: Read & Write`, `Issues: Read & Write`, `Pull requests: Read & Write`). Use for most repo-level automation tasks.
 
+- `AUTOMATION_GITHUB_REPOSITORY` — Optional override for target repository in `owner/repo` format. Use this instead of environment variables that start with `GITHUB_`.
+
 - `AUTOMATION_GITHUB_TOKEN_ORG` — Org-level automation token (only if org-level actions required). Minimal scopes: `admin:org` or fine-grained equivalent.
 
 - `AUTOMATION_GITHUB_TOKEN_PAI` — Privileged automation identity for advanced tasks (use sparingly). Grants broader rights (e.g., repo admin) for emergency operations or batch history edits. Use only with explicit `CHECKPOINT_<n>.md` approval.

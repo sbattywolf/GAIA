@@ -89,9 +89,10 @@ def main():
         os.environ.get('AUTOMATION_GITHUB_TOKEN_ORG') or
         os.environ.get('GITHUB_TOKEN')
     )
-    repo = os.environ.get('GITHUB_REPO') or os.environ.get('GITHUB_REPOSITORY')
+    # prefer automation-specific repo env var to avoid using vars that start with GITHUB_
+    repo = os.environ.get('AUTOMATION_GITHUB_REPOSITORY') or os.environ.get('AUTOMATION_GITHUB_REPO') or os.environ.get('GITHUB_REPO') or os.environ.get('GITHUB_REPOSITORY')
     if not token or not repo:
-        print('GITHUB_TOKEN and GITHUB_REPO required when not in --dry-run')
+        print('AUTOMATION_GITHUB_TOKEN (or equivalent) and AUTOMATION_GITHUB_REPOSITORY (or GITHUB_REPOSITORY) required when not in --dry-run')
         return 1
 
     s = requests.Session()
