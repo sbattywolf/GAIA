@@ -1,0 +1,176 @@
+# GitHub Copilot Workspace Configuration
+# This file helps Copilot understand the GAIA project structure and patterns
+
+workspace:
+  name: "GAIA - Agent Orchestration Platform"
+  description: "CLI-first agent orchestration system with event-driven architecture"
+  
+# Primary languages and frameworks
+languages:
+  - python
+  - powershell
+  - bash
+
+# Project patterns and conventions
+patterns:
+  agents:
+    - location: "agents/"
+    - pattern: "CLI wrappers that execute actions and emit NDJSON events"
+    - template: "agents/backlog_agent.py"
+    - conventions:
+        - "Use click for CLI parsing"
+        - "Append events to events.ndjson"
+        - "Include trace_id (UUID) in all events"
+        - "Use gh CLI for GitHub operations"
+  
+  events:
+    - format: "NDJSON (one JSON object per line)"
+    - location: "events.ndjson"
+    - required_fields:
+        - "type: event type (e.g., 'agent.task.created')"
+        - "source: agent or component name"
+        - "target: repository or working directory"
+        - "timestamp: UTC ISO8601 with 'Z' suffix"
+        - "trace_id: UUID for tracing"
+        - "payload: event-specific data"
+  
+  database:
+    - type: "SQLite"
+    - location: "gaia.db"
+    - purpose: "Audit trail and state persistence"
+    - initialized_by: "orchestrator.py"
+  
+  secrets:
+    - method: "Environment variables or .env file"
+    - manager: "scripts/secrets_cli.py"
+    - storage: "Encrypted local storage or Bitwarden"
+    - never: "Commit secrets to git"
+
+# Key files for context
+context_files:
+  - path: ".github/copilot-instructions.md"
+    purpose: "Agent development patterns and conventions"
+  
+  - path: "README.md"
+    purpose: "Project overview and quick start"
+  
+  - path: "orchestrator.py"
+    purpose: "Main service entry point"
+  
+  - path: ".copilot/session_state.json"
+    purpose: "Current session state and progress"
+  
+  - path: "PLAN.md"
+    purpose: "Current implementation plan (requires approval)"
+  
+  - path: "TODO.md"
+    purpose: "Pending tasks and action items"
+
+# Development workflows
+workflows:
+  setup:
+    - "Run: python scripts/setup_dev_env.py"
+    - "Activate venv: .venv/Scripts/Activate.ps1 (Windows) or source .venv/bin/activate (Unix)"
+    - "Configure secrets: python scripts/secrets_cli.py set <KEY> <VALUE>"
+  
+  development:
+    - "Load context: python scripts/load_context.py"
+    - "Check health: python scripts/health_check.py"
+    - "Start session: scripts/start_session.ps1"
+    - "Run agent: python agents/<agent_name>.py [args]"
+  
+  testing:
+    - "Run tests: pytest -v"
+    - "Dry run: set PROTOTYPE_USE_LOCAL_EVENTS=1 then run agent with --dry-run"
+    - "Tail events: Get-Content events.ndjson -Wait -Tail 10"
+
+# Integration points
+integrations:
+  github_cli:
+    command: "gh"
+    usage: "Create issues, PRs, and interact with GitHub"
+    auth: "gh auth login"
+  
+  bitwarden_cli:
+    command: "bw"
+    usage: "Secret storage (optional)"
+    optional: true
+
+# Coding standards
+standards:
+  python:
+    - "Use type hints where appropriate"
+    - "Follow PEP 8 style guidelines"
+    - "Use click for CLI interfaces"
+    - "Handle errors gracefully with try-except"
+    - "Log to events.ndjson for audit trail"
+  
+  agents:
+    - "Each agent is a standalone CLI script"
+    - "Parse arguments with click"
+    - "Execute main action (GitHub, file ops, etc.)"
+    - "Append structured event using append_event()"
+    - "Return appropriate exit codes"
+  
+  events:
+    - "Always include required fields: type, source, target, timestamp, trace_id"
+    - "Use descriptive event types (e.g., 'agent.issue.created')"
+    - "Include relevant payload data"
+    - "Timestamp format: ISO8601 with 'Z' (UTC)"
+  
+  security:
+    - "Never commit secrets or tokens"
+    - "Use .env or secrets manager"
+    - "Validate inputs before external calls"
+    - "Use subprocess safely (avoid shell=True)"
+
+# Testing guidelines
+testing:
+  unit:
+    - "Location: tests/"
+    - "Framework: pytest"
+    - "Run: pytest -v"
+    - "Naming: test_*.py or *_test.py"
+  
+  integration:
+    - "Use PROTOTYPE_USE_LOCAL_EVENTS=1 for local testing"
+    - "Mock external services (gh, bw) when possible"
+    - "Test with --dry-run flag for agents"
+
+# Documentation
+documentation:
+  structure:
+    - "01_onboarding/: New user guides"
+    - "02_technical/: Architecture and design"
+    - "03_procedural/: Runbooks and procedures"
+    - "04_reference/: Configs and schemas"
+    - "05_backlog/: Tasks and stories"
+  
+  style:
+    - "Use Markdown for all docs"
+    - "Include code examples"
+    - "Cross-reference related docs"
+    - "Keep concise and focused"
+
+# Session management
+session:
+  state_file: ".copilot/session_state.json"
+  fields:
+    - "current_task_id: Active task identifier"
+    - "status: Current state (IN_PROGRESS, COMPLETED, etc.)"
+    - "steps_completed: List of completed steps"
+    - "next_immediate_step: Next action to take"
+    - "last_sync: UTC timestamp of last update"
+  
+  plan_file: "PLAN.md"
+  approval_required: true
+  note: "Wait for 'APPROVATO' or 'APPROVED' in PLAN.md before coding"
+
+# Quick reference for Copilot
+quick_reference:
+  create_agent: "Use agents/backlog_agent.py as template"
+  emit_event: "Use append_event() from events module"
+  cli_interface: "Use click.command() and click.option()"
+  secrets: "Load from .env or use scripts/secrets_cli.py"
+  github_ops: "Use gh CLI commands via subprocess"
+  database: "SQLite via orchestrator.py audit methods"

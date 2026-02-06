@@ -2,6 +2,32 @@
 
 Quick start notes and run steps for Windows (PowerShell).
 
+## 🚀 Quick Start for GitHub Copilot Users
+
+Get up and running in 5 minutes with automated setup and Copilot integration:
+
+```powershell
+# 1. Automated environment setup
+python scripts/setup_dev_env.py
+
+# 2. Load project context
+python scripts/load_context.py
+
+# 3. Check environment health
+python scripts/health_check.py
+```
+
+**For detailed Copilot setup and usage:** See [Copilot Local Setup Guide](doc/01_onboarding/copilot-local-setup.md)
+
+**Key features for Copilot users:**
+- ✅ Automated environment setup and validation
+- ✅ Context loader for backlog and current state
+- ✅ Health check for troubleshooting
+- ✅ Copilot workspace configuration with project patterns
+- ✅ VSCode settings optimized for Copilot
+
+---
+
 ## Requirements
 - Git
 - GitHub CLI (`gh`) — optional but used by agents
