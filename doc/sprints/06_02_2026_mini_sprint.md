@@ -13,3 +13,15 @@ Top tasks
 Notes
 - This file is the sprint starter for 2026-02-06 (first sprint of the day).
 - Add daily entries and link to `doc/sprints/analysis` as work proceeds.
+
+<!-- Audit: Merged from 2026-02-06 — see doc/SPRINT_MERGED_2026-02-06.md -->
+
+## Progress summary (from MASTER_BACKLOG)
+
+| ID | Status | Scrum Pt | Score |
+|---:|---|---:|---:|
+| T002 | completed | 8 | 50 |
+| T003 | completed | 8 | 50 |
+| T004 | completed | 8 | 50 |
+| T005 | completed | 5 | 20 |
+| T007 | completed | 2 | 10 |

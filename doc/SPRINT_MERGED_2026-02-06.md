@@ -1,0 +1,101 @@
+## Sprint Merge — 2026-02-06
+
+Summary
+-------
+
+This document consolidates the artifacts produced during the 2026-02-06 sprint rotation freeze and day plan. It aggregates the day plan, mini-sprint notes, rotation action plan, and todo snapshots into a single reference for handoff and archival.
+
+Key Artifacts Merged
+---------------------
+
+- `sprints/2026-02-06_day_plan.md`
+- `06_02_project_overview.md`
+- `06_02_todo_list.md`
+- `PLAN_2026-02-06.md`
+- `doc/sprints/ROTATION_ACTION_PLAN_2026-02-06.md`
+- `doc/sprints/SPRINT_ROTATION_FREEZE_2026-02-06.md`
+
+Highlights
+--------
+
+- Rotation freeze enacted to secure token-policy changes.
+- Pending CI fixes: pytest basetemp creation, DB migration hardening, heredoc relocation.
+- Action items for next sprint: canonicalize `doc/todo-archive.ndjson`, run archive consolidation dry-run, prepare CHECKPOINT for any destructive rotation.
+
+Next Steps
+----------
+
+1. Decide dedupe strategy for `doc/todo-archive.ndjson` (keep-first vs keep-last).
+2. Run `python scripts/update_todo_archive.py --dry-run -v` and review changes.
+3. If approved, commit the consolidated archive and create CHECKPOINT for rotation steps.
+
+Appendix
+--------
+
+Extracted items (top pending tasks):
+
+- Fix CI: create `.tmp/pytest` before test run
+- Harden DB migrations on orchestrator startup
+- Move heredoc content into scripts to avoid workflow parsing issues
+- Resolve NDJSON merge markers and dedupe `doc/todo-archive.ndjson`
+```markdown
+# Merged Sprint — 2026-02-06
+Date: 2026-02-06
+
+Summary
+- Primary focus: Security purge planning (tokens & secrets), agent automation prototype (alby_agent dry-run), and backlog/docs consolidation.
+- Several high-priority minisprints produced artifacts and concrete next actions (see Outputs).
+
+Completed / Verified
+- T002 Add detect-secrets + pre-commit — completed (baseline + CI enforcement).
+- T003 Mock Telegram harness — completed (local + CI dry-run tests).
+- T004 Retryer backoff tests — completed (unit tests added).
+- T005 Normalize todos into NDJSON — completed (doc/todo-archive.ndjson normalized).
+- T007 Run pytest smoke and record results — completed (116 tests: 115 passed, 1 skipped recorded in .tmp/smoke_results.txt).
+
+Minisprints (overview)
+- Security & Secrets (critical)
+  - Inventory & evidence collection; produced `rotation/inventory.json` and CSV mapping.
+  - Drafted filter-repo dry-run plan and created `CHECKPOINT_1.md` (approval gating required before destructive steps).
+  - Produced `doc/sprints/ROTATION_ACTION_PLAN_2026-02-06.md` and a freeze snapshot `doc/sprints/SPRINT_ROTATION_FREEZE_2026-02-06.md`.
+
+- Agent Automation (high)
+  - Scaffolding and dry-run prototype for `alby_agent` created; added idempotency/tracing recommendations.
+  - `agents/github_sessions_sync.py` (dry-run) produced for session → GitHub materialization testing.
+
+- Backlog & Docs (medium)
+  - Consolidated daily snapshots: `06_02_project_overview.md`, `06_02_todo_list.md` and updated `MASTER_BACKLOG.md`.
+  - Draft GH issue bodies saved under `.tmp/gh_issue_drafts/` (dry-run mode available).
+
+Key Artifacts
+- `doc/todo-archive.ndjson` — normalized machine backlog (source of truth for automation).
+- `rotation/inventory.json` — token/consumer inventory evidence output.
+- `doc/sprints/ROTATION_ACTION_PLAN_2026-02-06.md` — rotation action steps and safety checklist.
+- `doc/sprints/SPRINT_ROTATION_FREEZE_2026-02-06.md` — freeze snapshot for rotation minisprint.
+- `agents/github_sessions_sync.py` — prototype for syncing backlog → GitHub (dry-run available).
+- `sprints/session_sprint_20260206_*.json` — recorded minisprint session files.
+
+Decisions & Recommendations
+- Prefer GitHub App/installation tokens for automation where possible; fallback to fine-grained PATs only when necessary.
+- Require explicit `CHECKPOINT` approval for any destructive history rewrite or mass secret rotation that affects remote state.
+- Always run `scripts/update_todo_archive.py --dry-run` before changing `doc/todo-archive.ndjson` to inspect merges.
+
+Next Actions (priority)
+1. Inventory tokens & validate consumers (run `scripts/validate_consumers.py`) — owner: ops/security.
+2. Create GitHub App or scoped tokens and persist via `scripts/rotate_tokens_helper.py` (use ephemeral admin PAT only during setup).
+3. Run consumer validation smoke tests and update CI/workflows to consume new secrets.
+4. Revoke temporary admin PAT and record revocation in `gaia.db` and `events.ndjson`.
+5. Draft CHECKPOINT PR for rotation changes and request approval before merging.
+
+References
+- PLAN — [PLAN_2026-02-06.md](../PLAN_2026-02-06.md)
+- Day plan — [sprints/2026-02-06_day_plan.md](sprints/2026-02-06_day_plan.md)
+- Mini-sprint starter — [doc/sprints/06_02_2026_mini_sprint.md](doc/sprints/06_02_2026_mini_sprint.md)
+- Freeze snapshot — [doc/sprints/SPRINT_ROTATION_FREEZE_2026-02-06.md](doc/sprints/SPRINT_ROTATION_FREEZE_2026-02-06.md)
+
+Maintainers: GAIA agents / repository maintainers
+
+---
+
+(Generated by agent: consolidated 06_02 snapshots into a merged sprint document.)
+```
