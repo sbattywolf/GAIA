@@ -1,9 +1,3 @@
-{
-  "epic": "EPC_Telegram",
-  "feature_id": "F-runbook-docs",
-  "feature_name": "Runbook & documentation",
-  "story_key": "stoy_auto",
-  "agent": "assistant",
-  "tasks": [],
-  "impediments": []
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:865015154aef70ba5cdc20b3247b89bc52ccca488f875ed1822b4206df2213d5
+size 196

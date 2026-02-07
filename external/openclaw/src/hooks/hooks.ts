@@ -1,14 +1,3 @@
-export * from "./internal-hooks.js";
-
-export type HookEventType = import("./internal-hooks.js").InternalHookEventType;
-export type HookEvent = import("./internal-hooks.js").InternalHookEvent;
-export type HookHandler = import("./internal-hooks.js").InternalHookHandler;
-
-export {
-  registerInternalHook as registerHook,
-  unregisterInternalHook as unregisterHook,
-  clearInternalHooks as clearHooks,
-  getRegisteredEventKeys as getRegisteredHookEventKeys,
-  triggerInternalHook as triggerHook,
-  createInternalHookEvent as createHookEvent,
-} from "./internal-hooks.js";
+version https://git-lfs.github.com/spec/v1
+oid sha256:41b720025ab35a153a84f35a1442a54f79a7ecfc57aba2dbab91a9af05a808db
+size 569

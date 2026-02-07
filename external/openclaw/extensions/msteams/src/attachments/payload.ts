@@ -1,22 +1,3 @@
-export function buildMSTeamsMediaPayload(
-  mediaList: Array<{ path: string; contentType?: string }>,
-): {
-  MediaPath?: string;
-  MediaType?: string;
-  MediaUrl?: string;
-  MediaPaths?: string[];
-  MediaUrls?: string[];
-  MediaTypes?: string[];
-} {
-  const first = mediaList[0];
-  const mediaPaths = mediaList.map((media) => media.path);
-  const mediaTypes = mediaList.map((media) => media.contentType ?? "");
-  return {
-    MediaPath: first?.path,
-    MediaType: first?.contentType,
-    MediaUrl: first?.path,
-    MediaPaths: mediaPaths.length > 0 ? mediaPaths : undefined,
-    MediaUrls: mediaPaths.length > 0 ? mediaPaths : undefined,
-    MediaTypes: mediaPaths.length > 0 ? mediaTypes : undefined,
-  };
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6bb8c8021b58250f6132736742f1d4516f587d1670e11a343f647c8832d6e26d
+size 710

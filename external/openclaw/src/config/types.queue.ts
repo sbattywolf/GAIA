@@ -1,21 +1,3 @@
-export type QueueMode =
-  | "steer"
-  | "followup"
-  | "collect"
-  | "steer-backlog"
-  | "steer+backlog"
-  | "queue"
-  | "interrupt";
-export type QueueDropPolicy = "old" | "new" | "summarize";
-
-export type QueueModeByProvider = {
-  whatsapp?: QueueMode;
-  telegram?: QueueMode;
-  discord?: QueueMode;
-  googlechat?: QueueMode;
-  slack?: QueueMode;
-  signal?: QueueMode;
-  imessage?: QueueMode;
-  msteams?: QueueMode;
-  webchat?: QueueMode;
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:5144a6b8d307e3031a42aae8c71b58287c47fe6eb51ed18e66be52e717ee6640
+size 443

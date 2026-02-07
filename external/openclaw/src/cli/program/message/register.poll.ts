@@ -1,23 +1,3 @@
-import type { Command } from "commander";
-import type { MessageCliHelpers } from "./helpers.js";
-import { collectOption } from "../helpers.js";
-
-export function registerMessagePollCommand(message: Command, helpers: MessageCliHelpers) {
-  helpers
-    .withMessageBase(
-      helpers.withRequiredMessageTarget(message.command("poll").description("Send a poll")),
-    )
-    .requiredOption("--poll-question <text>", "Poll question")
-    .option(
-      "--poll-option <choice>",
-      "Poll option (repeat 2-12 times)",
-      collectOption,
-      [] as string[],
-    )
-    .option("--poll-multi", "Allow multiple selections", false)
-    .option("--poll-duration-hours <n>", "Poll duration (Discord)")
-    .option("-m, --message <text>", "Optional message body")
-    .action(async (opts) => {
-      await helpers.runMessageAction("poll", opts);
-    });
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:cf69a53652a2dabcd576deb8cb5de87b88b219d7463e516ac3556c60e1131598
+size 850

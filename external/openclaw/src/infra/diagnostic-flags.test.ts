@@ -1,30 +1,3 @@
-import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
-import { isDiagnosticFlagEnabled, resolveDiagnosticFlags } from "./diagnostic-flags.js";
-
-describe("diagnostic flags", () => {
-  it("merges config + env flags", () => {
-    const cfg = {
-      diagnostics: { flags: ["telegram.http", "cache.*"] },
-    } as OpenClawConfig;
-    const env = {
-      OPENCLAW_DIAGNOSTICS: "foo,bar",
-    } as NodeJS.ProcessEnv;
-
-    const flags = resolveDiagnosticFlags(cfg, env);
-    expect(flags).toEqual(expect.arrayContaining(["telegram.http", "cache.*", "foo", "bar"]));
-    expect(isDiagnosticFlagEnabled("telegram.http", cfg, env)).toBe(true);
-    expect(isDiagnosticFlagEnabled("cache.hit", cfg, env)).toBe(true);
-    expect(isDiagnosticFlagEnabled("foo", cfg, env)).toBe(true);
-  });
-
-  it("treats env true as wildcard", () => {
-    const env = { OPENCLAW_DIAGNOSTICS: "1" } as NodeJS.ProcessEnv;
-    expect(isDiagnosticFlagEnabled("anything.here", undefined, env)).toBe(true);
-  });
-
-  it("treats env false as disabled", () => {
-    const env = { OPENCLAW_DIAGNOSTICS: "0" } as NodeJS.ProcessEnv;
-    expect(isDiagnosticFlagEnabled("telegram.http", undefined, env)).toBe(false);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:837eed31bfac7b49a46f6449606e2249ab5b82d0651bfbd61db3ed3ff82b20f0
+size 1234

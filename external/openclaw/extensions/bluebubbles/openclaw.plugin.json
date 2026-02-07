@@ -1,9 +1,3 @@
-{
-  "id": "bluebubbles",
-  "channels": ["bluebubbles"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:1dcea7f0a4637b56ca591a8f0e7cb6027341c6f60c31dc74afefe6d3278ac9ed
+size 160

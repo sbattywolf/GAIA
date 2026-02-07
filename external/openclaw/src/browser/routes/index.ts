@@ -1,11 +1,3 @@
-import type { BrowserRouteContext } from "../server-context.js";
-import type { BrowserRouteRegistrar } from "./types.js";
-import { registerBrowserAgentRoutes } from "./agent.js";
-import { registerBrowserBasicRoutes } from "./basic.js";
-import { registerBrowserTabRoutes } from "./tabs.js";
-
-export function registerBrowserRoutes(app: BrowserRouteRegistrar, ctx: BrowserRouteContext) {
-  registerBrowserBasicRoutes(app, ctx);
-  registerBrowserTabRoutes(app, ctx);
-  registerBrowserAgentRoutes(app, ctx);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:adc9b079c1a407950cc460761c87ec4451c14de1cea7716bab9503ebd3a1244e
+size 505

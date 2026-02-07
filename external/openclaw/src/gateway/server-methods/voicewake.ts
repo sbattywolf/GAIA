@@ -1,34 +1,3 @@
-import type { GatewayRequestHandlers } from "./types.js";
-import { loadVoiceWakeConfig, setVoiceWakeTriggers } from "../../infra/voicewake.js";
-import { ErrorCodes, errorShape } from "../protocol/index.js";
-import { normalizeVoiceWakeTriggers } from "../server-utils.js";
-import { formatForLog } from "../ws-log.js";
-
-export const voicewakeHandlers: GatewayRequestHandlers = {
-  "voicewake.get": async ({ respond }) => {
-    try {
-      const cfg = await loadVoiceWakeConfig();
-      respond(true, { triggers: cfg.triggers });
-    } catch (err) {
-      respond(false, undefined, errorShape(ErrorCodes.UNAVAILABLE, formatForLog(err)));
-    }
-  },
-  "voicewake.set": async ({ params, respond, context }) => {
-    if (!Array.isArray(params.triggers)) {
-      respond(
-        false,
-        undefined,
-        errorShape(ErrorCodes.INVALID_REQUEST, "voicewake.set requires triggers: string[]"),
-      );
-      return;
-    }
-    try {
-      const triggers = normalizeVoiceWakeTriggers(params.triggers);
-      const cfg = await setVoiceWakeTriggers(triggers);
-      context.broadcastVoiceWakeChanged(cfg.triggers);
-      respond(true, { triggers: cfg.triggers });
-    } catch (err) {
-      respond(false, undefined, errorShape(ErrorCodes.UNAVAILABLE, formatForLog(err)));
-    }
-  },
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:0e3b23030145f9173ac5625100f8239a3ed861dcbb90c1a42dccb986b3a17e09
+size 1281

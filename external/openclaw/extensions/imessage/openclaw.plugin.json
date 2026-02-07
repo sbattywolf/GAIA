@@ -1,9 +1,3 @@
-{
-  "id": "imessage",
-  "channels": ["imessage"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e9d6179dac8ebfe8f7ab3f53d48b681ae6ddbf3ceb6b73cf61c4ef30c14678b0
+size 154

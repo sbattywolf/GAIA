@@ -1,19 +1,3 @@
-import { afterEach, expect, test } from "vitest";
-import { resetProcessRegistryForTests } from "./bash-process-registry";
-import { createExecTool } from "./bash-tools.exec";
-
-afterEach(() => {
-  resetProcessRegistryForTests();
-});
-
-test("exec supports pty output", async () => {
-  const tool = createExecTool({ allowBackground: false });
-  const result = await tool.execute("toolcall", {
-    command: 'node -e "process.stdout.write(String.fromCharCode(111,107))"',
-    pty: true,
-  });
-
-  expect(result.details.status).toBe("completed");
-  const text = result.content?.[0]?.text ?? "";
-  expect(text).toContain("ok");
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:660f106b8855a4752982f37f7d6d07435bdedd4d0b35ec0f4c57644e34274434
+size 622

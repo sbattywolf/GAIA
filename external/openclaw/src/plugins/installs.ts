@@ -1,30 +1,3 @@
-import type { OpenClawConfig } from "../config/config.js";
-import type { PluginInstallRecord } from "../config/types.plugins.js";
-
-export type PluginInstallUpdate = PluginInstallRecord & { pluginId: string };
-
-export function recordPluginInstall(
-  cfg: OpenClawConfig,
-  update: PluginInstallUpdate,
-): OpenClawConfig {
-  const { pluginId, ...record } = update;
-  const installs = {
-    ...cfg.plugins?.installs,
-    [pluginId]: {
-      ...cfg.plugins?.installs?.[pluginId],
-      ...record,
-      installedAt: record.installedAt ?? new Date().toISOString(),
-    },
-  };
-
-  return {
-    ...cfg,
-    plugins: {
-      ...cfg.plugins,
-      installs: {
-        ...installs,
-        [pluginId]: installs[pluginId],
-      },
-    },
-  };
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:dc5d67520525b8b175f5d56133f604e599e529a4e5f28e06cce71394d5f6bf1d
+size 735

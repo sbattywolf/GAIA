@@ -1,18 +1,3 @@
-import { describe, expect, test } from "vitest";
-import { createChatRunRegistry } from "./server-chat.js";
-
-describe("chat run registry", () => {
-  test("queues and removes runs per session", () => {
-    const registry = createChatRunRegistry();
-
-    registry.add("s1", { sessionKey: "main", clientRunId: "c1" });
-    registry.add("s1", { sessionKey: "main", clientRunId: "c2" });
-
-    expect(registry.peek("s1")?.clientRunId).toBe("c1");
-    expect(registry.shift("s1")?.clientRunId).toBe("c1");
-    expect(registry.peek("s1")?.clientRunId).toBe("c2");
-
-    expect(registry.remove("s1", "c2")?.clientRunId).toBe("c2");
-    expect(registry.peek("s1")).toBeUndefined();
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:78d08b14a377a9151251bd5a423d4b59adba54fd9c99279c3aeaff289085e57f
+size 679

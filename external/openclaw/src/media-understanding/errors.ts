@@ -1,15 +1,3 @@
-export type MediaUnderstandingSkipReason = "maxBytes" | "timeout" | "unsupported" | "empty";
-
-export class MediaUnderstandingSkipError extends Error {
-  readonly reason: MediaUnderstandingSkipReason;
-
-  constructor(reason: MediaUnderstandingSkipReason, message: string) {
-    super(message);
-    this.reason = reason;
-    this.name = "MediaUnderstandingSkipError";
-  }
-}
-
-export function isMediaUnderstandingSkipError(err: unknown): err is MediaUnderstandingSkipError {
-  return err instanceof MediaUnderstandingSkipError;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:f5457d1501399d00320cbe0548687a25c355cec299a3ad2a9e79f2580574a6b9
+size 525

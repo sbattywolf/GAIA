@@ -1,28 +1,3 @@
-export type TypingCallbacks = {
-  onReplyStart: () => Promise<void>;
-  onIdle?: () => void;
-};
-
-export function createTypingCallbacks(params: {
-  start: () => Promise<void>;
-  stop?: () => Promise<void>;
-  onStartError: (err: unknown) => void;
-  onStopError?: (err: unknown) => void;
-}): TypingCallbacks {
-  const stop = params.stop;
-  const onReplyStart = async () => {
-    try {
-      await params.start();
-    } catch (err) {
-      params.onStartError(err);
-    }
-  };
-
-  const onIdle = stop
-    ? () => {
-        void stop().catch((err) => (params.onStopError ?? params.onStartError)(err));
-      }
-    : undefined;
-
-  return { onReplyStart, onIdle };
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:2909b08db3c53043f3086ae468be5a5aef459550b9d675930c218d3791d30c35
+size 658

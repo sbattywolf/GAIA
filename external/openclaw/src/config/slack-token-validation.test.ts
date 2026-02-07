@@ -1,36 +1,3 @@
-import { describe, expect, it } from "vitest";
-import { validateConfigObject } from "./config.js";
-
-describe("Slack token config fields", () => {
-  it("accepts user token config fields", () => {
-    const res = validateConfigObject({
-      channels: {
-        slack: {
-          botToken: "xoxb-any",
-          appToken: "xapp-any",
-          userToken: "xoxp-any",
-          userTokenReadOnly: false,
-        },
-      },
-    });
-    expect(res.ok).toBe(true);
-  });
-
-  it("accepts account-level user token config", () => {
-    const res = validateConfigObject({
-      channels: {
-        slack: {
-          accounts: {
-            work: {
-              botToken: "xoxb-any",
-              appToken: "xapp-any",
-              userToken: "xoxp-any",
-              userTokenReadOnly: true,
-            },
-          },
-        },
-      },
-    });
-    expect(res.ok).toBe(true);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:c8edd18197c3932c27d5251d12f79234af10c195fec3ee35c4b69210f57a1ed7
+size 885

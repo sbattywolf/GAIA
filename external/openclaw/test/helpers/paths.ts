@@ -1,16 +1,3 @@
-import path from "node:path";
-
-export function isPathWithinBase(base: string, target: string): boolean {
-  if (process.platform === "win32") {
-    const normalizedBase = path.win32.normalize(path.win32.resolve(base));
-    const normalizedTarget = path.win32.normalize(path.win32.resolve(target));
-
-    const rel = path.win32.relative(normalizedBase.toLowerCase(), normalizedTarget.toLowerCase());
-    return rel === "" || (!rel.startsWith("..") && !path.win32.isAbsolute(rel));
-  }
-
-  const normalizedBase = path.resolve(base);
-  const normalizedTarget = path.resolve(target);
-  const rel = path.relative(normalizedBase, normalizedTarget);
-  return rel === "" || (!rel.startsWith("..") && !path.isAbsolute(rel));
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:8132440573d66ac7234e078a9fad5d985eda1e1ed6d72b9b2024febea87c0c1f
+size 715

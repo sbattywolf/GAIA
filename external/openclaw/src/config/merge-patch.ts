@@ -1,28 +1,3 @@
-type PlainObject = Record<string, unknown>;
-
-function isPlainObject(value: unknown): value is PlainObject {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-export function applyMergePatch(base: unknown, patch: unknown): unknown {
-  if (!isPlainObject(patch)) {
-    return patch;
-  }
-
-  const result: PlainObject = isPlainObject(base) ? { ...base } : {};
-
-  for (const [key, value] of Object.entries(patch)) {
-    if (value === null) {
-      delete result[key];
-      continue;
-    }
-    if (isPlainObject(value)) {
-      const baseValue = result[key];
-      result[key] = applyMergePatch(isPlainObject(baseValue) ? baseValue : {}, value);
-      continue;
-    }
-    result[key] = value;
-  }
-
-  return result;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:44ea0ed78508fdd104974ff6f6269df61e0c376e963f0b3eaca4091ac26383d1
+size 744

@@ -1,15 +1,3 @@
-const ESC = String.fromCharCode(0x1b);
-const DSR_PATTERN = new RegExp(`${ESC}\\[\\??6n`, "g");
-
-export function stripDsrRequests(input: string): { cleaned: string; requests: number } {
-  let requests = 0;
-  const cleaned = input.replace(DSR_PATTERN, () => {
-    requests += 1;
-    return "";
-  });
-  return { cleaned, requests };
-}
-
-export function buildCursorPositionResponse(row = 1, col = 1): string {
-  return `\x1b[${row};${col}R`;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:97f9a0de1bb7dc559ea286613f31b4965f95ef4852726a1e25620d422bf6bdca
+size 439

@@ -1,23 +1,3 @@
-import { describe, expect, it } from "vitest";
-import { createProcessedMessageTracker } from "./processed-messages.js";
-
-describe("createProcessedMessageTracker", () => {
-  it("dedupes and evicts oldest entries", () => {
-    const tracker = createProcessedMessageTracker(3);
-
-    expect(tracker.mark("a")).toBe(true);
-    expect(tracker.mark("a")).toBe(false);
-    expect(tracker.has("a")).toBe(true);
-
-    tracker.mark("b");
-    tracker.mark("c");
-    expect(tracker.size()).toBe(3);
-
-    tracker.mark("d");
-    expect(tracker.size()).toBe(3);
-    expect(tracker.has("a")).toBe(false);
-    expect(tracker.has("b")).toBe(true);
-    expect(tracker.has("c")).toBe(true);
-    expect(tracker.has("d")).toBe(true);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:2623bd0e03403ee6befae8abbffa3d793683ac25e2ff4c848e98dbd04f39a738
+size 720

@@ -1,23 +1,3 @@
-import type { ResolvedSlackAccount } from "../accounts.js";
-import type { SlackMonitorContext } from "./context.js";
-import type { SlackMessageHandler } from "./message-handler.js";
-import { registerSlackChannelEvents } from "./events/channels.js";
-import { registerSlackMemberEvents } from "./events/members.js";
-import { registerSlackMessageEvents } from "./events/messages.js";
-import { registerSlackPinEvents } from "./events/pins.js";
-import { registerSlackReactionEvents } from "./events/reactions.js";
-
-export function registerSlackMonitorEvents(params: {
-  ctx: SlackMonitorContext;
-  account: ResolvedSlackAccount;
-  handleSlackMessage: SlackMessageHandler;
-}) {
-  registerSlackMessageEvents({
-    ctx: params.ctx,
-    handleSlackMessage: params.handleSlackMessage,
-  });
-  registerSlackReactionEvents({ ctx: params.ctx });
-  registerSlackMemberEvents({ ctx: params.ctx });
-  registerSlackChannelEvents({ ctx: params.ctx });
-  registerSlackPinEvents({ ctx: params.ctx });
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:5865dd219c0190ffd1b785bd17feeba58e1b807c8ab3856091a56fca86841879
+size 983

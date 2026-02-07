@@ -1,31 +1,3 @@
-import type { OpenClawConfig } from "../config/config.js";
-import type { AgentBootstrapHookContext } from "../hooks/internal-hooks.js";
-import type { WorkspaceBootstrapFile } from "./workspace.js";
-import { createInternalHookEvent, triggerInternalHook } from "../hooks/internal-hooks.js";
-import { resolveAgentIdFromSessionKey } from "../routing/session-key.js";
-
-export async function applyBootstrapHookOverrides(params: {
-  files: WorkspaceBootstrapFile[];
-  workspaceDir: string;
-  config?: OpenClawConfig;
-  sessionKey?: string;
-  sessionId?: string;
-  agentId?: string;
-}): Promise<WorkspaceBootstrapFile[]> {
-  const sessionKey = params.sessionKey ?? params.sessionId ?? "unknown";
-  const agentId =
-    params.agentId ??
-    (params.sessionKey ? resolveAgentIdFromSessionKey(params.sessionKey) : undefined);
-  const context: AgentBootstrapHookContext = {
-    workspaceDir: params.workspaceDir,
-    bootstrapFiles: params.files,
-    cfg: params.config,
-    sessionKey: params.sessionKey,
-    sessionId: params.sessionId,
-    agentId,
-  };
-  const event = createInternalHookEvent("agent", "bootstrap", sessionKey, context);
-  await triggerInternalHook(event);
-  const updated = (event.context as AgentBootstrapHookContext).bootstrapFiles;
-  return Array.isArray(updated) ? updated : params.files;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:79edd578f38fea902a0b375fcf2b103116ae9916968cfef059f83a00dc620a64
+size 1304

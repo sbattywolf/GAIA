@@ -1,34 +1,3 @@
-import { normalizeCommandBody } from "./commands-registry.js";
-
-export type GroupActivationMode = "mention" | "always";
-
-export function normalizeGroupActivation(raw?: string | null): GroupActivationMode | undefined {
-  const value = raw?.trim().toLowerCase();
-  if (value === "mention") {
-    return "mention";
-  }
-  if (value === "always") {
-    return "always";
-  }
-  return undefined;
-}
-
-export function parseActivationCommand(raw?: string): {
-  hasCommand: boolean;
-  mode?: GroupActivationMode;
-} {
-  if (!raw) {
-    return { hasCommand: false };
-  }
-  const trimmed = raw.trim();
-  if (!trimmed) {
-    return { hasCommand: false };
-  }
-  const normalized = normalizeCommandBody(trimmed);
-  const match = normalized.match(/^\/activation(?:\s+([a-zA-Z]+))?\s*$/i);
-  if (!match) {
-    return { hasCommand: false };
-  }
-  const mode = normalizeGroupActivation(match[1]);
-  return { hasCommand: true, mode };
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:40fa0ae97d3d3bc8be885a36155a76ae189c0aa03cb02c54a775b69ae45698df
+size 914

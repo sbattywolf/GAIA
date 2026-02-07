@@ -1,6 +1,3 @@
-import { createSubsystemLogger } from "../../logging/subsystem.js";
-
-export const whatsappLog = createSubsystemLogger("gateway/channels/whatsapp");
-export const whatsappInboundLog = whatsappLog.child("inbound");
-export const whatsappOutboundLog = whatsappLog.child("outbound");
-export const whatsappHeartbeatLog = whatsappLog.child("heartbeat");
+version https://git-lfs.github.com/spec/v1
+oid sha256:2f4ad02767aa9be1d1e8d15c5fbd836a3024f8cfce51f2027c3a510a370a2619
+size 346

@@ -1,16 +1,3 @@
-export type ThemeMode = "system" | "light" | "dark";
-export type ResolvedTheme = "light" | "dark";
-
-export function getSystemTheme(): ResolvedTheme {
-  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
-    return "dark";
-  }
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-}
-
-export function resolveTheme(mode: ThemeMode): ResolvedTheme {
-  if (mode === "system") {
-    return getSystemTheme();
-  }
-  return mode;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0be0937c973f29ebe82548c5e933a6216bfa6eb8f9587e3d6832cd24cb26ef8f
+size 485

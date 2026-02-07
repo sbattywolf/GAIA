@@ -1,27 +1,3 @@
-{
-  "name": "@openclaw/diagnostics-otel",
-  "version": "2026.2.1",
-  "description": "OpenClaw diagnostics OpenTelemetry exporter",
-  "type": "module",
-  "dependencies": {
-    "@opentelemetry/api": "^1.9.0",
-    "@opentelemetry/api-logs": "^0.211.0",
-    "@opentelemetry/exporter-logs-otlp-http": "^0.211.0",
-    "@opentelemetry/exporter-metrics-otlp-http": "^0.211.0",
-    "@opentelemetry/exporter-trace-otlp-http": "^0.211.0",
-    "@opentelemetry/resources": "^2.5.0",
-    "@opentelemetry/sdk-logs": "^0.211.0",
-    "@opentelemetry/sdk-metrics": "^2.5.0",
-    "@opentelemetry/sdk-node": "^0.211.0",
-    "@opentelemetry/sdk-trace-base": "^2.5.0",
-    "@opentelemetry/semantic-conventions": "^1.39.0"
-  },
-  "devDependencies": {
-    "openclaw": "workspace:*"
-  },
-  "openclaw": {
-    "extensions": [
-      "./index.ts"
-    ]
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:4357a98318b201b2086946c022d76afc16a7dfde48f0ef97cb6935d277c06197
+size 830

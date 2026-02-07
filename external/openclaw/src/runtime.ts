@@ -1,24 +1,3 @@
-import { clearActiveProgressLine } from "./terminal/progress-line.js";
-import { restoreTerminalState } from "./terminal/restore.js";
-
-export type RuntimeEnv = {
-  log: typeof console.log;
-  error: typeof console.error;
-  exit: (code: number) => never;
-};
-
-export const defaultRuntime: RuntimeEnv = {
-  log: (...args: Parameters<typeof console.log>) => {
-    clearActiveProgressLine();
-    console.log(...args);
-  },
-  error: (...args: Parameters<typeof console.error>) => {
-    clearActiveProgressLine();
-    console.error(...args);
-  },
-  exit: (code) => {
-    restoreTerminalState("runtime exit");
-    process.exit(code);
-    throw new Error("unreachable"); // satisfies tests when mocked
-  },
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:cc3fb5ea786cbe05e092507b8d98f85882cd1341f9b19bffe2fb425a865cb336
+size 699

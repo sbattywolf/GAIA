@@ -1,17 +1,3 @@
-export function isSlackChannelAllowedByPolicy(params: {
-  groupPolicy: "open" | "disabled" | "allowlist";
-  channelAllowlistConfigured: boolean;
-  channelAllowed: boolean;
-}): boolean {
-  const { groupPolicy, channelAllowlistConfigured, channelAllowed } = params;
-  if (groupPolicy === "disabled") {
-    return false;
-  }
-  if (groupPolicy === "open") {
-    return true;
-  }
-  if (!channelAllowlistConfigured) {
-    return false;
-  }
-  return channelAllowed;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e2341ea982c7462de19414c13f750db395ba260313183842950d8edf3ffd34e3
+size 461

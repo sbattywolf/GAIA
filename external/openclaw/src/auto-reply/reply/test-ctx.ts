@@ -1,17 +1,3 @@
-import type { FinalizedMsgContext, MsgContext } from "../templating.js";
-import { finalizeInboundContext } from "./inbound-context.js";
-
-export function buildTestCtx(overrides: Partial<MsgContext> = {}): FinalizedMsgContext {
-  return finalizeInboundContext({
-    Body: "",
-    CommandBody: "",
-    CommandSource: "text",
-    From: "whatsapp:+1000",
-    To: "whatsapp:+2000",
-    ChatType: "direct",
-    Provider: "whatsapp",
-    Surface: "whatsapp",
-    CommandAuthorized: false,
-    ...overrides,
-  });
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:f500fadaff06f08f1a1a589e41e6619aa0642e9385f4f5f91482d1d62b9045ad
+size 507

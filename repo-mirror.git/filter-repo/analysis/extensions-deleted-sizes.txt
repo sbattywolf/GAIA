@@ -1,0 +1,11 @@
+=== Deleted extensions by reverse size ===
+Format: unpacked size, packed size, date deleted, extension name
+      236438       9347 2026-02-04 .err
+        4940        780 2026-02-04 .2
+        4940        704 2026-02-04 .1
+        4940        610 2026-02-04 .3
+         620        328 2026-02-04 .2026-02-03T000000Z
+         323        239 2026-02-04 .template
+         110        118 2026-02-04 .bak
+          20         38 2026-02-04 .finalized
+           8         23 2026-02-07 .pem

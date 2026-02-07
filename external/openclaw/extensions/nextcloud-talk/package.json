@@ -1,33 +1,3 @@
-{
-  "name": "@openclaw/nextcloud-talk",
-  "version": "2026.2.1",
-  "description": "OpenClaw Nextcloud Talk channel plugin",
-  "type": "module",
-  "devDependencies": {
-    "openclaw": "workspace:*"
-  },
-  "openclaw": {
-    "extensions": [
-      "./index.ts"
-    ],
-    "channel": {
-      "id": "nextcloud-talk",
-      "label": "Nextcloud Talk",
-      "selectionLabel": "Nextcloud Talk (self-hosted)",
-      "docsPath": "/channels/nextcloud-talk",
-      "docsLabel": "nextcloud-talk",
-      "blurb": "Self-hosted chat via Nextcloud Talk webhook bots.",
-      "aliases": [
-        "nc-talk",
-        "nc"
-      ],
-      "order": 65,
-      "quickstartAllowFrom": true
-    },
-    "install": {
-      "npmSpec": "@openclaw/nextcloud-talk",
-      "localPath": "extensions/nextcloud-talk",
-      "defaultChoice": "npm"
-    }
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ab6126b9eed58f6d31772578dd811e5abc43cf94134300db59cd567a40c43d35
+size 822

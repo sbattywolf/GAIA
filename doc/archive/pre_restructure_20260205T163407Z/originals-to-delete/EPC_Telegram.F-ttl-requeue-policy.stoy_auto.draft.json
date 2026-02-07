@@ -1,9 +1,3 @@
-{
-  "epic": "EPC_Telegram",
-  "feature_id": "F-ttl-requeue-policy",
-  "feature_name": "Claim TTL & Requeue Policy",
-  "story_key": "stoy_auto",
-  "agent": "assistant",
-  "tasks": [],
-  "impediments": []
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:cefbf3947768edc6ebc1ed1b6faadfdde6a59ce279d16d7bb6289147ce0a69b0
+size 205

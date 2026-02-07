@@ -1,21 +1,3 @@
-export type BrowserRequest = {
-  params: Record<string, string>;
-  query: Record<string, unknown>;
-  body?: unknown;
-};
-
-export type BrowserResponse = {
-  status: (code: number) => BrowserResponse;
-  json: (body: unknown) => void;
-};
-
-export type BrowserRouteHandler = (
-  req: BrowserRequest,
-  res: BrowserResponse,
-) => void | Promise<void>;
-
-export type BrowserRouteRegistrar = {
-  get: (path: string, handler: BrowserRouteHandler) => void;
-  post: (path: string, handler: BrowserRouteHandler) => void;
-  delete: (path: string, handler: BrowserRouteHandler) => void;
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:94f4d5fcd141b7df17eef2c609dd17ff5eaf1c14a278638a5f3d9f38ca12dffc
+size 574

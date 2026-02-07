@@ -1,14 +1,3 @@
-{
-  "name": "@openclaw/discord",
-  "version": "2026.2.1",
-  "description": "OpenClaw Discord channel plugin",
-  "type": "module",
-  "devDependencies": {
-    "openclaw": "workspace:*"
-  },
-  "openclaw": {
-    "extensions": [
-      "./index.ts"
-    ]
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:bec2f93c3077e063cdf9bb7333da82a4450503e3d0b3846f478c2e7a8bcc3d4a
+size 255

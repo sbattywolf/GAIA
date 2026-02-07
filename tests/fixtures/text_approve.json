@@ -1,8 +1,3 @@
-{
-  "message": {
-    "message_id": 200,
-    "from": { "id": 321, "first_name": "tester" },
-    "chat": { "id": "test_chat" },
-    "text": "approve abc123"
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:06762e09a6a5aeddcb52fb44d80907f713d0e1b631f8f8c7b0493d9124577d0d
+size 161

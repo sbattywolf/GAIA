@@ -1,17 +1,3 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
-import { mattermostPlugin } from "./src/channel.js";
-import { setMattermostRuntime } from "./src/runtime.js";
-
-const plugin = {
-  id: "mattermost",
-  name: "Mattermost",
-  description: "Mattermost channel plugin",
-  configSchema: emptyPluginConfigSchema(),
-  register(api: OpenClawPluginApi) {
-    setMattermostRuntime(api.runtime);
-    api.registerChannel({ plugin: mattermostPlugin });
-  },
-};
-
-export default plugin;
+version https://git-lfs.github.com/spec/v1
+oid sha256:bc2e38cef8365218bcdb6c4d1ef5416942c627cd1540d1ce691762eaf9a6521f
+size 545

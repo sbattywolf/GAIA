@@ -1,18 +1,3 @@
-import crypto from "node:crypto";
-
-export function validateLineSignature(
-  body: string,
-  signature: string,
-  channelSecret: string,
-): boolean {
-  const hash = crypto.createHmac("SHA256", channelSecret).update(body).digest("base64");
-  const hashBuffer = Buffer.from(hash);
-  const signatureBuffer = Buffer.from(signature);
-
-  // Use constant-time comparison to prevent timing attacks.
-  if (hashBuffer.length !== signatureBuffer.length) {
-    return false;
-  }
-
-  return crypto.timingSafeEqual(hashBuffer, signatureBuffer);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:bbeb3864cf426dd910d152b84f738f62734266ef64d7295897ada233f781e1a3
+size 531

@@ -1,35 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-export function resolveBundledSkillsDir(): string | undefined {
-  const override = process.env.OPENCLAW_BUNDLED_SKILLS_DIR?.trim();
-  if (override) {
-    return override;
-  }
-
-  // bun --compile: ship a sibling `skills/` next to the executable.
-  try {
-    const execDir = path.dirname(process.execPath);
-    const sibling = path.join(execDir, "skills");
-    if (fs.existsSync(sibling)) {
-      return sibling;
-    }
-  } catch {
-    // ignore
-  }
-
-  // npm/dev: resolve `<packageRoot>/skills` relative to this module.
-  try {
-    const moduleDir = path.dirname(fileURLToPath(import.meta.url));
-    const root = path.resolve(moduleDir, "..", "..", "..");
-    const candidate = path.join(root, "skills");
-    if (fs.existsSync(candidate)) {
-      return candidate;
-    }
-  } catch {
-    // ignore
-  }
-
-  return undefined;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:5c9f84e4d57697fc15c40520312662f431b0b8249967ec239e78a4ee7234ccde
+size 921

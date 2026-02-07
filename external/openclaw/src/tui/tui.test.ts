@@ -1,17 +1,3 @@
-import { describe, expect, it } from "vitest";
-import { resolveFinalAssistantText } from "./tui.js";
-
-describe("resolveFinalAssistantText", () => {
-  it("falls back to streamed text when final text is empty", () => {
-    expect(resolveFinalAssistantText({ finalText: "", streamedText: "Hello" })).toBe("Hello");
-  });
-
-  it("prefers the final text when present", () => {
-    expect(
-      resolveFinalAssistantText({
-        finalText: "All done",
-        streamedText: "partial",
-      }),
-    ).toBe("All done");
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:abb1efba81ae9680b2141eea3b591c674d1abbd7e4647a4e6e408fa494f00e99
+size 525

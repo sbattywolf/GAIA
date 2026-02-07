@@ -1,27 +1,3 @@
-import type { Command } from "commander";
-import { formatDocsLink } from "../../terminal/links.js";
-import { theme } from "../../terminal/theme.js";
-import {
-  registerCronAddCommand,
-  registerCronListCommand,
-  registerCronStatusCommand,
-} from "./register.cron-add.js";
-import { registerCronEditCommand } from "./register.cron-edit.js";
-import { registerCronSimpleCommands } from "./register.cron-simple.js";
-
-export function registerCronCli(program: Command) {
-  const cron = program
-    .command("cron")
-    .description("Manage cron jobs (via Gateway)")
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/cron", "docs.openclaw.ai/cli/cron")}\n`,
-    );
-
-  registerCronStatusCommand(cron);
-  registerCronListCommand(cron);
-  registerCronAddCommand(cron);
-  registerCronSimpleCommands(cron);
-  registerCronEditCommand(cron);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3bc99ec1d0a06fb08e7eacfc72e5b35db7badbde9e77e46ae7697d02330390e1
+size 883

@@ -1,24 +1,3 @@
-import type { SlackSlashCommandConfig } from "../../config/config.js";
-
-export function normalizeSlackSlashCommandName(raw: string) {
-  return raw.replace(/^\/+/, "");
-}
-
-export function resolveSlackSlashCommandConfig(
-  raw?: SlackSlashCommandConfig,
-): Required<SlackSlashCommandConfig> {
-  const normalizedName = normalizeSlackSlashCommandName(raw?.name?.trim() || "openclaw");
-  const name = normalizedName || "openclaw";
-  return {
-    enabled: raw?.enabled === true,
-    name,
-    sessionPrefix: raw?.sessionPrefix?.trim() || "slack:slash",
-    ephemeral: raw?.ephemeral !== false,
-  };
-}
-
-export function buildSlackSlashCommandMatcher(name: string) {
-  const normalized = normalizeSlackSlashCommandName(name);
-  const escaped = normalized.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`^/?${escaped}$`);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:64d241b8be375f5a07c5dc282807015186deaede5472265a51788d347c13e2dd
+size 827

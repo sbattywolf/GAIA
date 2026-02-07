@@ -1,34 +1,3 @@
-export type ConfiguredEntry = {
-  key: string;
-  ref: { provider: string; model: string };
-  tags: Set<string>;
-  aliases: string[];
-};
-
-export type ModelRow = {
-  key: string;
-  name: string;
-  input: string;
-  contextWindow: number | null;
-  local: boolean | null;
-  available: boolean | null;
-  tags: string[];
-  missing: boolean;
-};
-
-export type ProviderAuthOverview = {
-  provider: string;
-  effective: {
-    kind: "profiles" | "env" | "models.json" | "missing";
-    detail: string;
-  };
-  profiles: {
-    count: number;
-    oauth: number;
-    token: number;
-    apiKey: number;
-    labels: string[];
-  };
-  env?: { value: string; source: string };
-  modelsJson?: { value: string; source: string };
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:b893231acbffa28ca6d34fd61e99090e69cdc427e41ad399bc24e43deb98d9f9
+size 707

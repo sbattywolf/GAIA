@@ -1,23 +1,3 @@
-export type AllowlistMatchSource =
-  | "wildcard"
-  | "id"
-  | "name"
-  | "tag"
-  | "username"
-  | "prefixed-id"
-  | "prefixed-user"
-  | "prefixed-name"
-  | "slug"
-  | "localpart";
-
-export type AllowlistMatch<TSource extends string = AllowlistMatchSource> = {
-  allowed: boolean;
-  matchKey?: string;
-  matchSource?: TSource;
-};
-
-export function formatAllowlistMatchMeta(
-  match?: { matchKey?: string; matchSource?: string } | null,
-): string {
-  return `matchKey=${match?.matchKey ?? "none"} matchSource=${match?.matchSource ?? "none"}`;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:fd501130c969a8fc4b3f714b5e1cf431c9167249f5dfcf1362f3a9dd5cf37375
+size 542

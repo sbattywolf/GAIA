@@ -1,18 +1,3 @@
-import { describe, expect, it } from "vitest";
-import { zalouserPlugin } from "./channel.js";
-
-describe("zalouser outbound chunker", () => {
-  it("chunks without empty strings and respects limit", () => {
-    const chunker = zalouserPlugin.outbound?.chunker;
-    expect(chunker).toBeTypeOf("function");
-    if (!chunker) {
-      return;
-    }
-
-    const limit = 10;
-    const chunks = chunker("hello world\nthis is a test", limit);
-    expect(chunks.length).toBeGreaterThan(1);
-    expect(chunks.every((c) => c.length > 0)).toBe(true);
-    expect(chunks.every((c) => c.length <= limit)).toBe(true);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:156b2d08c7bb5b77d17c489133b0b57911a3c4a1879d62660d946045dea55c52
+size 609

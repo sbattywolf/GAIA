@@ -1,8 +1,3 @@
-{
-  "epic": "EPC_Telegram",
-  "feature_id": "F-backup-retention",
-  "feature_name": "Backup & retention",
-  "story_key": "stoy_auto",
-  "agent": "assistant",
-  "tasks": []
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:55bbe4a66a8d193b516213de2910a12d84cdd58afb6c9b15e452511f9806c196
+size 174

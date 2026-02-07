@@ -1,14 +1,3 @@
-import type { PluginRuntime } from "openclaw/plugin-sdk";
-
-let runtime: PluginRuntime | null = null;
-
-export function setMSTeamsRuntime(next: PluginRuntime) {
-  runtime = next;
-}
-
-export function getMSTeamsRuntime(): PluginRuntime {
-  if (!runtime) {
-    throw new Error("MSTeams runtime not initialized");
-  }
-  return runtime;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ddbe810dcce7dbc56338c5d77a123320d3f8c6389daf767c582e1d648edd499d
+size 331

@@ -1,12 +1,3 @@
-/**
- * Chat-related constants for the UI layer.
- */
-
-/** Character threshold for showing tool output inline vs collapsed */
-export const TOOL_INLINE_THRESHOLD = 80;
-
-/** Maximum lines to show in collapsed preview */
-export const PREVIEW_MAX_LINES = 2;
-
-/** Maximum characters to show in collapsed preview */
-export const PREVIEW_MAX_CHARS = 100;
+version https://git-lfs.github.com/spec/v1
+oid sha256:aae25a2f3fe95153c8b26148e4cb13b81f253c12c628481463b0d4a20f2e83fa
+size 346

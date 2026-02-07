@@ -1,15 +1,3 @@
-export const TELEGRAM_MAX_CAPTION_LENGTH = 1024;
-
-export function splitTelegramCaption(text?: string): {
-  caption?: string;
-  followUpText?: string;
-} {
-  const trimmed = text?.trim() ?? "";
-  if (!trimmed) {
-    return { caption: undefined, followUpText: undefined };
-  }
-  if (trimmed.length > TELEGRAM_MAX_CAPTION_LENGTH) {
-    return { caption: undefined, followUpText: trimmed };
-  }
-  return { caption: trimmed, followUpText: undefined };
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:71b89f0c8b21d3defabdf426d5889e83ad9d2cc2a550432160c6bffcb1ae0282
+size 448

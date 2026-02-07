@@ -1,17 +1,3 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
-import { imessagePlugin } from "./src/channel.js";
-import { setIMessageRuntime } from "./src/runtime.js";
-
-const plugin = {
-  id: "imessage",
-  name: "iMessage",
-  description: "iMessage channel plugin",
-  configSchema: emptyPluginConfigSchema(),
-  register(api: OpenClawPluginApi) {
-    setIMessageRuntime(api.runtime);
-    api.registerChannel({ plugin: imessagePlugin });
-  },
-};
-
-export default plugin;
+version https://git-lfs.github.com/spec/v1
+oid sha256:8b66e3c5acf30e8e94dbd2513614631015792eb15653f9a367e4e6400210a1c2
+size 531

@@ -1,20 +1,3 @@
-import type { DaemonStatusOptions } from "./types.js";
-import { defaultRuntime } from "../../runtime.js";
-import { colorize, isRich, theme } from "../../terminal/theme.js";
-import { gatherDaemonStatus } from "./status.gather.js";
-import { printDaemonStatus } from "./status.print.js";
-
-export async function runDaemonStatus(opts: DaemonStatusOptions) {
-  try {
-    const status = await gatherDaemonStatus({
-      rpc: opts.rpc,
-      probe: Boolean(opts.probe),
-      deep: Boolean(opts.deep),
-    });
-    printDaemonStatus(status, { json: Boolean(opts.json) });
-  } catch (err) {
-    const rich = isRich();
-    defaultRuntime.error(colorize(rich, theme.error, `Gateway status failed: ${String(err)}`));
-    defaultRuntime.exit(1);
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ecc6eabbc89c684ca599bdb30d6dcbd22b833a71562c370cb98a73b849395e5d
+size 738

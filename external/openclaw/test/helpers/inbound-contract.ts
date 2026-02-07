@@ -1,19 +1,3 @@
-import { expect } from "vitest";
-import type { MsgContext } from "../../src/auto-reply/templating.js";
-import { normalizeChatType } from "../../src/channels/chat-type.js";
-import { resolveConversationLabel } from "../../src/channels/conversation-label.js";
-import { validateSenderIdentity } from "../../src/channels/sender-identity.js";
-
-export function expectInboundContextContract(ctx: MsgContext) {
-  expect(validateSenderIdentity(ctx)).toEqual([]);
-
-  expect(ctx.Body).toBeTypeOf("string");
-  expect(ctx.BodyForAgent).toBeTypeOf("string");
-  expect(ctx.BodyForCommands).toBeTypeOf("string");
-
-  const chatType = normalizeChatType(ctx.ChatType);
-  if (chatType && chatType !== "direct") {
-    const label = ctx.ConversationLabel?.trim() || resolveConversationLabel(ctx);
-    expect(label).toBeTruthy();
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:efa78f5a2768e1ac12422eb7067f0b43180337856f5b4f7a37cdaf8824486c81
+size 812

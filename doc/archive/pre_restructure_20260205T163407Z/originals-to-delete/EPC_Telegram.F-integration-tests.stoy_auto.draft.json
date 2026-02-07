@@ -1,9 +1,3 @@
-{
-  "epic": "EPC_Telegram",
-  "feature_id": "F-integration-tests",
-  "feature_name": "Integration tests",
-  "story_key": "stoy_auto",
-  "agent": "assistant",
-  "tasks": [],
-  "impediments": []
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:12c182847ef8e3a1cafc5b1e6212b734f0142b790d0666bd96e130153882fb93
+size 195

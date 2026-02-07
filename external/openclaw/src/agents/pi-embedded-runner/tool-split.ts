@@ -1,17 +1,3 @@
-import type { AgentTool } from "@mariozechner/pi-agent-core";
-import { toToolDefinitions } from "../pi-tool-definition-adapter.js";
-
-// We always pass tools via `customTools` so our policy filtering, sandbox integration,
-// and extended toolset remain consistent across providers.
-type AnyAgentTool = AgentTool;
-
-export function splitSdkTools(options: { tools: AnyAgentTool[]; sandboxEnabled: boolean }): {
-  builtInTools: AnyAgentTool[];
-  customTools: ReturnType<typeof toToolDefinitions>;
-} {
-  const { tools } = options;
-  return {
-    builtInTools: [],
-    customTools: toToolDefinitions(tools),
-  };
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6095a1db6151a15a1883034f1d3fed31db6bfc3593fb7e8b55d5c259340f01da
+size 608

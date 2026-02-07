@@ -1,25 +1,3 @@
-import { parseTimeoutMs } from "./parse-timeout.js";
-
-export function parseEnvPairs(pairs: unknown): Record<string, string> | undefined {
-  if (!Array.isArray(pairs) || pairs.length === 0) {
-    return undefined;
-  }
-  const env: Record<string, string> = {};
-  for (const pair of pairs) {
-    if (typeof pair !== "string") {
-      continue;
-    }
-    const idx = pair.indexOf("=");
-    if (idx <= 0) {
-      continue;
-    }
-    const key = pair.slice(0, idx).trim();
-    if (!key) {
-      continue;
-    }
-    env[key] = pair.slice(idx + 1);
-  }
-  return Object.keys(env).length > 0 ? env : undefined;
-}
-
-export { parseTimeoutMs };
+version https://git-lfs.github.com/spec/v1
+oid sha256:901f74fc73db9575a27422b289b74caee5c04a740d9470ae2d606ae87d8a8452
+size 631

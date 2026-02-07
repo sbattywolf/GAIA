@@ -1,14 +1,3 @@
-import type { PluginRuntime } from "openclaw/plugin-sdk";
-
-let runtime: PluginRuntime | null = null;
-
-export function setBlueBubblesRuntime(next: PluginRuntime): void {
-  runtime = next;
-}
-
-export function getBlueBubblesRuntime(): PluginRuntime {
-  if (!runtime) {
-    throw new Error("BlueBubbles runtime not initialized");
-  }
-  return runtime;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b5e1671da1a1c64501f058b4bbd18a513b227bfaa5b9456f6e6ec234414e6946
+size 349

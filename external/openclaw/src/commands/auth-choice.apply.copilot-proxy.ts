@@ -1,14 +1,3 @@
-import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from "./auth-choice.apply.js";
-import { applyAuthChoicePluginProvider } from "./auth-choice.apply.plugin-provider.js";
-
-export async function applyAuthChoiceCopilotProxy(
-  params: ApplyAuthChoiceParams,
-): Promise<ApplyAuthChoiceResult | null> {
-  return await applyAuthChoicePluginProvider(params, {
-    authChoice: "copilot-proxy",
-    pluginId: "copilot-proxy",
-    providerId: "copilot-proxy",
-    methodId: "local",
-    label: "Copilot Proxy",
-  });
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:d780d292a922642cbadfc3c4ef90dd48199df2aeaeb7ff5ed3109ee39614abba
+size 519

@@ -1,12 +1,3 @@
-export function isAbortError(err: unknown): boolean {
-  if (!err || typeof err !== "object") {
-    return false;
-  }
-  const name = "name" in err ? String(err.name) : "";
-  if (name === "AbortError") {
-    return true;
-  }
-  const message =
-    "message" in err && typeof err.message === "string" ? err.message.toLowerCase() : "";
-  return message.includes("aborted");
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:540fdd3bff27843500f4ba8b0d76d39dbd4423857c88bd655f42c45aae1b2962
+size 371

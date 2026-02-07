@@ -1,20 +1,3 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
-import { twitchPlugin } from "./src/plugin.js";
-import { setTwitchRuntime } from "./src/runtime.js";
-
-export { monitorTwitchProvider } from "./src/monitor.js";
-
-const plugin = {
-  id: "twitch",
-  name: "Twitch",
-  description: "Twitch channel plugin",
-  configSchema: emptyPluginConfigSchema(),
-  register(api: OpenClawPluginApi) {
-    setTwitchRuntime(api.runtime);
-    // oxlint-disable-next-line typescript/no-explicit-any
-    api.registerChannel({ plugin: twitchPlugin as any });
-  },
-};
-
-export default plugin;
+version https://git-lfs.github.com/spec/v1
+oid sha256:a3a0a012d054321a8191cb4e1ce31f7675872e481f34ccdd12f88a7a1913a3fe
+size 641

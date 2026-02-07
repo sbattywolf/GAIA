@@ -1,8 +1,3 @@
-{
-  "epic": "EPC_Telegram",
-  "feature_id": "F-permanent-failed-ui",
-  "feature_name": "Permanent-failed UI & requeue",
-  "story_key": "stoy_auto",
-  "agent": "assistant",
-  "tasks": []
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:a5b2a7b374f545f08788382bddf72a60980244bd382839f96ed0385491e9b02f
+size 188

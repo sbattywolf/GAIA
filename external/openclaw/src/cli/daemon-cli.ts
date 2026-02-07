@@ -1,14 +1,3 @@
-export { registerDaemonCli } from "./daemon-cli/register.js";
-export {
-  runDaemonInstall,
-  runDaemonRestart,
-  runDaemonStart,
-  runDaemonStatus,
-  runDaemonStop,
-  runDaemonUninstall,
-} from "./daemon-cli/runners.js";
-export type {
-  DaemonInstallOptions,
-  DaemonStatusOptions,
-  GatewayRpcOpts,
-} from "./daemon-cli/types.js";
+version https://git-lfs.github.com/spec/v1
+oid sha256:7529669f79f75c4945d50d9fce54b410a99ef7552db6c9bcb334d45220a22417
+size 332

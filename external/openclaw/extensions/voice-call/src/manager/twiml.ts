@@ -1,9 +1,3 @@
-import { escapeXml } from "../voice-mapping.js";
-
-export function generateNotifyTwiml(message: string, voice: string): string {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<Response>
-  <Say voice="${voice}">${escapeXml(message)}</Say>
-  <Hangup/>
-</Response>`;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:2591e14047ee25656826cd19e222e463315da0e545021512d42c5fa5f06f6cd5
+size 268

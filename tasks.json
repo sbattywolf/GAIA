@@ -1,8 +1,3 @@
-[
-  {
-    "id": "task-smoke",
-    "action": "noop",
-    "requires_approval": true,
-    "status": "done"
-  }
-]
+version https://git-lfs.github.com/spec/v1
+oid sha256:5a71b9ac41c54f34adab16603f394642aae189fdf103a2e04fff512c8cf45c9f
+size 109

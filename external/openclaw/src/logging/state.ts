@@ -1,17 +1,3 @@
-export const loggingState = {
-  cachedLogger: null as unknown,
-  cachedSettings: null as unknown,
-  cachedConsoleSettings: null as unknown,
-  overrideSettings: null as unknown,
-  consolePatched: false,
-  forceConsoleToStderr: false,
-  consoleTimestampPrefix: false,
-  consoleSubsystemFilter: null as string[] | null,
-  resolvingConsoleSettings: false,
-  rawConsole: null as {
-    log: typeof console.log;
-    info: typeof console.info;
-    warn: typeof console.warn;
-    error: typeof console.error;
-  } | null,
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:7a5a9933186308399054d5fd828a54ccaded50fd4aa7e0ff4d5d45c034cda121
+size 515

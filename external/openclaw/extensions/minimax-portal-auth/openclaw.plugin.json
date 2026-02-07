@@ -1,9 +1,3 @@
-{
-  "id": "minimax-portal-auth",
-  "providers": ["minimax-portal"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:309ca572ea226eb153975c6d4afd9b4284231e70ffda2ad736c83d38884e6a59
+size 172

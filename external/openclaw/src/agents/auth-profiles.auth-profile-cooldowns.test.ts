@@ -1,12 +1,3 @@
-import { describe, expect, it } from "vitest";
-import { calculateAuthProfileCooldownMs } from "./auth-profiles.js";
-
-describe("auth profile cooldowns", () => {
-  it("applies exponential backoff with a 1h cap", () => {
-    expect(calculateAuthProfileCooldownMs(1)).toBe(60_000);
-    expect(calculateAuthProfileCooldownMs(2)).toBe(5 * 60_000);
-    expect(calculateAuthProfileCooldownMs(3)).toBe(25 * 60_000);
-    expect(calculateAuthProfileCooldownMs(4)).toBe(60 * 60_000);
-    expect(calculateAuthProfileCooldownMs(5)).toBe(60 * 60_000);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:ac650bc57fe89cc396d4d081eef9de1ba32052a5dbac5ba01f4c641024b53008
+size 547

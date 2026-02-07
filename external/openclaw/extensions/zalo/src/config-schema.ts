@@ -1,24 +1,3 @@
-import { MarkdownConfigSchema } from "openclaw/plugin-sdk";
-import { z } from "zod";
-
-const allowFromEntry = z.union([z.string(), z.number()]);
-
-const zaloAccountSchema = z.object({
-  name: z.string().optional(),
-  enabled: z.boolean().optional(),
-  markdown: MarkdownConfigSchema,
-  botToken: z.string().optional(),
-  tokenFile: z.string().optional(),
-  webhookUrl: z.string().optional(),
-  webhookSecret: z.string().optional(),
-  webhookPath: z.string().optional(),
-  dmPolicy: z.enum(["pairing", "allowlist", "open", "disabled"]).optional(),
-  allowFrom: z.array(allowFromEntry).optional(),
-  mediaMaxMb: z.number().optional(),
-  proxy: z.string().optional(),
-});
-
-export const ZaloConfigSchema = zaloAccountSchema.extend({
-  accounts: z.object({}).catchall(zaloAccountSchema).optional(),
-  defaultAccount: z.string().optional(),
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:3d003057ad61ab734025bf71ee75db7fe8f9bf05799a3f72d6c6fe19a70538f2
+size 837

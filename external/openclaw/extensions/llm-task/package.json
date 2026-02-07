@@ -1,14 +1,3 @@
-{
-  "name": "@openclaw/llm-task",
-  "version": "2026.2.1",
-  "description": "OpenClaw JSON-only LLM task plugin",
-  "type": "module",
-  "devDependencies": {
-    "openclaw": "workspace:*"
-  },
-  "openclaw": {
-    "extensions": [
-      "./index.ts"
-    ]
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ec7bbadc80a7ca6c5ff481789a726e08f5661aba57e6b753a7a89b260294b542
+size 259

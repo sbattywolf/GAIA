@@ -1,13 +1,3 @@
-import { describe, expect, it } from "vitest";
-import { parseImageSizeError } from "./pi-embedded-helpers.js";
-
-describe("parseImageSizeError", () => {
-  it("parses max MB values from error text", () => {
-    expect(parseImageSizeError("image exceeds 5 MB maximum")?.maxMb).toBe(5);
-    expect(parseImageSizeError("Image exceeds 5.5 MB limit")?.maxMb).toBe(5.5);
-  });
-
-  it("returns null for unrelated errors", () => {
-    expect(parseImageSizeError("context overflow")).toBeNull();
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:789e21548b51dd1a9e07f93442c4682f47de20f5ddc0c4c66a19859ba0d2614c
+size 494

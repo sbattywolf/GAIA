@@ -1,21 +1,3 @@
-import type WebSocket from "ws";
-import { Buffer } from "node:buffer";
-
-export function rawDataToString(
-  data: WebSocket.RawData,
-  encoding: BufferEncoding = "utf8",
-): string {
-  if (typeof data === "string") {
-    return data;
-  }
-  if (Buffer.isBuffer(data)) {
-    return data.toString(encoding);
-  }
-  if (Array.isArray(data)) {
-    return Buffer.concat(data).toString(encoding);
-  }
-  if (data instanceof ArrayBuffer) {
-    return Buffer.from(data).toString(encoding);
-  }
-  return Buffer.from(String(data)).toString(encoding);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:d2487abf8d34e93aedf0770d205bce587a22c4623585eff9afe4c94f5c1c706b
+size 538

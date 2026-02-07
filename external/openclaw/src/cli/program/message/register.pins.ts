@@ -1,35 +1,3 @@
-import type { Command } from "commander";
-import type { MessageCliHelpers } from "./helpers.js";
-
-export function registerMessagePinCommands(message: Command, helpers: MessageCliHelpers) {
-  const pins = [
-    helpers
-      .withMessageBase(
-        helpers.withRequiredMessageTarget(message.command("pin").description("Pin a message")),
-      )
-      .requiredOption("--message-id <id>", "Message id")
-      .action(async (opts) => {
-        await helpers.runMessageAction("pin", opts);
-      }),
-    helpers
-      .withMessageBase(
-        helpers.withRequiredMessageTarget(message.command("unpin").description("Unpin a message")),
-      )
-      .requiredOption("--message-id <id>", "Message id")
-      .action(async (opts) => {
-        await helpers.runMessageAction("unpin", opts);
-      }),
-    helpers
-      .withMessageBase(
-        helpers.withRequiredMessageTarget(
-          message.command("pins").description("List pinned messages"),
-        ),
-      )
-      .option("--limit <n>", "Result limit")
-      .action(async (opts) => {
-        await helpers.runMessageAction("list-pins", opts);
-      }),
-  ] as const;
-
-  void pins;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:15d8e10ff8fe750f508dbd1b4954f6c46fb70c8017d0b25398e59dcbf60d069d
+size 1141

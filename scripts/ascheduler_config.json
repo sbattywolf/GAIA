@@ -1,10 +1,3 @@
-{
-  "tasks": [
-    {
-      "name": "notify.telegram.summary",
-      "interval_minutes": 30,
-      "command": ["python", "scripts/telegram_summary.py"],
-      "env": { "GAIA_PROTOTYPE_USE_LOCAL_EVENTS": "1" }
-    }
-  ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:731e037dfdd77b0a5dfa2ae453bb2b4f2797549d11771a91ad72b82afe8b198a
+size 220

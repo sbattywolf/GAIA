@@ -1,14 +1,3 @@
-import type { PluginRuntime } from "openclaw/plugin-sdk";
-
-let runtime: PluginRuntime | null = null;
-
-export function setTwitchRuntime(next: PluginRuntime) {
-  runtime = next;
-}
-
-export function getTwitchRuntime(): PluginRuntime {
-  if (!runtime) {
-    throw new Error("Twitch runtime not initialized");
-  }
-  return runtime;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:8b76fd8f5846e4c5e79e998285c4b40551c6fb4f774635c47acbd7f42ce97d1c
+size 328

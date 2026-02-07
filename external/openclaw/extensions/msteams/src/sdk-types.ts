@@ -1,19 +1,3 @@
-import type { TurnContext } from "@microsoft/agents-hosting";
-
-/**
- * Minimal public surface we depend on from the Microsoft SDK types.
- *
- * Note: we intentionally avoid coupling to SDK classes with private members
- * (like TurnContext) in our own public signatures. The SDK's TS surface is also
- * stricter than what the runtime accepts (e.g. it allows plain activity-like
- * objects), so we model the minimal structural shape we rely on.
- */
-export type MSTeamsActivity = TurnContext["activity"];
-
-export type MSTeamsTurnContext = {
-  activity: MSTeamsActivity;
-  sendActivity: (textOrActivity: string | object) => Promise<unknown>;
-  sendActivities: (
-    activities: Array<{ type: string } & Record<string, unknown>>,
-  ) => Promise<unknown>;
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:ec97a84f2ce4de034551ec68f35f79f180ceda1f52e10b2739e348c2ac56bc55
+size 751

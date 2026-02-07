@@ -1,23 +1,3 @@
-import type { FinalizedMsgContext } from "../../../auto-reply/templating.js";
-import type { ResolvedAgentRoute } from "../../../routing/resolve-route.js";
-import type { ResolvedSlackAccount } from "../../accounts.js";
-import type { SlackMessageEvent } from "../../types.js";
-import type { SlackChannelConfigResolved } from "../channel-config.js";
-import type { SlackMonitorContext } from "../context.js";
-
-export type PreparedSlackMessage = {
-  ctx: SlackMonitorContext;
-  account: ResolvedSlackAccount;
-  message: SlackMessageEvent;
-  route: ResolvedAgentRoute;
-  channelConfig: SlackChannelConfigResolved | null;
-  replyTarget: string;
-  ctxPayload: FinalizedMsgContext;
-  isDirectMessage: boolean;
-  isRoomish: boolean;
-  historyKey: string;
-  preview: string;
-  ackReactionMessageTs?: string;
-  ackReactionValue: string;
-  ackReactionPromise: Promise<boolean> | null;
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:bc3ccaffb942e3acabf771baa024fefe14434cf38bf51544945d3c425c7b8e5a
+size 875

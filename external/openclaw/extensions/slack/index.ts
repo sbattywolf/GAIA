@@ -1,17 +1,3 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
-import { slackPlugin } from "./src/channel.js";
-import { setSlackRuntime } from "./src/runtime.js";
-
-const plugin = {
-  id: "slack",
-  name: "Slack",
-  description: "Slack channel plugin",
-  configSchema: emptyPluginConfigSchema(),
-  register(api: OpenClawPluginApi) {
-    setSlackRuntime(api.runtime);
-    api.registerChannel({ plugin: slackPlugin });
-  },
-};
-
-export default plugin;
+version https://git-lfs.github.com/spec/v1
+oid sha256:1a4ec7efd889c5006f94ee4ef3fede258e8f9da0305d71728f0316dd875132f0
+size 510

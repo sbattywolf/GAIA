@@ -1,11 +1,3 @@
-import { API_CONSTANTS } from "grammy";
-
-type TelegramUpdateType = (typeof API_CONSTANTS.ALL_UPDATE_TYPES)[number];
-
-export function resolveTelegramAllowedUpdates(): ReadonlyArray<TelegramUpdateType> {
-  const updates = [...API_CONSTANTS.DEFAULT_UPDATE_TYPES] as TelegramUpdateType[];
-  if (!updates.includes("message_reaction")) {
-    updates.push("message_reaction");
-  }
-  return updates;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:4b57daf51e2bf19e10a8e625bcde78ad74073156b41b5a63147d091ffa1c4c9e
+size 394

@@ -1,9 +1,3 @@
-{
-  "id": "whatsapp",
-  "channels": ["whatsapp"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:061d1648c1d0aca3533a0c45354175c7aa18da13577f90762e0993a567373cd9
+size 154

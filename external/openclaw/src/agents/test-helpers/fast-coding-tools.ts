@@ -1,22 +1,3 @@
-import { vi } from "vitest";
-
-const stubTool = (name: string) => ({
-  name,
-  description: `${name} stub`,
-  parameters: { type: "object", properties: {} },
-  execute: vi.fn(),
-});
-
-vi.mock("../tools/image-tool.js", () => ({
-  createImageTool: () => stubTool("image"),
-}));
-
-vi.mock("../tools/web-tools.js", () => ({
-  createWebSearchTool: () => null,
-  createWebFetchTool: () => null,
-}));
-
-vi.mock("../../plugins/tools.js", () => ({
-  resolvePluginTools: () => [],
-  getPluginToolMeta: () => undefined,
-}));
+version https://git-lfs.github.com/spec/v1
+oid sha256:792a99d71f96c6b10f4844a087c72ec41beb4729c5ad2c6fc6cdf470a8c00240
+size 510

@@ -1,9 +1,3 @@
-import { LEGACY_CONFIG_MIGRATIONS_PART_1 } from "./legacy.migrations.part-1.js";
-import { LEGACY_CONFIG_MIGRATIONS_PART_2 } from "./legacy.migrations.part-2.js";
-import { LEGACY_CONFIG_MIGRATIONS_PART_3 } from "./legacy.migrations.part-3.js";
-
-export const LEGACY_CONFIG_MIGRATIONS = [
-  ...LEGACY_CONFIG_MIGRATIONS_PART_1,
-  ...LEGACY_CONFIG_MIGRATIONS_PART_2,
-  ...LEGACY_CONFIG_MIGRATIONS_PART_3,
-];
+version https://git-lfs.github.com/spec/v1
+oid sha256:b5bf2f81c4efce89fda61da134ad34957a4dd1cfeaa360bb952f7c08b5029f06
+size 403

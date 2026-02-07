@@ -1,8 +1,3 @@
-import type { ErrorShape } from "./protocol/index.js";
-
-export type DedupeEntry = {
-  ts: number;
-  ok: boolean;
-  payload?: unknown;
-  error?: ErrorShape;
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:3663d93cccfde35949b515ea5fe79bb55ed0b53518026c7e4e610c9c76cdd919
+size 159

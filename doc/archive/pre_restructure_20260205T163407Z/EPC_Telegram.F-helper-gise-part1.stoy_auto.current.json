@@ -1,8 +1,3 @@
-{
-  "epic": "EPC_Telegram",
-  "feature_id": "F-helper-gise-part1",
-  "feature_name": "Helper Gise — Foundation",
-  "story_key": "stoy_auto",
-  "agent": "assistant",
-  "tasks": []
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:4ba0cd563b5c685877592139e2e419efa1b04b57d3d17567104b0bc49c606fce
+size 183

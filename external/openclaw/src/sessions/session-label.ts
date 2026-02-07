@@ -1,20 +1,3 @@
-export const SESSION_LABEL_MAX_LENGTH = 64;
-
-export type ParsedSessionLabel = { ok: true; label: string } | { ok: false; error: string };
-
-export function parseSessionLabel(raw: unknown): ParsedSessionLabel {
-  if (typeof raw !== "string") {
-    return { ok: false, error: "invalid label: must be a string" };
-  }
-  const trimmed = raw.trim();
-  if (!trimmed) {
-    return { ok: false, error: "invalid label: empty" };
-  }
-  if (trimmed.length > SESSION_LABEL_MAX_LENGTH) {
-    return {
-      ok: false,
-      error: `invalid label: too long (max ${SESSION_LABEL_MAX_LENGTH})`,
-    };
-  }
-  return { ok: true, label: trimmed };
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:8742e40cc511072fa130f8b00343c4dd43c888b50f7fd2f0ae31928b702568bb
+size 630

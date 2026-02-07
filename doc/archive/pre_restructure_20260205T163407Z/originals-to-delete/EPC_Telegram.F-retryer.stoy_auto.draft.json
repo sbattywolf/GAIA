@@ -1,9 +1,3 @@
-{
-  "epic": "EPC_Telegram",
-  "feature_id": "F-retryer",
-  "feature_name": "Retryer error classification",
-  "story_key": "stoy_auto",
-  "agent": "assistant",
-  "tasks": [],
-  "impediments": []
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:59b428ac5455afba664a7509caab3f994582c9bf1ad19ca21eb33a34d6103b53
+size 196

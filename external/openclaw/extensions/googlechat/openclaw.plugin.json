@@ -1,9 +1,3 @@
-{
-  "id": "googlechat",
-  "channels": ["googlechat"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:15df8f67b265072dcffc96ad350a6d0b476c35e5c17c342a92b4046ac311d437
+size 158

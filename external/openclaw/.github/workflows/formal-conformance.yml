@@ -15,6 +15,7 @@ jobs:
       - name: Checkout openclaw (PR)
         uses: actions/checkout@v4
         with:
+          lfs: false
           path: openclaw
 
       - name: Checkout formal models

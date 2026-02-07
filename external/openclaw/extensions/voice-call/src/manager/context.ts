@@ -1,21 +1,3 @@
-import type { VoiceCallConfig } from "../config.js";
-import type { VoiceCallProvider } from "../providers/base.js";
-import type { CallId, CallRecord } from "../types.js";
-
-export type TranscriptWaiter = {
-  resolve: (text: string) => void;
-  reject: (err: Error) => void;
-  timeout: NodeJS.Timeout;
-};
-
-export type CallManagerContext = {
-  activeCalls: Map<CallId, CallRecord>;
-  providerCallIdMap: Map<string, CallId>;
-  processedEventIds: Set<string>;
-  provider: VoiceCallProvider | null;
-  config: VoiceCallConfig;
-  storePath: string;
-  webhookUrl: string | null;
-  transcriptWaiters: Map<CallId, TranscriptWaiter>;
-  maxDurationTimers: Map<CallId, NodeJS.Timeout>;
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:06cadeee7f17f62f54fb2b1f9d2e0730ef01695e93ac75310a80493b447e67a2
+size 674

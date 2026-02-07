@@ -1,27 +1,3 @@
-import type { FindExtraGatewayServicesOptions } from "../../daemon/inspect.js";
-
-export type GatewayRpcOpts = {
-  url?: string;
-  token?: string;
-  password?: string;
-  timeout?: string;
-  json?: boolean;
-};
-
-export type DaemonStatusOptions = {
-  rpc: GatewayRpcOpts;
-  probe: boolean;
-  json: boolean;
-} & FindExtraGatewayServicesOptions;
-
-export type DaemonInstallOptions = {
-  port?: string | number;
-  runtime?: string;
-  token?: string;
-  force?: boolean;
-  json?: boolean;
-};
-
-export type DaemonLifecycleOptions = {
-  json?: boolean;
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:77deaad968915bc249c1ad7674b7b8c7f66dadc7571638b05f0364cb403a62b6
+size 543

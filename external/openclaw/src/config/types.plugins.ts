@@ -1,36 +1,3 @@
-export type PluginEntryConfig = {
-  enabled?: boolean;
-  config?: Record<string, unknown>;
-};
-
-export type PluginSlotsConfig = {
-  /** Select which plugin owns the memory slot ("none" disables memory plugins). */
-  memory?: string;
-};
-
-export type PluginsLoadConfig = {
-  /** Additional plugin/extension paths to load. */
-  paths?: string[];
-};
-
-export type PluginInstallRecord = {
-  source: "npm" | "archive" | "path";
-  spec?: string;
-  sourcePath?: string;
-  installPath?: string;
-  version?: string;
-  installedAt?: string;
-};
-
-export type PluginsConfig = {
-  /** Enable or disable plugin loading. */
-  enabled?: boolean;
-  /** Optional plugin allowlist (plugin ids). */
-  allow?: string[];
-  /** Optional plugin denylist (plugin ids). */
-  deny?: string[];
-  load?: PluginsLoadConfig;
-  slots?: PluginSlotsConfig;
-  entries?: Record<string, PluginEntryConfig>;
-  installs?: Record<string, PluginInstallRecord>;
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:65c573fc55850dc732a16ca3313f60abbc929cdd2d450aa316c08022c30dd8f8
+size 919

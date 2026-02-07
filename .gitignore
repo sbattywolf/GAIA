@@ -79,3 +79,6 @@ external/**/pnpm-lock.yaml
 .pytest_basetemp/
 .tmp/pytest*
 pytest_tmp/
+# Ignore temporary and test files
+.pytest_tmp/
+.tmp/

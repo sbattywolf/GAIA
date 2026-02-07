@@ -1,18 +1,3 @@
-import type { RuntimeEnv } from "../runtime.js";
-import { displayPath } from "../utils.js";
-import { CONFIG_PATH } from "./paths.js";
-
-type LogConfigUpdatedOptions = {
-  path?: string;
-  suffix?: string;
-};
-
-export function formatConfigPath(path: string = CONFIG_PATH): string {
-  return displayPath(path);
-}
-
-export function logConfigUpdated(runtime: RuntimeEnv, opts: LogConfigUpdatedOptions = {}): void {
-  const path = formatConfigPath(opts.path ?? CONFIG_PATH);
-  const suffix = opts.suffix ? ` ${opts.suffix}` : "";
-  runtime.log(`Updated ${path}${suffix}`);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:49f2e9161ddcfff9a7e11abc58a6825a83ce5c9aff1d70fe3186855817d660c2
+size 567

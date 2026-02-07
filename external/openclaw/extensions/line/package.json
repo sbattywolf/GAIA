@@ -1,29 +1,3 @@
-{
-  "name": "@openclaw/line",
-  "version": "2026.2.1",
-  "description": "OpenClaw LINE channel plugin",
-  "type": "module",
-  "devDependencies": {
-    "openclaw": "workspace:*"
-  },
-  "openclaw": {
-    "extensions": [
-      "./index.ts"
-    ],
-    "channel": {
-      "id": "line",
-      "label": "LINE",
-      "selectionLabel": "LINE (Messaging API)",
-      "docsPath": "/channels/line",
-      "docsLabel": "line",
-      "blurb": "LINE Messaging API bot for Japan/Taiwan/Thailand markets.",
-      "order": 75,
-      "quickstartAllowFrom": true
-    },
-    "install": {
-      "npmSpec": "@openclaw/line",
-      "localPath": "extensions/line",
-      "defaultChoice": "npm"
-    }
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e6c2692968bbfa152630a94719b2537166c25404ae28febd97e75f5689b8670d
+size 682

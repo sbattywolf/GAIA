@@ -1,30 +1,3 @@
-import { describe, expect, it, vi } from "vitest";
-
-describe("talk.voiceAliases", () => {
-  it("accepts a string map of voice aliases", async () => {
-    vi.resetModules();
-    const { validateConfigObject } = await import("./config.js");
-    const res = validateConfigObject({
-      talk: {
-        voiceAliases: {
-          Clawd: "EXAVITQu4vr4xnSDxMaL",
-          Roger: "CwhRBWXzGAHq8TQ4Fs17",
-        },
-      },
-    });
-    expect(res.ok).toBe(true);
-  });
-
-  it("rejects non-string voice alias values", async () => {
-    vi.resetModules();
-    const { validateConfigObject } = await import("./config.js");
-    const res = validateConfigObject({
-      talk: {
-        voiceAliases: {
-          Clawd: 123,
-        },
-      },
-    });
-    expect(res.ok).toBe(false);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:bef3270bb5874da8ea181c9c0c5583f0b2492cee671fbf01c071fcf1d5f08c51
+size 782

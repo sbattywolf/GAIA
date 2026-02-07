@@ -1,24 +1,3 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { MediaAttachmentCache } from "./attachments.js";
-
-const originalFetch = globalThis.fetch;
-
-describe("media understanding attachments SSRF", () => {
-  afterEach(() => {
-    globalThis.fetch = originalFetch;
-    vi.restoreAllMocks();
-  });
-
-  it("blocks private IP URLs before fetching", async () => {
-    const fetchSpy = vi.fn();
-    globalThis.fetch = fetchSpy as typeof fetch;
-
-    const cache = new MediaAttachmentCache([{ index: 0, url: "http://127.0.0.1/secret.jpg" }]);
-
-    await expect(
-      cache.getBuffer({ attachmentIndex: 0, maxBytes: 1024, timeoutMs: 1000 }),
-    ).rejects.toThrow(/private|internal|blocked/i);
-
-    expect(fetchSpy).not.toHaveBeenCalled();
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:9e3a77325e94274367d272b4ee0838df7ffc28b01cafbba145f77a8d504494e1
+size 753

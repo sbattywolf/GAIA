@@ -1,22 +1,3 @@
-import type { CronServiceState } from "./state.js";
-
-const storeLocks = new Map<string, Promise<void>>();
-
-const resolveChain = (promise: Promise<unknown>) =>
-  promise.then(
-    () => undefined,
-    () => undefined,
-  );
-
-export async function locked<T>(state: CronServiceState, fn: () => Promise<T>): Promise<T> {
-  const storePath = state.deps.storePath;
-  const storeOp = storeLocks.get(storePath) ?? Promise.resolve();
-  const next = Promise.all([resolveChain(state.op), resolveChain(storeOp)]).then(fn);
-
-  // Keep the chain alive even when the operation fails.
-  const keepAlive = resolveChain(next);
-  state.op = keepAlive;
-  storeLocks.set(storePath, keepAlive);
-
-  return (await next) as T;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0dcbbcbf8ece48486fa97123b3a437ba76930f05ecbb1f40b2c4dc9282037e96
+size 703

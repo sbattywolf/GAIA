@@ -1,9 +1,3 @@
-{
-  "id": "mattermost",
-  "channels": ["mattermost"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b7eed0096768b874d3ec505ffb02d35a2635e89b4c7e465022c924e570065133
+size 158

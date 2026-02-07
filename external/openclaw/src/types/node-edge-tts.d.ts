@@ -1,18 +1,3 @@
-declare module "node-edge-tts" {
-  export type EdgeTTSOptions = {
-    voice?: string;
-    lang?: string;
-    outputFormat?: string;
-    saveSubtitles?: boolean;
-    proxy?: string;
-    rate?: string;
-    pitch?: string;
-    volume?: string;
-    timeout?: number;
-  };
-
-  export class EdgeTTS {
-    constructor(options?: EdgeTTSOptions);
-    ttsPromise(text: string, outputPath: string): Promise<void>;
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:a424868f6efe96cb6bd65b61b99782dbd62186daae69f3abaff29f64acc8a0a9
+size 408

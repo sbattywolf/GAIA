@@ -1,36 +1,3 @@
-import { ConsoleLogger, LogService } from "@vector-im/matrix-bot-sdk";
-
-let matrixSdkLoggingConfigured = false;
-const matrixSdkBaseLogger = new ConsoleLogger();
-
-function shouldSuppressMatrixHttpNotFound(module: string, messageOrObject: unknown[]): boolean {
-  if (module !== "MatrixHttpClient") {
-    return false;
-  }
-  return messageOrObject.some((entry) => {
-    if (!entry || typeof entry !== "object") {
-      return false;
-    }
-    return (entry as { errcode?: string }).errcode === "M_NOT_FOUND";
-  });
-}
-
-export function ensureMatrixSdkLoggingConfigured(): void {
-  if (matrixSdkLoggingConfigured) {
-    return;
-  }
-  matrixSdkLoggingConfigured = true;
-
-  LogService.setLogger({
-    trace: (module, ...messageOrObject) => matrixSdkBaseLogger.trace(module, ...messageOrObject),
-    debug: (module, ...messageOrObject) => matrixSdkBaseLogger.debug(module, ...messageOrObject),
-    info: (module, ...messageOrObject) => matrixSdkBaseLogger.info(module, ...messageOrObject),
-    warn: (module, ...messageOrObject) => matrixSdkBaseLogger.warn(module, ...messageOrObject),
-    error: (module, ...messageOrObject) => {
-      if (shouldSuppressMatrixHttpNotFound(module, messageOrObject)) {
-        return;
-      }
-      matrixSdkBaseLogger.error(module, ...messageOrObject);
-    },
-  });
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:53671d350c9b919e242d66effbb7415dcf301fef777c5ac8b5a55a2425bb89e6
+size 1293

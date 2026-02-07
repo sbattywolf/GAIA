@@ -1,17 +1,3 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
-import { telegramPlugin } from "./src/channel.js";
-import { setTelegramRuntime } from "./src/runtime.js";
-
-const plugin = {
-  id: "telegram",
-  name: "Telegram",
-  description: "Telegram channel plugin",
-  configSchema: emptyPluginConfigSchema(),
-  register(api: OpenClawPluginApi) {
-    setTelegramRuntime(api.runtime);
-    api.registerChannel({ plugin: telegramPlugin });
-  },
-};
-
-export default plugin;
+version https://git-lfs.github.com/spec/v1
+oid sha256:513031b00f3bc3b12315f51d34e201de9776b3cce0ea9b06aea149be30539b60
+size 531

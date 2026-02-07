@@ -1,14 +1,3 @@
-import type { GatewayTlsConfig } from "../../config/types.gateway.js";
-import {
-  type GatewayTlsRuntime,
-  loadGatewayTlsRuntime as loadGatewayTlsRuntimeConfig,
-} from "../../infra/tls/gateway.js";
-
-export type { GatewayTlsRuntime } from "../../infra/tls/gateway.js";
-
-export async function loadGatewayTlsRuntime(
-  cfg: GatewayTlsConfig | undefined,
-  log?: { info?: (msg: string) => void; warn?: (msg: string) => void },
-): Promise<GatewayTlsRuntime> {
-  return await loadGatewayTlsRuntimeConfig(cfg, log);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:630b511fcf250715c9ace9326b0dbbaf3c41b5f1f1895f5fa21bf240fa773e2a
+size 512

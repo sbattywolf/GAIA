@@ -1,8 +1,3 @@
-{
-  "epic": "EPC_Telegram",
-  "feature_id": "F-security-token",
-  "feature_name": "Security & token rotation",
-  "story_key": "stoy_auto",
-  "agent": "assistant",
-  "tasks": []
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6c9334bb4538e034da5de5549bcb6f8da9e5e45ef323674961b7bc84c779f5db
+size 179

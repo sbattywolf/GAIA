@@ -1,26 +1,3 @@
-import { parseSlackTarget } from "../../../slack/targets.js";
-
-export function normalizeSlackMessagingTarget(raw: string): string | undefined {
-  const target = parseSlackTarget(raw, { defaultKind: "channel" });
-  return target?.normalized;
-}
-
-export function looksLikeSlackTargetId(raw: string): boolean {
-  const trimmed = raw.trim();
-  if (!trimmed) {
-    return false;
-  }
-  if (/^<@([A-Z0-9]+)>$/i.test(trimmed)) {
-    return true;
-  }
-  if (/^(user|channel):/i.test(trimmed)) {
-    return true;
-  }
-  if (/^slack:/i.test(trimmed)) {
-    return true;
-  }
-  if (/^[@#]/.test(trimmed)) {
-    return true;
-  }
-  return /^[CUWGD][A-Z0-9]{8,}$/i.test(trimmed);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:a1626244e0fa586eb21a935d73fb69db473425c7f987c49a50cb2387e68b62ef
+size 663

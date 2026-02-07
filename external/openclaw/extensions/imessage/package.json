@@ -1,14 +1,3 @@
-{
-  "name": "@openclaw/imessage",
-  "version": "2026.2.1",
-  "description": "OpenClaw iMessage channel plugin",
-  "type": "module",
-  "devDependencies": {
-    "openclaw": "workspace:*"
-  },
-  "openclaw": {
-    "extensions": [
-      "./index.ts"
-    ]
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:83405fcb56a8a2e3553e4fdcd29bb16e3c1bdddd841822cc09d25aaf1457f813
+size 257

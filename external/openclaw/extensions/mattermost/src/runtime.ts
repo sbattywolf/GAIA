@@ -1,14 +1,3 @@
-import type { PluginRuntime } from "openclaw/plugin-sdk";
-
-let runtime: PluginRuntime | null = null;
-
-export function setMattermostRuntime(next: PluginRuntime) {
-  runtime = next;
-}
-
-export function getMattermostRuntime(): PluginRuntime {
-  if (!runtime) {
-    throw new Error("Mattermost runtime not initialized");
-  }
-  return runtime;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:2a3a313e37d5ba0e967f48f279af4682aa0ccb1477b2eadc746b1af30d9838ef
+size 340

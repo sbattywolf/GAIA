@@ -1,9 +1,3 @@
-{
-  "id": "zalouser",
-  "channels": ["zalouser"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0d17e9d90297b4103288dbbb60fb6291204d9acf88e1c3e80109ea12823ff85a
+size 154

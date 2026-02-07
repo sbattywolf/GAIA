@@ -1,14 +1,3 @@
-import type { NodeRegistry } from "./node-registry.js";
-
-const isMobilePlatform = (platform: unknown): boolean => {
-  const p = typeof platform === "string" ? platform.trim().toLowerCase() : "";
-  if (!p) {
-    return false;
-  }
-  return p.startsWith("ios") || p.startsWith("ipados") || p.startsWith("android");
-};
-
-export function hasConnectedMobileNode(registry: NodeRegistry): boolean {
-  const connected = registry.listConnected();
-  return connected.some((n) => isMobilePlatform(n.platform));
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:5c7345057aca3e0e13ab7686bf9d600c292ce7a60b88fee45c3e5846bd29db92
+size 500

@@ -1,14 +1,3 @@
-import type { ApplyAuthChoiceParams, ApplyAuthChoiceResult } from "./auth-choice.apply.js";
-import { applyAuthChoicePluginProvider } from "./auth-choice.apply.plugin-provider.js";
-
-export async function applyAuthChoiceGoogleAntigravity(
-  params: ApplyAuthChoiceParams,
-): Promise<ApplyAuthChoiceResult | null> {
-  return await applyAuthChoicePluginProvider(params, {
-    authChoice: "google-antigravity",
-    pluginId: "google-antigravity-auth",
-    providerId: "google-antigravity",
-    methodId: "oauth",
-    label: "Google Antigravity",
-  });
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:2833702e46f7e89a262fdd1531784a449376e88d3654113c0407ef06aea6ab4a
+size 549

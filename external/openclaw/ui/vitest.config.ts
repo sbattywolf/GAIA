@@ -1,15 +1,3 @@
-import { playwright } from "@vitest/browser-playwright";
-import { defineConfig } from "vitest/config";
-
-export default defineConfig({
-  test: {
-    include: ["src/**/*.test.ts"],
-    browser: {
-      enabled: true,
-      provider: playwright(),
-      instances: [{ browser: "chromium", name: "chromium" }],
-      headless: true,
-      ui: false,
-    },
-  },
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:d4fabe2c326cb5dcdc5f4a7a49a036ea21b7bfac829ded785976c05be843d668
+size 362

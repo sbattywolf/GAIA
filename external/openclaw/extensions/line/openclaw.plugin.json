@@ -1,9 +1,3 @@
-{
-  "id": "line",
-  "channels": ["line"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:5a6e8fe8b48685fd14d907c67efcf2c384c88419ef6e8ff304796e3657c2caca
+size 146

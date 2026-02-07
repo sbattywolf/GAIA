@@ -1,9 +1,3 @@
-{
-  "id": "telegram",
-  "channels": ["telegram"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:2c54840f2a2c0cec516ed7f737be918d9e793f240215b29ac2689c29a3b7e9be
+size 154

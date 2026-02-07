@@ -1,25 +1,3 @@
-import path from "node:path";
-import { getMSTeamsRuntime } from "./runtime.js";
-
-export type MSTeamsStorePathOptions = {
-  env?: NodeJS.ProcessEnv;
-  homedir?: () => string;
-  stateDir?: string;
-  storePath?: string;
-  filename: string;
-};
-
-export function resolveMSTeamsStorePath(params: MSTeamsStorePathOptions): string {
-  if (params.storePath) {
-    return params.storePath;
-  }
-  if (params.stateDir) {
-    return path.join(params.stateDir, params.filename);
-  }
-
-  const env = params.env ?? process.env;
-  const stateDir = params.homedir
-    ? getMSTeamsRuntime().state.resolveStateDir(env, params.homedir)
-    : getMSTeamsRuntime().state.resolveStateDir(env);
-  return path.join(stateDir, params.filename);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b4ff82c7545043dbba4d82972bb475fbff6fcf0a9a4f145073846d5f66c438eb
+size 716
