@@ -76,4 +76,6 @@ jobs:
         run: |
           # ensure repo path is available to python via .pth in the user site-packages (cross-platform)
           python .github/scripts/write_pth.py
+          # ensure pytest basetemp directory exists (cross-platform)
+          python -c "import os; os.makedirs('.tmp/pytest', exist_ok=True)"
           python -m pytest -q --basetemp .tmp/pytest
