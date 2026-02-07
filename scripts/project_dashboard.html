@@ -31,7 +31,10 @@
             margin-bottom: 30px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+<<<<<<< HEAD
             position: relative;
+=======
+>>>>>>> f9cfb76b837e2e31b0c3e4f6dc4d476459fc8b2f
         }
 
         header h1 {
@@ -44,6 +47,7 @@
             font-size: 1.1em;
         }
 
+<<<<<<< HEAD
         .header-actions {
             position: absolute;
             top: 30px;
@@ -118,6 +122,8 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+=======
+>>>>>>> f9cfb76b837e2e31b0c3e4f6dc4d476459fc8b2f
         .nav-tabs {
             display: flex;
             gap: 10px;
@@ -414,6 +420,7 @@
         <header>
             <h1>🚀 GAIA Project Dashboard</h1>
             <p>Agent-First Backlog Orchestrator - Real-time Project Insights</p>
+<<<<<<< HEAD
             <div class="header-actions">
                 <button class="refresh-btn" onclick="refreshArchive()" id="refresh-btn">
                     <span class="icon">🔄</span>
@@ -424,6 +431,10 @@
 
         <div id="status-message" class="status-message"></div>
 
+=======
+        </header>
+
+>>>>>>> f9cfb76b837e2e31b0c3e4f6dc4d476459fc8b2f
         <div class="nav-tabs">
             <button class="nav-tab active" onclick="switchView('overview')">📊 Overview</button>
             <button class="nav-tab" onclick="switchView('tasks')">📋 Tasks</button>
@@ -560,12 +571,22 @@
         // Load data
         async function loadData() {
             try {
+<<<<<<< HEAD
                 // Load tasks from API
                 const response = await fetch('/api/tasks');
                 allTasks = await response.json();
                 
                 // Load agents from API
                 const agentsResponse = await fetch('/api/agents');
+=======
+                // Load tasks from NDJSON
+                const response = await fetch('../doc/todo-archive.ndjson');
+                const text = await response.text();
+                allTasks = text.trim().split('\n').map(line => JSON.parse(line));
+                
+                // Load agents
+                const agentsResponse = await fetch('../agents.json');
+>>>>>>> f9cfb76b837e2e31b0c3e4f6dc4d476459fc8b2f
                 agents = await agentsResponse.json();
 
                 updateDashboard();
@@ -724,6 +745,7 @@
             document.querySelector('.container').insertBefore(error, document.querySelector('.nav-tabs'));
         }
 
+<<<<<<< HEAD
         function showStatusMessage(message, isSuccess = true) {
             const statusEl = document.getElementById('status-message');
             statusEl.className = `status-message ${isSuccess ? 'success' : 'error'} show`;
@@ -778,6 +800,8 @@
             }
         }
 
+=======
+>>>>>>> f9cfb76b837e2e31b0c3e4f6dc4d476459fc8b2f
         // Auto-refresh every 30 seconds
         setInterval(loadData, 30000);
 
