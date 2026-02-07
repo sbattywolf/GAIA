@@ -9,11 +9,12 @@ import json
 import os
 import sys
 import tempfile
+import getpass
 from datetime import datetime
 import uuid
 
 ROOT = os.path.dirname(os.path.dirname(__file__))
-ARCHIVE = os.path.join(ROOT, 'Gaia', 'doc', 'todo-archive.ndjson')
+ARCHIVE = os.path.join(ROOT, 'doc', 'todo-archive.ndjson')
 
 
 def ensure_dir(path):
@@ -34,7 +35,12 @@ def main():
     p.add_argument('--title', required=True)
     p.add_argument('--description', default='')
     p.add_argument('--priority', type=int, default=100)
-    p.add_argument('--added_by', default=os.getlogin() if hasattr(os, 'getlogin') else 'user')
+    # use getpass.getuser() which works in non-interactive CI environments
+    try:
+        default_user = getpass.getuser()
+    except Exception:
+        default_user = os.environ.get('USER') or os.environ.get('USERNAME') or 'user'
+    p.add_argument('--added_by', default=default_user)
     args = p.parse_args()
 
     rec = {

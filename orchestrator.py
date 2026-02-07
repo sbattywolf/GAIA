@@ -80,6 +80,7 @@ def init_db():
             cur.execute('ALTER TABLE queue ADD COLUMN last_reclaimed_at TEXT')
         except Exception:
             pass
+    conn.commit()
 
     # ensure migration: add `timestamp` and `actor` columns to `audit` if missing
     try:
