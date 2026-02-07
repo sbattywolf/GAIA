@@ -33,6 +33,33 @@ python scripts/launch_dashboard.py      # Auto-opens browser
 - [scripts/QUICKSTART.md](scripts/QUICKSTART.md) - 60-second quick start
 - [doc/DASHBOARD_README.md](doc/DASHBOARD_README.md) - Complete dashboard docs
 
+## 🔗 GitHub Projects Integration
+
+**GAIA integrates with GitHub Projects V2!** Automatically add issues to your project board.
+
+### Quick Setup (3 steps)
+1. Create a GitHub Project at https://github.com/users/YOUR_USERNAME/projects
+2. Add `PROJECT_V2_NUMBER` secret to repository settings
+3. Label issues with `sprint/*` to auto-add them to your project
+
+### Check Integration Status
+```bash
+python scripts/setup_github_projects.py check
+```
+
+### Sync Backlog to GitHub Issues
+```bash
+# Dry-run (safe preview)
+python agents/github_sessions_sync.py --dry-run
+
+# Live sync (requires AUTOMATION_GITHUB_TOKEN)
+export AUTOMATION_GITHUB_TOKEN="your_token_here"
+export AUTOMATION_GITHUB_REPOSITORY="owner/repo"
+python agents/github_sessions_sync.py
+```
+
+**Full Documentation:** [doc/GITHUB_PROJECTS_INTEGRATION.md](doc/GITHUB_PROJECTS_INTEGRATION.md)
+
 ---
 
 ## Requirements
