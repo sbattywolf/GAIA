@@ -9,7 +9,7 @@ The GAIA dashboard is a **local web application** that runs entirely on your com
 - ✅ Requires only Python (no external dependencies)
 - ✅ Reads data from local files in this repository
 - ✅ Starts a local web server on your machine
-- ✅ Opens in your web browser at `http://localhost:8080`
+- ✅ Opens in your web browser at `http://localhost:9080`
 
 **Important**: This dashboard shows data from the local `doc/todo-archive.ndjson` file in this repository, **NOT** from GitHub Projects API.
 
@@ -42,19 +42,19 @@ Replace `/path/to/GAIA` with wherever you cloned this repository.
 ### Step 3: Start the Dashboard
 
 ```bash
-python scripts/dashboard_server.py --port 8080
+python scripts/dashboard_server.py --port 9080
 ```
 
 or on some systems:
 
 ```bash
-python3 scripts/dashboard_server.py --port 8080
+python3 scripts/dashboard_server.py --port 9080
 ```
 
 You should see:
 ```
-🚀 GAIA Project Dashboard serving on http://127.0.0.1:8080
-   Access the dashboard at: http://127.0.0.1:8080/dashboard
+🚀 GAIA Project Dashboard serving on http://127.0.0.1:9080
+   Access the dashboard at: http://127.0.0.1:9080/dashboard
    Press CTRL+C to stop
 ```
 
@@ -62,12 +62,12 @@ You should see:
 
 Open any web browser and go to:
 ```
-http://localhost:8080/dashboard
+http://localhost:9080/dashboard
 ```
 
 or:
 ```
-http://127.0.0.1:8080/dashboard
+http://127.0.0.1:9080/dashboard
 ```
 
 That's it! You should see the dashboard.
@@ -89,12 +89,12 @@ That's it! You should see the dashboard.
 
 3. **Start Dashboard**
    ```cmd
-   python scripts\dashboard_server.py --port 8080
+   python scripts\dashboard_server.py --port 9080
    ```
 
 4. **Open Browser**
    - Open Chrome, Firefox, or Edge
-   - Go to: `http://localhost:8080/dashboard`
+   - Go to: `http://localhost:9080/dashboard`
 
 5. **Stop Dashboard**
    - Press `Ctrl+C` in the Command Prompt window
@@ -114,12 +114,12 @@ That's it! You should see the dashboard.
 
 3. **Start Dashboard**
    ```bash
-   python3 scripts/dashboard_server.py --port 8080
+   python3 scripts/dashboard_server.py --port 9080
    ```
 
 4. **Open Browser**
    - Open Safari, Chrome, or Firefox
-   - Go to: `http://localhost:8080/dashboard`
+   - Go to: `http://localhost:9080/dashboard`
 
 5. **Stop Dashboard**
    - Press `Ctrl+C` in the Terminal window
@@ -140,11 +140,11 @@ That's it! You should see the dashboard.
 
 3. **Start Dashboard**
    ```bash
-   python3 scripts/dashboard_server.py --port 8080
+   python3 scripts/dashboard_server.py --port 9080
    ```
 
 4. **Open Browser**
-   - Go to: `http://localhost:8080/dashboard`
+   - Go to: `http://localhost:9080/dashboard`
 
 5. **Stop Dashboard**
    - Press `Ctrl+C` in the terminal
@@ -182,7 +182,7 @@ If you want to see **YOUR** tasks in the dashboard:
 
 ### "Address already in use"
 
-**Problem**: Port 8080 is being used by another program.
+**Problem**: Port 9080 is being used by another program.
 
 **Solution**: Use a different port:
 ```bash
@@ -211,12 +211,12 @@ If `todo-archive.ndjson` is empty, you can add sample data:
 **Problem**: Wrong URL.
 
 **Solution**: Make sure you're using `/dashboard` at the end:
-- ✅ Correct: `http://localhost:8080/dashboard`
-- ❌ Wrong: `http://localhost:8080`
+- ✅ Correct: `http://localhost:9080/dashboard`
+- ❌ Wrong: `http://localhost:9080`
 
 ### "Permission Denied"
 
-**Problem**: Port 8080 requires admin access on some systems.
+**Problem**: Port 9080 requires admin access on some systems.
 
 **Solution**: Use a higher port number:
 ```bash
@@ -243,14 +243,14 @@ Yes! If your laptop and phone are on the same WiFi network:
 
 2. Start the dashboard allowing external access:
    ```bash
-   python scripts/dashboard_server.py --host 0.0.0.0 --port 8080
+   python scripts/dashboard_server.py --host 0.0.0.0 --port 9080
    ```
 
 3. On your phone, open browser and go to:
    ```
-   http://YOUR_LAPTOP_IP:8080/dashboard
+   http://YOUR_LAPTOP_IP:9080/dashboard
    ```
-   For example: `http://192.168.1.100:8080/dashboard`
+   For example: `http://192.168.1.100:9080/dashboard`
 
 ## ❓ Frequently Asked Questions
 
@@ -311,7 +311,7 @@ Once you have the dashboard running:
 - ✅ **Completely local** (no internet connection needed)
 - ✅ **Shows local file data** (not GitHub Projects)
 - ✅ **Simple to start** (`python scripts/dashboard_server.py`)
-- ✅ **Access in browser** (`http://localhost:8080/dashboard`)
+- ✅ **Access in browser** (`http://localhost:9080/dashboard`)
 
 **You're ready to go!** Just run the command and open your browser. 🚀
 

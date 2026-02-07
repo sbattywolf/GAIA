@@ -136,8 +136,8 @@ def check_port_availability():
     
     import socket
     
-    default_port = 8080
-    alternative_ports = [8888, 9000, 3000]
+    default_port = 9080  # Less common port to avoid conflicts
+    alternative_ports = [9081, 9082, 9090, 9099, 8888]
     
     def is_port_available(port):
         """Check if a port is available."""
@@ -173,8 +173,8 @@ def provide_next_steps():
     print(f"{BOLD}To start the dashboard:{RESET}")
     print()
     print("  1. Open a terminal in the repository directory")
-    print("  2. Run: python scripts/dashboard_server.py --port 8080")
-    print("  3. Open your browser to: http://localhost:8080/dashboard")
+    print("  2. Run: python scripts/dashboard_server.py --port 9080")
+    print("  3. Open your browser to: http://localhost:9080/dashboard")
     print()
     print(f"{BOLD}Alternative - CLI Tool:{RESET}")
     print()

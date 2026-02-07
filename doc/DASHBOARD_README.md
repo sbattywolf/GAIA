@@ -39,7 +39,7 @@ A comprehensive web-based dashboard for monitoring and managing the GAIA (Agent-
 #### Option 1: Direct Server Start
 ```bash
 cd /home/runner/work/GAIA/GAIA
-python scripts/dashboard_server.py --port 8080
+python scripts/dashboard_server.py --port 9080
 ```
 
 #### Option 2: Using Test Script
@@ -57,7 +57,7 @@ python scripts/dashboard_server.py --host 0.0.0.0 --port 8090
 
 Open your web browser and navigate to:
 ```
-http://127.0.0.1:8080/dashboard
+http://127.0.0.1:9080/dashboard
 ```
 
 Or if using a custom port:
@@ -132,7 +132,7 @@ Returns pending commands from `.tmp/pending_commands.json`:
 The dashboard server supports the following environment variables:
 
 - `GAIA_DASHBOARD_HOST`: Host to bind to (default: `127.0.0.1`)
-- `GAIA_DASHBOARD_PORT`: Port to bind to (default: `8080`)
+- `GAIA_DASHBOARD_PORT`: Port to bind to (default: `9080`)
 
 Example:
 ```bash
@@ -153,7 +153,7 @@ GAIA Project Dashboard Server
 options:
   -h, --help   show this help message and exit
   --host HOST  Host to bind to (default: 127.0.0.1)
-  --port PORT  Port to bind to (default: 8080)
+  --port PORT  Port to bind to (default: 9080)
 ```
 
 ## Data Sources
@@ -240,7 +240,7 @@ If you see `OSError: [Errno 98] Address already in use`:
 
 1. Find the process using the port:
 ```bash
-lsof -ti:8080
+lsof -ti:9080
 ```
 
 2. Kill the process:
@@ -268,7 +268,7 @@ head -2 doc/todo-archive.ndjson
 ### API Not Responding
 1. Verify server is running:
 ```bash
-curl http://127.0.0.1:8080/api/stats
+curl http://127.0.0.1:9080/api/stats
 ```
 
 2. Check firewall settings

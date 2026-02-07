@@ -4,6 +4,7 @@ GAIA Dashboard Launcher
 
 Simple one-command launcher for the GAIA dashboard.
 Automatically finds an available port and opens the browser.
+Uses less common ports (9080-9099 range) to avoid conflicts.
 """
 
 import sys
@@ -11,11 +12,26 @@ import socket
 import webbrowser
 import time
 import subprocess
+import random
 from pathlib import Path
 
-def find_available_port(start_port=8080, max_attempts=10):
-    """Find an available port starting from start_port."""
-    for port in range(start_port, start_port + max_attempts):
+def find_available_port(start_port=None, max_attempts=20):
+    """
+    Find an available port starting from a random less-common port.
+    
+    Uses port range 9080-9099 by default to avoid common port conflicts.
+    """
+    if start_port is None:
+        # Start from random port in less common range to avoid conflicts
+        start_port = random.randint(9080, 9099)
+    
+    # Try ports in sequence from start_port
+    for offset in range(max_attempts):
+        port = start_port + offset
+        # Keep in reasonable range
+        if port > 65535:
+            port = 9080 + (port - 65536) % 20
+            
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(1)

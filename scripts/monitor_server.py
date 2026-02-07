@@ -337,7 +337,7 @@ def serve(host: str = '127.0.0.1', port: int = 8080):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument('--host', default=os.environ.get('GAIA_MONITOR_HOST', '127.0.0.1'))
-    p.add_argument('--port', type=int, default=int(os.environ.get('GAIA_MONITOR_PORT', '8080')))
+    p.add_argument('--port', type=int, default=int(os.environ.get('GAIA_MONITOR_PORT', '9082')))
     args = p.parse_args()
     serve(args.host, args.port)
 

@@ -8,19 +8,19 @@ Get up and running with the GAIA project dashboard in 60 seconds.
 
 ```bash
 cd /home/runner/work/GAIA/GAIA
-python scripts/dashboard_server.py --port 8080
+python scripts/dashboard_server.py --port 9080
 ```
 
 You should see:
 ```
-🚀 GAIA Project Dashboard serving on http://127.0.0.1:8080
-   Access the dashboard at: http://127.0.0.1:8080/dashboard
+🚀 GAIA Project Dashboard serving on http://127.0.0.1:9080
+   Access the dashboard at: http://127.0.0.1:9080/dashboard
    Press CTRL+C to stop
 ```
 
 ### 2. Open in Browser
 
-Navigate to: **http://127.0.0.1:8080/dashboard**
+Navigate to: **http://127.0.0.1:9080/dashboard**
 
 ### 3. Explore the Views
 
@@ -58,10 +58,10 @@ python scripts/dashboard_server.py --port 9000
 ### Allow External Access
 
 ```bash
-python scripts/dashboard_server.py --host 0.0.0.0 --port 8080
+python scripts/dashboard_server.py --host 0.0.0.0 --port 9080
 ```
 
-Then access from other machines at: `http://YOUR_IP:8080/dashboard`
+Then access from other machines at: `http://YOUR_IP:9080/dashboard`
 
 ### Use Environment Variables
 
@@ -81,14 +81,14 @@ For complete documentation, see:
 ### Port Already in Use?
 
 ```bash
-# Find process using port 8080
-lsof -ti:8080
+# Find process using port 9080
+lsof -ti:9080
 
 # Kill it (replace PID with actual number)
 kill <PID>
 
 # Try again
-python scripts/dashboard_server.py --port 8080
+python scripts/dashboard_server.py --port 9080
 ```
 
 ### Dashboard Not Loading?
@@ -138,13 +138,13 @@ The dashboard provides RESTful APIs:
 
 ```bash
 # Get statistics
-curl http://127.0.0.1:8080/api/stats
+curl http://127.0.0.1:9080/api/stats
 
 # Get all tasks
-curl http://127.0.0.1:8080/api/tasks
+curl http://127.0.0.1:9080/api/tasks
 
 # Get agents
-curl http://127.0.0.1:8080/api/agents
+curl http://127.0.0.1:9080/api/agents
 ```
 
 ## 💡 Tips
@@ -164,4 +164,4 @@ curl http://127.0.0.1:8080/api/agents
 
 **Ready to explore your project data!** 🎉
 
-Start with: `python scripts/dashboard_server.py --port 8080`
+Start with: `python scripts/dashboard_server.py --port 9080`

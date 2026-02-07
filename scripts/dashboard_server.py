@@ -199,7 +199,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
             self.end_headers()
 
 
-def serve(host: str = '127.0.0.1', port: int = 8080):
+def serve(host: str = '127.0.0.1', port: int = 9080):
     """Start the dashboard server."""
     addr = (host, port)
     httpd = HTTPServer(addr, DashboardHandler)
@@ -219,8 +219,8 @@ def main():
     parser = argparse.ArgumentParser(description='GAIA Project Dashboard Server')
     parser.add_argument('--host', default=os.environ.get('GAIA_DASHBOARD_HOST', '127.0.0.1'),
                         help='Host to bind to (default: 127.0.0.1)')
-    parser.add_argument('--port', type=int, default=int(os.environ.get('GAIA_DASHBOARD_PORT', '8080')),
-                        help='Port to bind to (default: 8080)')
+    parser.add_argument('--port', type=int, default=int(os.environ.get('GAIA_DASHBOARD_PORT', '9080')),
+                        help='Port to bind to (default: 9080 - less common to avoid conflicts)')
     args = parser.parse_args()
     
     serve(args.host, args.port)

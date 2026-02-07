@@ -28,7 +28,7 @@ The GAIA dashboard **runs perfectly on your laptop**. It's designed specifically
 cd /path/to/GAIA
 python scripts/verify_setup.py          # Check everything
 python scripts/dashboard_server.py      # Start dashboard
-# Open: http://localhost:8080/dashboard
+# Open: http://localhost:9080/dashboard
 ```
 
 ### Method 2: One-Click Launch
@@ -68,20 +68,20 @@ This dashboard is a **local web application** that reads data from files in your
 ### Windows
 1. Open Command Prompt or PowerShell
 2. `cd C:\path\to\GAIA`
-3. `python scripts\dashboard_server.py --port 8080`
-4. Open browser to `http://localhost:8080/dashboard`
+3. `python scripts\dashboard_server.py --port 9080`
+4. Open browser to `http://localhost:9080/dashboard`
 
 ### Mac
 1. Open Terminal
 2. `cd ~/path/to/GAIA`
-3. `python3 scripts/dashboard_server.py --port 8080`
-4. Open browser to `http://localhost:8080/dashboard`
+3. `python3 scripts/dashboard_server.py --port 9080`
+4. Open browser to `http://localhost:9080/dashboard`
 
 ### Linux
 1. Open Terminal
 2. `cd ~/path/to/GAIA`
-3. `python3 scripts/dashboard_server.py --port 8080`
-4. Open browser to `http://localhost:8080/dashboard`
+3. `python3 scripts/dashboard_server.py --port 9080`
+4. Open browser to `http://localhost:9080/dashboard`
 
 ## Documentation Created for You
 
@@ -121,7 +121,7 @@ When you run `python scripts/verify_setup.py`, you'll see:
   ✓ Python 3.12.3 is compatible (requires 3.10+)
   ✓ Repository Structure: PASSED
   ✓ Data Files: PASSED
-  ✓ Port 8080 is available
+  ✓ Port 9080 is available
 
 ✓ All checks passed! You're ready to run the dashboard.
 ```
@@ -129,8 +129,8 @@ When you run `python scripts/verify_setup.py`, you'll see:
 When you run `python scripts/dashboard_server.py`, you'll see:
 
 ```
-🚀 GAIA Project Dashboard serving on http://127.0.0.1:8080
-   Access the dashboard at: http://127.0.0.1:8080/dashboard
+🚀 GAIA Project Dashboard serving on http://127.0.0.1:9080
+   Access the dashboard at: http://127.0.0.1:9080/dashboard
    Press CTRL+C to stop
 ```
 
