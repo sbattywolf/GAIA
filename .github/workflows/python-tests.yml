@@ -40,3 +40,6 @@ jobs:
 
       - name: Run tests
         run: pytest -q
+        - name: Python tests
+          env:
+            GAIA_TOKEN: ${{ secrets.GAIA_GITHUB_TOKEN || github.token }}

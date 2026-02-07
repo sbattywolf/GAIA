@@ -7,6 +7,8 @@ jobs:
   repro-flake:
     name: Reproduce flake on windows-latest
     runs-on: windows-latest
+      env:
+        GAIA_TOKEN: ${{ secrets.GAIA_GITHUB_TOKEN || github.token }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
