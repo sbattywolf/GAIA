@@ -5,6 +5,8 @@ from __future__ import annotations
 import os
 import json
 import argparse
+import subprocess
+import sys
 from pathlib import Path
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs, urlparse
@@ -66,7 +68,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
         """Handle CORS preflight."""
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET,OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Token')
         self.end_headers()
 
@@ -114,6 +116,19 @@ class DashboardHandler(BaseHTTPRequestHandler):
         if path.startswith('/scripts/') or path.endswith(('.html', '.js', '.css')):
             filepath = ROOT / path.lstrip('/')
             return self._serve_file(filepath)
+
+        # 404
+        self.send_response(404)
+        self.end_headers()
+        self.wfile.write(b'Not Found')
+
+    def do_POST(self):
+        """Handle POST requests."""
+        path = self.path.split('?')[0]
+
+        # API: Trigger archive refresh
+        if path == '/api/refresh':
+            return self._trigger_refresh()
 
         # 404
         self.send_response(404)
@@ -189,6 +204,73 @@ class DashboardHandler(BaseHTTPRequestHandler):
         pending = load_json_file(TMP / 'pending_commands.json', [])
         self._set_json_headers(200)
         self.wfile.write(json.dumps({'pending': pending}, default=str).encode('utf-8'))
+
+    def _trigger_refresh(self):
+        """Trigger update_todo_archive.py script."""
+        try:
+            # Path to the update script
+            script_path = ROOT / 'scripts' / 'update_todo_archive.py'
+            
+            if not script_path.exists():
+                self._set_json_headers(404)
+                self.wfile.write(json.dumps({
+                    'success': False,
+                    'error': 'update_todo_archive.py not found'
+                }).encode('utf-8'))
+                return
+            
+            # Run the script
+            result = subprocess.run(
+                [sys.executable, str(script_path), '--verbose'],
+                capture_output=True,
+                text=True,
+                timeout=30,
+                cwd=str(ROOT)
+            )
+            
+            if result.returncode == 0:
+                # Success
+                self._set_json_headers(200)
+                self.wfile.write(json.dumps({
+                    'success': True,
+                    'message': 'Archive updated successfully',
+                    'output': result.stdout,
+                    'stats': self._extract_stats(result.stdout)
+                }).encode('utf-8'))
+            else:
+                # Error
+                self._set_json_headers(500)
+                self.wfile.write(json.dumps({
+                    'success': False,
+                    'error': 'Script execution failed',
+                    'output': result.stdout,
+                    'stderr': result.stderr
+                }).encode('utf-8'))
+                
+        except subprocess.TimeoutExpired:
+            self._set_json_headers(500)
+            self.wfile.write(json.dumps({
+                'success': False,
+                'error': 'Script execution timed out (30s)'
+            }).encode('utf-8'))
+        except Exception as e:
+            self._set_json_headers(500)
+            self.wfile.write(json.dumps({
+                'success': False,
+                'error': str(e)
+            }).encode('utf-8'))
+
+    def _extract_stats(self, output: str) -> dict:
+        """Extract statistics from script output."""
+        stats = {}
+        for line in output.split('\n'):
+            if 'Sprint items:' in line:
+                stats['sprint_items'] = int(line.split(':')[1].strip())
+            elif 'Backlog items:' in line:
+                stats['backlog_items'] = int(line.split(':')[1].strip())
+            elif 'Total entries:' in line:
+                stats['total_entries'] = int(line.split(':')[1].strip())
+        return stats
 
     def _serve_roadmap(self):
         """Serve roadmap data grouped by sprints/milestones."""

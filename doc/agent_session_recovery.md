@@ -72,6 +72,10 @@ Manual operator checklist (if recovery requires human action)
 
 Agent training / procedures to create backlog items and resume
 - To create a backlog item: append NDJSON line to `doc/todo-archive.ndjson` with required fields (`id`, `title`, `status`, `priority`, `est_hours`, `added_at`).
+<<<<<<< HEAD
+- To consolidate backlog from multiple sources: run `python scripts/update_todo_archive.py` to merge entries from sprints/*.json, backlogs/*.json, and tasks.json into the archive. See `doc/UPDATE_TODO_ARCHIVE_README.md` for details.
+=======
+>>>>>>> f9cfb76b837e2e31b0c3e4f6dc4d476459fc8b2f
 - To mark progress: update the NDJSON by appending a corrected line with same `id` and new `status` (machine consumers should read the latest line per id), or prefer a small helper script `agents/update_todo.py` to perform atomic updates.
 - To resume after crash: run `python scripts/restore_session.py --session-state .copilot/session_state.json` (script to be implemented) which will follow the automated recovery steps above.
 

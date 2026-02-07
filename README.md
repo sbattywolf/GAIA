@@ -2,6 +2,31 @@
 
 Quick start notes and run steps for Windows (PowerShell).
 
+<<<<<<< HEAD
+## 📊 NEW: Project Dashboard
+
+**Run the GAIA dashboard on your laptop!** View project statistics, tasks, and agent status in your web browser.
+
+### Quick Start (3 commands)
+```bash
+cd /path/to/GAIA
+python scripts/verify_setup.py          # Check your setup
+python scripts/dashboard_server.py      # Start the dashboard
+# Open browser to: http://localhost:8080/dashboard
+```
+
+**Or use the one-click launcher:**
+```bash
+python scripts/launch_dashboard.py      # Auto-opens browser
+```
+
+**For complete laptop setup instructions, see:** [LAPTOP_SETUP.md](LAPTOP_SETUP.md)
+
+**Key Features:**
+- ✅ Runs completely on your laptop (Windows, Mac, Linux)
+- ✅ No external dependencies (Python 3.10+ only)
+- ✅ Shows local project data from `doc/todo-archive.ndjson`
+=======
 ## 📊 NEW: Enhanced Multi-View Dashboard
 
 **Multiple perspectives on your project!** Choose between Standard and Enhanced dashboards with 6 specialized views.
@@ -45,11 +70,16 @@ python scripts/enrich_sample_data.py            # Apply changes
 - ✅ Runs completely on your laptop (Windows, Mac, Linux)
 - ✅ No external dependencies (Python 3.10+ only)
 - ✅ 6 specialized views for different workflows
+>>>>>>> f9cfb76b837e2e31b0c3e4f6dc4d476459fc8b2f
 - ✅ Real-time statistics and progress tracking
 - ✅ Mobile-responsive web interface
 
 **Documentation:**
 - [LAPTOP_SETUP.md](LAPTOP_SETUP.md) - Detailed laptop setup guide
+<<<<<<< HEAD
+- [scripts/QUICKSTART.md](scripts/QUICKSTART.md) - 60-second quick start
+- [doc/DASHBOARD_README.md](doc/DASHBOARD_README.md) - Complete dashboard docs
+=======
 - [doc/DASHBOARD_README.md](doc/DASHBOARD_README.md) - Standard dashboard
 - [doc/DASHBOARD_ENHANCED_README.md](doc/DASHBOARD_ENHANCED_README.md) - Enhanced dashboard (NEW!)
 - [scripts/QUICKSTART.md](scripts/QUICKSTART.md) - 60-second quick start
@@ -80,6 +110,7 @@ python agents/github_sessions_sync.py
 ```
 
 **Full Documentation:** [doc/GITHUB_PROJECTS_INTEGRATION.md](doc/GITHUB_PROJECTS_INTEGRATION.md)
+>>>>>>> f9cfb76b837e2e31b0c3e4f6dc4d476459fc8b2f
 
 ---
 
