@@ -31,6 +31,7 @@
             margin-bottom: 30px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
         }
 
         header h1 {
@@ -41,6 +42,80 @@
         header p {
             opacity: 0.9;
             font-size: 1.1em;
+        }
+
+        .header-actions {
+            position: absolute;
+            top: 30px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .refresh-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .refresh-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .refresh-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .refresh-btn.spinning .icon {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .status-message {
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-message.show {
+            display: block;
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .nav-tabs {
@@ -339,7 +414,15 @@
         <header>
             <h1>🚀 GAIA Project Dashboard</h1>
             <p>Agent-First Backlog Orchestrator - Real-time Project Insights</p>
+            <div class="header-actions">
+                <button class="refresh-btn" onclick="refreshArchive()" id="refresh-btn">
+                    <span class="icon">🔄</span>
+                    <span>Refresh Archive</span>
+                </button>
+            </div>
         </header>
+
+        <div id="status-message" class="status-message"></div>
 
         <div class="nav-tabs">
             <button class="nav-tab active" onclick="switchView('overview')">📊 Overview</button>
@@ -477,13 +560,12 @@
         // Load data
         async function loadData() {
             try {
-                // Load tasks from NDJSON
-                const response = await fetch('../doc/todo-archive.ndjson');
-                const text = await response.text();
-                allTasks = text.trim().split('\n').map(line => JSON.parse(line));
+                // Load tasks from API
+                const response = await fetch('/api/tasks');
+                allTasks = await response.json();
                 
-                // Load agents
-                const agentsResponse = await fetch('../agents.json');
+                // Load agents from API
+                const agentsResponse = await fetch('/api/agents');
                 agents = await agentsResponse.json();
 
                 updateDashboard();
@@ -640,6 +722,60 @@
             error.className = 'error';
             error.textContent = message;
             document.querySelector('.container').insertBefore(error, document.querySelector('.nav-tabs'));
+        }
+
+        function showStatusMessage(message, isSuccess = true) {
+            const statusEl = document.getElementById('status-message');
+            statusEl.className = `status-message ${isSuccess ? 'success' : 'error'} show`;
+            statusEl.textContent = message;
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                statusEl.classList.remove('show');
+            }, 5000);
+        }
+
+        async function refreshArchive() {
+            const btn = document.getElementById('refresh-btn');
+            const icon = btn.querySelector('.icon');
+            
+            // Disable button and show spinner
+            btn.disabled = true;
+            btn.classList.add('spinning');
+            
+            try {
+                const response = await fetch('/api/refresh', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showStatusMessage(
+                        `✓ ${result.message}. Total entries: ${result.stats?.total_entries || 'N/A'}`,
+                        true
+                    );
+                    // Reload data after successful refresh
+                    setTimeout(() => loadData(), 1000);
+                } else {
+                    showStatusMessage(
+                        `✗ Failed to refresh: ${result.error}`,
+                        false
+                    );
+                }
+            } catch (error) {
+                showStatusMessage(
+                    `✗ Error triggering refresh: ${error.message}`,
+                    false
+                );
+            } finally {
+                // Re-enable button
+                btn.disabled = false;
+                btn.classList.remove('spinning');
+            }
         }
 
         // Auto-refresh every 30 seconds

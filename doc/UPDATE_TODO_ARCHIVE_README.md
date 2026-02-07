@@ -4,6 +4,20 @@
 
 The `scripts/update_todo_archive.py` script consolidates backlog entities from multiple JSON sources into the canonical `doc/todo-archive.ndjson` file. This ensures all task and sprint information is properly tracked in the archive.
 
+## Quick Start
+
+```bash
+# Manual update
+python scripts/update_todo_archive.py
+
+# From dashboard: Click "Refresh Archive" button (top-right corner)
+
+# Preview without changes
+python scripts/update_todo_archive.py --dry-run --verbose
+```
+
+> **📖 See also**: [DASHBOARD_REFRESH_OPTIONS.md](DASHBOARD_REFRESH_OPTIONS.md) for automatic refresh, scheduling, and file watching options.
+
 ## Purpose
 
 As documented in `LAPTOP_SETUP.md` (lines 14, 158, 169), the dashboard and other tools read from `doc/todo-archive.ndjson`. However, backlog entities can be scattered across multiple files:
