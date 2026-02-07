@@ -80,19 +80,24 @@ def init_db():
             cur.execute('ALTER TABLE queue ADD COLUMN last_reclaimed_at TEXT')
         except Exception:
             pass
+    conn.commit()
 
-        # ensure migration: add `timestamp` column to `audit` if missing
-        try:
-            cur.execute("PRAGMA table_info(audit)")
-            audit_cols = {r[1] for r in cur.fetchall()}
-            if 'timestamp' not in audit_cols:
-                try:
-                    cur.execute("ALTER TABLE audit ADD COLUMN timestamp TEXT")
-                except Exception:
-                    # best-effort migration; ignore if not possible
-                    pass
-        except Exception:
-            pass
+    # ensure migration: add `actor` and `timestamp` columns to `audit` if missing
+    try:
+        cur.execute("PRAGMA table_info(audit)")
+        audit_cols = {r[1] for r in cur.fetchall()}
+        if 'actor' not in audit_cols:
+            try:
+                cur.execute("ALTER TABLE audit ADD COLUMN actor TEXT")
+            except Exception:
+                pass
+        if 'timestamp' not in audit_cols:
+            try:
+                cur.execute("ALTER TABLE audit ADD COLUMN timestamp TEXT")
+            except Exception:
+                pass
+    except Exception:
+        pass
 
     conn.commit()
     conn.close()
