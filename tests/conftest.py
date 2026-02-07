@@ -1,3 +1,18 @@
+import os
+
+
+def pytest_sessionstart(session):
+    """Ensure CI/test basetemp directories exist so pytest basetemp options don't fail.
+
+    Some CI workflows pass `--basetemp .tmp/pytest` but do not ensure the parent
+    `.tmp` directory exists. Creating these paths early avoids FileNotFoundError
+    in non-interactive runners.
+    """
+    try:
+        os.makedirs('.tmp/pytest', exist_ok=True)
+    except Exception:
+        # Best-effort: tests should still run even if the path cannot be created.
+        pass
 import subprocess
 import sys
 import socket
