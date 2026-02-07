@@ -23,18 +23,7 @@ jobs:
 
       - name: Enable live runs in workflow
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          p = Path('.github/workflows/automerge-agent-dry-run.yml')
-          if not p.exists():
-              print('automerge-agent-dry-run.yml not found; aborting')
-              raise SystemExit(1)
-          s = p.read_text()
-          s = s.replace("DRY_RUN: ${{ github.event.inputs.dry_run || 'true' }}","DRY_RUN: 'false'")
-          s = s.replace("DRY_RUN: 'true'","DRY_RUN: 'false'")
-          p.write_text(s)
-          print('Updated workflow to set DRY_RUN to false')
-          PY
+          python .github/scripts/enable_live_automerge.py
 
       - name: Commit & push
         run: |
