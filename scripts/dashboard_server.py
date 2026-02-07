@@ -78,6 +78,10 @@ class DashboardHandler(BaseHTTPRequestHandler):
         if path == '/' or path == '/dashboard':
             return self._serve_dashboard()
 
+        # Enhanced dashboard
+        if path == '/enhanced' or path == '/dashboard/enhanced':
+            return self._serve_enhanced_dashboard()
+
         # API: Tasks data
         if path == '/api/tasks':
             return self._serve_tasks()
@@ -93,6 +97,14 @@ class DashboardHandler(BaseHTTPRequestHandler):
         # API: Pending commands
         if path == '/api/pending':
             return self._serve_pending()
+
+        # API: Roadmap data
+        if path == '/api/roadmap':
+            return self._serve_roadmap()
+
+        # API: Sprint data
+        if path == '/api/sprints':
+            return self._serve_sprints()
 
         # Serve static files from doc/ (for NDJSON access)
         if path.startswith('/doc/'):
@@ -123,6 +135,22 @@ class DashboardHandler(BaseHTTPRequestHandler):
         self.send_response(404)
         self.end_headers()
         self.wfile.write(b'Dashboard not found')
+
+    def _serve_enhanced_dashboard(self):
+        """Serve the enhanced dashboard HTML."""
+        dashboard_path = STATIC_ROOT / 'project_dashboard_enhanced.html'
+        if dashboard_path.exists():
+            try:
+                content = dashboard_path.read_text(encoding='utf-8')
+                self._set_html_headers(200)
+                self.wfile.write(content.encode('utf-8'))
+                return
+            except Exception as e:
+                print(f"Error serving enhanced dashboard: {e}")
+        
+        self.send_response(404)
+        self.end_headers()
+        self.wfile.write(b'Enhanced dashboard not found')
 
     def _serve_tasks(self):
         """Serve tasks data from todo-archive.ndjson."""
@@ -161,6 +189,46 @@ class DashboardHandler(BaseHTTPRequestHandler):
         pending = load_json_file(TMP / 'pending_commands.json', [])
         self._set_json_headers(200)
         self.wfile.write(json.dumps({'pending': pending}, default=str).encode('utf-8'))
+
+    def _serve_roadmap(self):
+        """Serve roadmap data grouped by sprints/milestones."""
+        tasks = load_ndjson_file(DOC_ROOT / 'todo-archive.ndjson')
+        
+        # Group tasks by sprint/milestone
+        roadmap = {}
+        for task in tasks:
+            sprint = task.get('sprint') or task.get('milestone') or 'Backlog'
+            if sprint not in roadmap:
+                roadmap[sprint] = []
+            roadmap[sprint].append(task)
+        
+        self._set_json_headers(200)
+        self.wfile.write(json.dumps(roadmap, default=str).encode('utf-8'))
+
+    def _serve_sprints(self):
+        """Serve sprint data."""
+        tasks = load_ndjson_file(DOC_ROOT / 'todo-archive.ndjson')
+        
+        # Extract unique sprints
+        sprints = set()
+        for task in tasks:
+            sprint = task.get('sprint') or task.get('milestone')
+            if sprint:
+                sprints.add(sprint)
+        
+        sprint_data = []
+        for sprint in sorted(sprints):
+            sprint_tasks = [t for t in tasks if (t.get('sprint') or t.get('milestone')) == sprint]
+            sprint_data.append({
+                'name': sprint,
+                'total_tasks': len(sprint_tasks),
+                'completed': len([t for t in sprint_tasks if t.get('status') == 'completed']),
+                'in_progress': len([t for t in sprint_tasks if t.get('status') == 'in-progress']),
+                'pending': len([t for t in sprint_tasks if t.get('status') == 'pending']),
+            })
+        
+        self._set_json_headers(200)
+        self.wfile.write(json.dumps(sprint_data, default=str).encode('utf-8'))
 
     def _serve_file(self, filepath: Path):
         """Serve a static file."""
@@ -204,7 +272,9 @@ def serve(host: str = '127.0.0.1', port: int = 9080):
     addr = (host, port)
     httpd = HTTPServer(addr, DashboardHandler)
     print(f'🚀 GAIA Project Dashboard serving on http://{host}:{port}')
-    print(f'   Access the dashboard at: http://{host}:{port}/dashboard')
+    print(f'   Standard Dashboard: http://{host}:{port}/dashboard')
+    print(f'   Enhanced Dashboard: http://{host}:{port}/enhanced')
+    print(f'   API Endpoints: http://{host}:{port}/api/')
     print(f'   Press CTRL+C to stop')
     try:
         httpd.serve_forever()
