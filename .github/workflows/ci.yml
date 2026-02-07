@@ -62,7 +62,15 @@ jobs:
           python -c "import agents, scripts, orchestrator"
         shell: bash
 
-      - name: Smoke - online agent dry_run
+      - name: Smoke - Validate Environment
+        run: |
+          python -c "import os; assert 'TELEGRAM_BOT_TOKEN' in os.environ, 'Missing TELEGRAM_BOT_TOKEN'"
+
+      - name: Smoke - Validate Tokens
+        run: |
+          bash scripts/smoke_check_with_token.sh $TELEGRAM_BOT_TOKEN
+
+      - name: Smoke - Online Agent Dry Run
         run: |
           python -u scripts/online_agent.py --command dry_run
         shell: bash
