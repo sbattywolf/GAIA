@@ -82,19 +82,21 @@ def init_db():
             pass
     conn.commit()
 
-    # ensure migration: add `actor` and `timestamp` columns to `audit` if missing
+    # ensure migration: add `timestamp` and `actor` columns to `audit` if missing
     try:
         cur.execute("PRAGMA table_info(audit)")
         audit_cols = {r[1] for r in cur.fetchall()}
-        if 'actor' not in audit_cols:
-            try:
-                cur.execute("ALTER TABLE audit ADD COLUMN actor TEXT")
-            except Exception:
-                pass
         if 'timestamp' not in audit_cols:
             try:
                 cur.execute("ALTER TABLE audit ADD COLUMN timestamp TEXT")
             except Exception:
+                # best-effort migration; ignore if not possible
+                pass
+        if 'actor' not in audit_cols:
+            try:
+                cur.execute("ALTER TABLE audit ADD COLUMN actor TEXT")
+            except Exception:
+                # best-effort migration; ignore if not possible
                 pass
     except Exception:
         pass
