@@ -39,3 +39,17 @@ Notes & safety
 
 Files & tools referenced
 - `scripts/github_app_token.py`, `scripts/rotate_tokens_helper.py`, `gaia/token_cache.py`, `scripts/token_cache_server.py`, `scripts/validate_consumers.py`.
+
+<!-- Audit: Merged from 2026-02-06 — see doc/SPRINT_MERGED_2026-02-06.md -->
+
+## Progress Snapshot (from MASTER_BACKLOG)
+
+Applied sprint progress highlights:
+
+| ID | Status | Scrum Pt | Score |
+|---:|---|---:|---:|
+| T002 | completed | 8 | 50 |
+| T003 | completed | 8 | 50 |
+| T004 | completed | 8 | 50 |
+| T005 | completed | 5 | 20 |
+| T007 | completed | 2 | 10 |

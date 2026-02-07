@@ -37,3 +37,16 @@ Planned sprints:
 These sprints were created as JSON under `sprints/` (security, agent_automation, backlog_docs). See `sprints/2026-02-06_day_plan.md` for detailed breakdown.
 
 Notes: No changes were made to the original `05_02_project_overview.md`; this file records today's statuses and deltas.
+
+<!-- Audit: Merged from 2026-02-06 — see doc/SPRINT_MERGED_2026-02-06.md -->
+
+## Progress Summary (from MASTER_BACKLOG)
+
+| ID | Task | Status | Scrum Pt | Score |
+|---:|---|---|---:|---:|
+| T002 | Add detect-secrets + pre-commit | completed | 8 | 50 |
+| T003 | Mock Telegram harness | completed | 8 | 50 |
+| T004 | Retryer backoff tests | completed | 8 | 50 |
+| T005 | Normalize todos into NDJSON | completed | 5 | 20 |
+| T007 | Run pytest smoke and record results | completed | 2 | 10 |
+
