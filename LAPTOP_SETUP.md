@@ -167,7 +167,16 @@ The dashboard displays data from **local files** in this repository:
 
 If you want to see **YOUR** tasks in the dashboard:
 1. Add your tasks to `doc/todo-archive.ndjson` (one JSON object per line)
+<<<<<<< HEAD
+2. Or use the archive updater script to consolidate from sprints/backlogs:
+   ```bash
+   python scripts/update_todo_archive.py
+   ```
+   (See [doc/UPDATE_TODO_ARCHIVE_README.md](doc/UPDATE_TODO_ARCHIVE_README.md) for details)
+3. Refresh the dashboard in your browser
+=======
 2. Refresh the dashboard in your browser
+>>>>>>> f9cfb76b837e2e31b0c3e4f6dc4d476459fc8b2f
 
 ## 🚨 Troubleshooting
 

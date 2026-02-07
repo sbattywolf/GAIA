@@ -5,6 +5,8 @@ from __future__ import annotations
 import os
 import json
 import argparse
+import subprocess
+import sys
 from pathlib import Path
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs, urlparse
@@ -66,7 +68,7 @@ class DashboardHandler(BaseHTTPRequestHandler):
         """Handle CORS preflight."""
         self.send_response(200)
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET,OPTIONS')
+        self.send_header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type, X-Admin-Token')
         self.end_headers()
 
@@ -77,6 +79,10 @@ class DashboardHandler(BaseHTTPRequestHandler):
         # Dashboard home
         if path == '/' or path == '/dashboard':
             return self._serve_dashboard()
+
+        # Enhanced dashboard
+        if path == '/enhanced' or path == '/dashboard/enhanced':
+            return self._serve_enhanced_dashboard()
 
         # API: Tasks data
         if path == '/api/tasks':
@@ -94,6 +100,14 @@ class DashboardHandler(BaseHTTPRequestHandler):
         if path == '/api/pending':
             return self._serve_pending()
 
+        # API: Roadmap data
+        if path == '/api/roadmap':
+            return self._serve_roadmap()
+
+        # API: Sprint data
+        if path == '/api/sprints':
+            return self._serve_sprints()
+
         # Serve static files from doc/ (for NDJSON access)
         if path.startswith('/doc/'):
             return self._serve_file(DOC_ROOT / path[5:])
@@ -102,6 +116,19 @@ class DashboardHandler(BaseHTTPRequestHandler):
         if path.startswith('/scripts/') or path.endswith(('.html', '.js', '.css')):
             filepath = ROOT / path.lstrip('/')
             return self._serve_file(filepath)
+
+        # 404
+        self.send_response(404)
+        self.end_headers()
+        self.wfile.write(b'Not Found')
+
+    def do_POST(self):
+        """Handle POST requests."""
+        path = self.path.split('?')[0]
+
+        # API: Trigger archive refresh
+        if path == '/api/refresh':
+            return self._trigger_refresh()
 
         # 404
         self.send_response(404)
@@ -123,6 +150,22 @@ class DashboardHandler(BaseHTTPRequestHandler):
         self.send_response(404)
         self.end_headers()
         self.wfile.write(b'Dashboard not found')
+
+    def _serve_enhanced_dashboard(self):
+        """Serve the enhanced dashboard HTML."""
+        dashboard_path = STATIC_ROOT / 'project_dashboard_enhanced.html'
+        if dashboard_path.exists():
+            try:
+                content = dashboard_path.read_text(encoding='utf-8')
+                self._set_html_headers(200)
+                self.wfile.write(content.encode('utf-8'))
+                return
+            except Exception as e:
+                print(f"Error serving enhanced dashboard: {e}")
+        
+        self.send_response(404)
+        self.end_headers()
+        self.wfile.write(b'Enhanced dashboard not found')
 
     def _serve_tasks(self):
         """Serve tasks data from todo-archive.ndjson."""
@@ -161,6 +204,113 @@ class DashboardHandler(BaseHTTPRequestHandler):
         pending = load_json_file(TMP / 'pending_commands.json', [])
         self._set_json_headers(200)
         self.wfile.write(json.dumps({'pending': pending}, default=str).encode('utf-8'))
+
+    def _trigger_refresh(self):
+        """Trigger update_todo_archive.py script."""
+        try:
+            # Path to the update script
+            script_path = ROOT / 'scripts' / 'update_todo_archive.py'
+            
+            if not script_path.exists():
+                self._set_json_headers(404)
+                self.wfile.write(json.dumps({
+                    'success': False,
+                    'error': 'update_todo_archive.py not found'
+                }).encode('utf-8'))
+                return
+            
+            # Run the script
+            result = subprocess.run(
+                [sys.executable, str(script_path), '--verbose'],
+                capture_output=True,
+                text=True,
+                timeout=30,
+                cwd=str(ROOT)
+            )
+            
+            if result.returncode == 0:
+                # Success
+                self._set_json_headers(200)
+                self.wfile.write(json.dumps({
+                    'success': True,
+                    'message': 'Archive updated successfully',
+                    'output': result.stdout,
+                    'stats': self._extract_stats(result.stdout)
+                }).encode('utf-8'))
+            else:
+                # Error
+                self._set_json_headers(500)
+                self.wfile.write(json.dumps({
+                    'success': False,
+                    'error': 'Script execution failed',
+                    'output': result.stdout,
+                    'stderr': result.stderr
+                }).encode('utf-8'))
+                
+        except subprocess.TimeoutExpired:
+            self._set_json_headers(500)
+            self.wfile.write(json.dumps({
+                'success': False,
+                'error': 'Script execution timed out (30s)'
+            }).encode('utf-8'))
+        except Exception as e:
+            self._set_json_headers(500)
+            self.wfile.write(json.dumps({
+                'success': False,
+                'error': str(e)
+            }).encode('utf-8'))
+
+    def _extract_stats(self, output: str) -> dict:
+        """Extract statistics from script output."""
+        stats = {}
+        for line in output.split('\n'):
+            if 'Sprint items:' in line:
+                stats['sprint_items'] = int(line.split(':')[1].strip())
+            elif 'Backlog items:' in line:
+                stats['backlog_items'] = int(line.split(':')[1].strip())
+            elif 'Total entries:' in line:
+                stats['total_entries'] = int(line.split(':')[1].strip())
+        return stats
+
+    def _serve_roadmap(self):
+        """Serve roadmap data grouped by sprints/milestones."""
+        tasks = load_ndjson_file(DOC_ROOT / 'todo-archive.ndjson')
+        
+        # Group tasks by sprint/milestone
+        roadmap = {}
+        for task in tasks:
+            sprint = task.get('sprint') or task.get('milestone') or 'Backlog'
+            if sprint not in roadmap:
+                roadmap[sprint] = []
+            roadmap[sprint].append(task)
+        
+        self._set_json_headers(200)
+        self.wfile.write(json.dumps(roadmap, default=str).encode('utf-8'))
+
+    def _serve_sprints(self):
+        """Serve sprint data."""
+        tasks = load_ndjson_file(DOC_ROOT / 'todo-archive.ndjson')
+        
+        # Extract unique sprints
+        sprints = set()
+        for task in tasks:
+            sprint = task.get('sprint') or task.get('milestone')
+            if sprint:
+                sprints.add(sprint)
+        
+        sprint_data = []
+        for sprint in sorted(sprints):
+            sprint_tasks = [t for t in tasks if (t.get('sprint') or t.get('milestone')) == sprint]
+            sprint_data.append({
+                'name': sprint,
+                'total_tasks': len(sprint_tasks),
+                'completed': len([t for t in sprint_tasks if t.get('status') == 'completed']),
+                'in_progress': len([t for t in sprint_tasks if t.get('status') == 'in-progress']),
+                'pending': len([t for t in sprint_tasks if t.get('status') == 'pending']),
+            })
+        
+        self._set_json_headers(200)
+        self.wfile.write(json.dumps(sprint_data, default=str).encode('utf-8'))
 
     def _serve_file(self, filepath: Path):
         """Serve a static file."""
@@ -204,7 +354,9 @@ def serve(host: str = '127.0.0.1', port: int = 9080):
     addr = (host, port)
     httpd = HTTPServer(addr, DashboardHandler)
     print(f'🚀 GAIA Project Dashboard serving on http://{host}:{port}')
-    print(f'   Access the dashboard at: http://{host}:{port}/dashboard')
+    print(f'   Standard Dashboard: http://{host}:{port}/dashboard')
+    print(f'   Enhanced Dashboard: http://{host}:{port}/enhanced')
+    print(f'   API Endpoints: http://{host}:{port}/api/')
     print(f'   Press CTRL+C to stop')
     try:
         httpd.serve_forever()

@@ -48,3 +48,33 @@ A comprehensive analysis of the Italian GPS (Graduatorie Provinciali per Supplen
 - `GPS_2026_QUICK_REFERENCE.md` — Quick reference guide with checklists (191 lines, 5.8 KB)
 
 Total: 1,364 lines of comprehensive policy analysis and operational guidance.
+<<<<<<< HEAD
+=======
+
+## GitHub Projects Integration
+
+**GitHub Projects V2 Integration** documentation added (2026-02-07):
+
+A complete integration guide for using GitHub Projects with GAIA, including automatic issue addition, database sync, and team collaboration features:
+
+- `GITHUB_PROJECTS_INTEGRATION.md` — Complete integration guide (329 lines, 10.9 KB)
+  - Architecture and data flow
+  - Step-by-step setup instructions
+  - Token management and security
+  - Troubleshooting guide
+  - Configuration reference
+
+- `GITHUB_PROJECTS_QUICKSTART.md` — Quick reference (276 lines, 8.4 KB)
+  - Integration status overview
+  - 2-minute setup guide
+  - Common workflows and usage examples
+  - Command reference
+  - FAQ
+
+**Related Files:**
+- `.github/workflows/sprint_onboard.yml` — Automatic issue addition workflow (existing)
+- `agents/github_sessions_sync.py` — Database to GitHub sync agent (existing)
+- `scripts/setup_github_projects.py` — Configuration helper script (NEW, 400 lines)
+
+**Status**: ✅ Integration implemented and documented. Optional feature, ready to use.
+>>>>>>> f9cfb76b837e2e31b0c3e4f6dc4d476459fc8b2f

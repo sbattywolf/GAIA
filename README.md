@@ -2,6 +2,7 @@
 
 Quick start notes and run steps for Windows (PowerShell).
 
+<<<<<<< HEAD
 ## 📊 NEW: Project Dashboard
 
 **Run the GAIA dashboard on your laptop!** View project statistics, tasks, and agent status in your web browser.
@@ -25,13 +26,91 @@ python scripts/launch_dashboard.py      # Auto-opens browser
 - ✅ Runs completely on your laptop (Windows, Mac, Linux)
 - ✅ No external dependencies (Python 3.10+ only)
 - ✅ Shows local project data from `doc/todo-archive.ndjson`
+=======
+## 📊 NEW: Enhanced Multi-View Dashboard
+
+**Multiple perspectives on your project!** Choose between Standard and Enhanced dashboards with 6 specialized views.
+
+### Quick Start
+```bash
+cd /path/to/GAIA
+# Standard dashboard (simple, fast)
+python scripts/dashboard_server.py
+# Open: http://localhost:9080/dashboard
+
+# Enhanced dashboard (multiple views)
+python scripts/launch_enhanced_dashboard.py
+# Auto-opens: http://localhost:9080/enhanced
+```
+
+### Available Views
+
+#### Standard Dashboard
+- 📊 Overview with metrics
+- 📋 Task table with filters
+- 🤖 Agent status
+- 📈 Basic timeline
+
+#### Enhanced Dashboard (NEW!)
+- 📊 **Overview** - Key metrics and progress
+- 📋 **Kanban Board** - Visual workflow (Pending → In Progress → Completed)
+- 🗺️ **Roadmap** - Sprint/milestone timeline
+- 📈 **Gantt Timeline** - Progress bars for tasks
+- 📅 **Calendar** - Monthly view with deadlines
+- 📊 **Metrics** - Analytics and charts
+
+### Enrich Your Data
+```bash
+# Add sprint, milestone, and deadline data to tasks
+python scripts/enrich_sample_data.py --preview  # Preview changes
+python scripts/enrich_sample_data.py            # Apply changes
+```
+
+**Key Features:**
+- ✅ Runs completely on your laptop (Windows, Mac, Linux)
+- ✅ No external dependencies (Python 3.10+ only)
+- ✅ 6 specialized views for different workflows
+>>>>>>> f9cfb76b837e2e31b0c3e4f6dc4d476459fc8b2f
 - ✅ Real-time statistics and progress tracking
 - ✅ Mobile-responsive web interface
 
 **Documentation:**
 - [LAPTOP_SETUP.md](LAPTOP_SETUP.md) - Detailed laptop setup guide
+<<<<<<< HEAD
 - [scripts/QUICKSTART.md](scripts/QUICKSTART.md) - 60-second quick start
 - [doc/DASHBOARD_README.md](doc/DASHBOARD_README.md) - Complete dashboard docs
+=======
+- [doc/DASHBOARD_README.md](doc/DASHBOARD_README.md) - Standard dashboard
+- [doc/DASHBOARD_ENHANCED_README.md](doc/DASHBOARD_ENHANCED_README.md) - Enhanced dashboard (NEW!)
+- [scripts/QUICKSTART.md](scripts/QUICKSTART.md) - 60-second quick start
+
+## 🔗 GitHub Projects Integration
+
+**GAIA integrates with GitHub Projects V2!** Automatically add issues to your project board.
+
+### Quick Setup (3 steps)
+1. Create a GitHub Project at https://github.com/users/YOUR_USERNAME/projects
+2. Add `PROJECT_V2_NUMBER` secret to repository settings
+3. Label issues with `sprint/*` to auto-add them to your project
+
+### Check Integration Status
+```bash
+python scripts/setup_github_projects.py check
+```
+
+### Sync Backlog to GitHub Issues
+```bash
+# Dry-run (safe preview)
+python agents/github_sessions_sync.py --dry-run
+
+# Live sync (requires AUTOMATION_GITHUB_TOKEN)
+export AUTOMATION_GITHUB_TOKEN="your_token_here"
+export AUTOMATION_GITHUB_REPOSITORY="owner/repo"
+python agents/github_sessions_sync.py
+```
+
+**Full Documentation:** [doc/GITHUB_PROJECTS_INTEGRATION.md](doc/GITHUB_PROJECTS_INTEGRATION.md)
+>>>>>>> f9cfb76b837e2e31b0c3e4f6dc4d476459fc8b2f
 
 ---
 
