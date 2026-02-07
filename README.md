@@ -2,36 +2,57 @@
 
 Quick start notes and run steps for Windows (PowerShell).
 
-## 📊 NEW: Project Dashboard
+## 📊 NEW: Enhanced Multi-View Dashboard
 
-**Run the GAIA dashboard on your laptop!** View project statistics, tasks, and agent status in your web browser.
+**Multiple perspectives on your project!** Choose between Standard and Enhanced dashboards with 6 specialized views.
 
-### Quick Start (3 commands)
+### Quick Start
 ```bash
 cd /path/to/GAIA
-python scripts/verify_setup.py          # Check your setup
-python scripts/dashboard_server.py      # Start the dashboard
-# Open browser to: http://localhost:8080/dashboard
+# Standard dashboard (simple, fast)
+python scripts/dashboard_server.py
+# Open: http://localhost:9080/dashboard
+
+# Enhanced dashboard (multiple views)
+python scripts/launch_enhanced_dashboard.py
+# Auto-opens: http://localhost:9080/enhanced
 ```
 
-**Or use the one-click launcher:**
+### Available Views
+
+#### Standard Dashboard
+- 📊 Overview with metrics
+- 📋 Task table with filters
+- 🤖 Agent status
+- 📈 Basic timeline
+
+#### Enhanced Dashboard (NEW!)
+- 📊 **Overview** - Key metrics and progress
+- 📋 **Kanban Board** - Visual workflow (Pending → In Progress → Completed)
+- 🗺️ **Roadmap** - Sprint/milestone timeline
+- 📈 **Gantt Timeline** - Progress bars for tasks
+- 📅 **Calendar** - Monthly view with deadlines
+- 📊 **Metrics** - Analytics and charts
+
+### Enrich Your Data
 ```bash
-python scripts/launch_dashboard.py      # Auto-opens browser
+# Add sprint, milestone, and deadline data to tasks
+python scripts/enrich_sample_data.py --preview  # Preview changes
+python scripts/enrich_sample_data.py            # Apply changes
 ```
-
-**For complete laptop setup instructions, see:** [LAPTOP_SETUP.md](LAPTOP_SETUP.md)
 
 **Key Features:**
 - ✅ Runs completely on your laptop (Windows, Mac, Linux)
 - ✅ No external dependencies (Python 3.10+ only)
-- ✅ Shows local project data from `doc/todo-archive.ndjson`
+- ✅ 6 specialized views for different workflows
 - ✅ Real-time statistics and progress tracking
 - ✅ Mobile-responsive web interface
 
 **Documentation:**
 - [LAPTOP_SETUP.md](LAPTOP_SETUP.md) - Detailed laptop setup guide
+- [doc/DASHBOARD_README.md](doc/DASHBOARD_README.md) - Standard dashboard
+- [doc/DASHBOARD_ENHANCED_README.md](doc/DASHBOARD_ENHANCED_README.md) - Enhanced dashboard (NEW!)
 - [scripts/QUICKSTART.md](scripts/QUICKSTART.md) - 60-second quick start
-- [doc/DASHBOARD_README.md](doc/DASHBOARD_README.md) - Complete dashboard docs
 
 ## 🔗 GitHub Projects Integration
 
