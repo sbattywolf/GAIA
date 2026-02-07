@@ -20,8 +20,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: false
-          lfs: false
+          submodules: true
+          lfs: true
 
       - name: Neutralize broken submodule entries
         shell: bash
@@ -75,3 +75,9 @@ jobs:
           # ensure pytest basetemp directory exists (cross-platform)
           python -c "import os; os.makedirs('.tmp/pytest', exist_ok=True)"
           python -m pytest -q --basetemp .tmp/pytest
+
+      - name: Build Docker Image
+        run: docker build -t gaia-ci-test .
+
+      - name: Run Tests in Docker
+        run: docker run --rm gaia-ci-test
