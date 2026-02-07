@@ -1,6 +1,16 @@
 import json
 import sqlite3
+import sys
 from pathlib import Path
+
+print('PYTHONPATH at start:', sys.path)
+
+sys.path.insert(0, str(Path(__file__).parent.parent / 'scripts'))
+
+# Ensure absolute path for clarity
+sys.path.insert(0, 'E:/Workspaces/Git/GAIA/scripts')
+
+sys.path.append(str(Path(__file__).resolve().parents[2] / 'scripts'))
 
 import pytest
 

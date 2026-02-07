@@ -1,0 +1,11 @@
+services:
+  gaia:
+    build: .
+    container_name: gaia_container
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python orchestrator.py
