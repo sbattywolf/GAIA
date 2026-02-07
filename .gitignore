@@ -73,3 +73,9 @@ external/**/pnpm-lock.yaml
 
 # Ephemeral pytest temporary artifacts created during test runs
 .pytest_tmp/
+
+# Ignore Pytest temporary artifacts
+.pytest_tmp/
+.pytest_basetemp/
+.tmp/pytest*
+pytest_tmp/
