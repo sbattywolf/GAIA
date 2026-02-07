@@ -84,6 +84,10 @@ class DashboardHandler(BaseHTTPRequestHandler):
         if path == '/enhanced' or path == '/dashboard/enhanced':
             return self._serve_enhanced_dashboard()
 
+        # Agent dashboard
+        if path == '/agents' or path == '/dashboard/agents':
+            return self._serve_agent_dashboard()
+
         # API: Tasks data
         if path == '/api/tasks':
             return self._serve_tasks()
@@ -91,6 +95,11 @@ class DashboardHandler(BaseHTTPRequestHandler):
         # API: Agents data
         if path == '/api/agents':
             return self._serve_agents()
+
+        # API: Agent-specific metrics
+        if path.startswith('/api/agent/') and path.endswith('/metrics'):
+            agent_id = path.split('/')[3]
+            return self._serve_agent_metrics(agent_id)
 
         # API: Project stats
         if path == '/api/stats':
@@ -107,6 +116,10 @@ class DashboardHandler(BaseHTTPRequestHandler):
         # API: Sprint data
         if path == '/api/sprints':
             return self._serve_sprints()
+
+        # API: Metrics
+        if path == '/api/metrics':
+            return self._serve_metrics()
 
         # Serve static files from doc/ (for NDJSON access)
         if path.startswith('/doc/'):
@@ -166,6 +179,22 @@ class DashboardHandler(BaseHTTPRequestHandler):
         self.send_response(404)
         self.end_headers()
         self.wfile.write(b'Enhanced dashboard not found')
+
+    def _serve_agent_dashboard(self):
+        """Serve the agent dashboard HTML."""
+        dashboard_path = STATIC_ROOT / 'agent_dashboard.html'
+        if dashboard_path.exists():
+            try:
+                content = dashboard_path.read_text(encoding='utf-8')
+                self._set_html_headers(200)
+                self.wfile.write(content.encode('utf-8'))
+                return
+            except Exception as e:
+                print(f"Error serving agent dashboard: {e}")
+        
+        self.send_response(404)
+        self.end_headers()
+        self.wfile.write(b'Agent dashboard not found')
 
     def _serve_tasks(self):
         """Serve tasks data from todo-archive.ndjson."""
@@ -312,6 +341,49 @@ class DashboardHandler(BaseHTTPRequestHandler):
         self._set_json_headers(200)
         self.wfile.write(json.dumps(sprint_data, default=str).encode('utf-8'))
 
+    def _serve_agent_metrics(self, agent_id: str):
+        """Serve metrics for a specific agent."""
+        import random
+        import time
+        
+        # Generate mock metrics (in production, this would come from a real metrics store)
+        metrics = {
+            'agent_id': agent_id,
+            'tasks_processed': random.randint(10, 150),
+            'success_rate': round(random.uniform(80, 99), 1),
+            'avg_response_time': round(random.uniform(0.5, 3.0), 2),
+            'uptime_hours': random.randint(24, 240),
+            'last_active': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+            'errors': random.randint(0, 5),
+            'warnings': random.randint(0, 15),
+            'recent_activities': [
+                {'time': '2 minutes ago', 'action': f'Processed task for {agent_id}'},
+                {'time': '15 minutes ago', 'action': 'Completed workflow execution'},
+                {'time': '1 hour ago', 'action': 'Updated status in database'},
+                {'time': '3 hours ago', 'action': 'Handled notification request'},
+            ]
+        }
+        
+        self._set_json_headers(200)
+        self.wfile.write(json.dumps(metrics, default=str).encode('utf-8'))
+
+    def _serve_metrics(self):
+        """Serve global metrics data."""
+        metrics_file = TMP / 'metrics.json'
+        metrics = load_json_file(metrics_file, {})
+        
+        # If no metrics exist, create default
+        if not metrics:
+            metrics = {
+                'tasks_created': 0,
+                'tasks_completed': 0,
+                'dashboard_views': 0,
+                'api_calls': 0
+            }
+        
+        self._set_json_headers(200)
+        self.wfile.write(json.dumps(metrics, default=str).encode('utf-8'))
+
     def _serve_file(self, filepath: Path):
         """Serve a static file."""
         if not filepath.exists() or not filepath.is_file():
@@ -356,6 +428,7 @@ def serve(host: str = '127.0.0.1', port: int = 9080):
     print(f'🚀 GAIA Project Dashboard serving on http://{host}:{port}')
     print(f'   Standard Dashboard: http://{host}:{port}/dashboard')
     print(f'   Enhanced Dashboard: http://{host}:{port}/enhanced')
+    print(f'   Agent Dashboard: http://{host}:{port}/agents')
     print(f'   API Endpoints: http://{host}:{port}/api/')
     print(f'   Press CTRL+C to stop')
     try:
