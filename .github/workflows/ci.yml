@@ -5,6 +5,7 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -21,11 +22,6 @@ jobs:
           fetch-depth: 0
           submodules: false
           lfs: false
-
-      - name: Install Git LFS
-        run: |
-          git lfs version || echo "git-lfs not available"
-          git lfs install || true
 
       - name: Neutralize broken submodule entries
         shell: bash
