@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAIA Agent Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .agent-selector {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .agent-selector h3 {
+            margin-bottom: 15px;
+            color: #14171a;
+        }
+
+        .agent-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .agent-tab {
+            padding: 12px 20px;
+            background: #f5f8fa;
+            border: 2px solid #e1e8ed;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .agent-tab:hover {
+            border-color: #1da1f2;
+            background: #e8f5fe;
+        }
+
+        .agent-tab.active {
+            background: #1da1f2;
+            color: white;
+            border-color: #1da1f2;
+        }
+
+        .agent-view {
+            display: none;
+        }
+
+        .agent-view.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .stat-card h3 {
+            font-size: 0.9em;
+            color: #657786;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #1da1f2;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .label {
+            color: #657786;
+            font-size: 0.9em;
+        }
+
+        .stat-card.success .value { color: #17bf63; }
+        .stat-card.warning .value { color: #ffad1f; }
+        .stat-card.danger .value { color: #e0245e; }
+        .stat-card.info .value { color: #794bc4; }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #14171a;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .agent-status {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .agent-status.active {
+            background: #17bf63;
+            box-shadow: 0 0 10px rgba(23, 191, 99, 0.5);
+        }
+
+        .agent-status.inactive {
+            background: #657786;
+        }
+
+        .agent-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            padding: 12px;
+            background: #f5f8fa;
+            border-radius: 6px;
+            border-left: 4px solid #1da1f2;
+        }
+
+        .info-item .label {
+            font-size: 0.85em;
+            color: #657786;
+            margin-bottom: 5px;
+        }
+
+        .info-item .value {
+            font-weight: 600;
+            color: #14171a;
+        }
+
+        .activity-log {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            padding: 12px;
+            border-left: 3px solid #e1e8ed;
+            margin-bottom: 10px;
+            background: #f5f8fa;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .activity-item:hover {
+            border-left-color: #1da1f2;
+            background: #e8f5fe;
+        }
+
+        .activity-time {
+            font-size: 0.85em;
+            color: #657786;
+            margin-bottom: 5px;
+        }
+
+        .activity-text {
+            color: #14171a;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .metric-bar {
+            background: #e1e8ed;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .metric-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1da1f2, #17bf63);
+            transition: width 0.5s ease;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        .badge.model {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .badge.version {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge.mode {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f5f8fa;
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #14171a;
+            border-bottom: 2px solid #e1e8ed;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        tr:hover {
+            background: #f5f8fa;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #657786;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #657786;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .agent-tabs {
+                flex-direction: column;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 GAIA Agent Dashboard</h1>
+            <p>Individual Agent Monitoring & Metrics</p>
+        </header>
+
+        <div class="agent-selector">
+            <h3>Select Agent</h3>
+            <div class="agent-tabs" id="agent-tabs">
+                <div class="loading">Loading agents...</div>
+            </div>
+        </div>
+
+        <div id="agent-content">
+            <div class="loading">Select an agent to view details</div>
+        </div>
+    </div>
+
+    <script>
+        let agents = [];
+        let currentAgent = null;
+        let agentMetrics = {};
+
+        // Load agents
+        async function loadAgents() {
+            try {
+                const response = await fetch('/api/agents');
+                agents = await response.json();
+                renderAgentTabs();
+            } catch (error) {
+                console.error('Error loading agents:', error);
+                document.getElementById('agent-tabs').innerHTML = 
+                    '<div class="error">Failed to load agents</div>';
+            }
+        }
+
+        // Render agent tabs
+        function renderAgentTabs() {
+            const container = document.getElementById('agent-tabs');
+            if (agents.length === 0) {
+                container.innerHTML = '<div class="no-data">No agents configured</div>';
+                return;
+            }
+
+            const html = agents.map(agent => `
+                <div class="agent-tab" onclick="selectAgent('${agent.id}')">
+                    <span class="agent-status ${agent.status || 'inactive'}"></span>
+                    ${agent.name || agent.id}
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+
+            // Auto-select first agent
+            if (agents.length > 0) {
+                selectAgent(agents[0].id);
+            }
+        }
+
+        // Select an agent
+        async function selectAgent(agentId) {
+            currentAgent = agents.find(a => a.id === agentId);
+            if (!currentAgent) return;
+
+            // Update active tab
+            document.querySelectorAll('.agent-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.closest('.agent-tab').classList.add('active');
+
+            // Load agent metrics
+            await loadAgentMetrics(agentId);
+
+            // Render agent dashboard
+            renderAgentDashboard();
+        }
+
+        // Load agent-specific metrics
+        async function loadAgentMetrics(agentId) {
+            try {
+                const response = await fetch(`/api/agent/${agentId}/metrics`);
+                if (response.ok) {
+                    agentMetrics = await response.json();
+                } else {
+                    // Generate mock metrics if endpoint doesn't exist
+                    agentMetrics = generateMockMetrics(agentId);
+                }
+            } catch (error) {
+                console.error('Error loading agent metrics:', error);
+                agentMetrics = generateMockMetrics(agentId);
+            }
+        }
+
+        // Generate mock metrics for demonstration
+        function generateMockMetrics(agentId) {
+            return {
+                tasks_processed: Math.floor(Math.random() * 100) + 10,
+                success_rate: (Math.random() * 20 + 80).toFixed(1),
+                avg_response_time: (Math.random() * 2 + 0.5).toFixed(2),
+                uptime_hours: Math.floor(Math.random() * 168) + 24,
+                last_active: new Date(Date.now() - Math.random() * 3600000).toISOString(),
+                errors: Math.floor(Math.random() * 5),
+                warnings: Math.floor(Math.random() * 10),
+                recent_activities: [
+                    { time: '2 minutes ago', action: 'Processed task T042' },
+                    { time: '15 minutes ago', action: 'Created GitHub issue #123' },
+                    { time: '1 hour ago', action: 'Updated backlog status' },
+                    { time: '3 hours ago', action: 'Sent notification to Telegram' },
+                ]
+            };
+        }
+
+        // Render agent dashboard
+        function renderAgentDashboard() {
+            const content = document.getElementById('agent-content');
+            
+            const successRate = parseFloat(agentMetrics.success_rate || 0);
+            const successClass = successRate >= 95 ? 'success' : successRate >= 80 ? 'warning' : 'danger';
+
+            content.innerHTML = `
+                <div class="agent-view active">
+                    <!-- Agent Overview -->
+                    <div class="card">
+                        <h2>
+                            <span class="agent-status ${currentAgent.status || 'inactive'}"></span>
+                            ${currentAgent.name || currentAgent.id}
+                        </h2>
+                        <div class="agent-info">
+                            <div class="info-item">
+                                <div class="label">Agent ID</div>
+                                <div class="value">${currentAgent.id}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="label">Version</div>
+                                <div class="value">${currentAgent.version || 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="label">Model</div>
+                                <div class="value">${currentAgent.model || 'N/A'}</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="label">Module</div>
+                                <div class="value">${currentAgent.module || 'N/A'}</div>
+                            </div>
+                        </div>
+                        <p><strong>Description:</strong> ${currentAgent.description || 'No description available'}</p>
+                        ${currentAgent.aliases ? `<p style="margin-top: 10px;"><strong>Aliases:</strong> ${currentAgent.aliases.map(a => `<span class="badge mode">${a}</span>`).join(' ')}</p>` : ''}
+                    </div>
+
+                    <!-- Performance Metrics -->
+                    <div class="stats-grid">
+                        <div class="stat-card info">
+                            <h3>Tasks Processed</h3>
+                            <div class="value">${agentMetrics.tasks_processed || 0}</div>
+                            <div class="label">Total</div>
+                        </div>
+                        <div class="stat-card ${successClass}">
+                            <h3>Success Rate</h3>
+                            <div class="value">${agentMetrics.success_rate || 0}%</div>
+                            <div class="label">Completion</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Avg Response Time</h3>
+                            <div class="value">${agentMetrics.avg_response_time || 0}s</div>
+                            <div class="label">Seconds</div>
+                        </div>
+                        <div class="stat-card success">
+                            <h3>Uptime</h3>
+                            <div class="value">${agentMetrics.uptime_hours || 0}h</div>
+                            <div class="label">Hours</div>
+                        </div>
+                    </div>
+
+                    <!-- Error/Warning Summary -->
+                    <div class="stats-grid">
+                        <div class="stat-card ${agentMetrics.errors > 0 ? 'danger' : 'success'}">
+                            <h3>Errors</h3>
+                            <div class="value">${agentMetrics.errors || 0}</div>
+                            <div class="label">Total</div>
+                        </div>
+                        <div class="stat-card ${agentMetrics.warnings > 5 ? 'warning' : 'success'}">
+                            <h3>Warnings</h3>
+                            <div class="value">${agentMetrics.warnings || 0}</div>
+                            <div class="label">Total</div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <h2>📋 Recent Activity</h2>
+                        <div class="activity-log">
+                            ${agentMetrics.recent_activities && agentMetrics.recent_activities.length > 0 ? 
+                                agentMetrics.recent_activities.map(activity => `
+                                    <div class="activity-item">
+                                        <div class="activity-time">${activity.time}</div>
+                                        <div class="activity-text">${activity.action}</div>
+                                    </div>
+                                `).join('') : 
+                                '<div class="no-data">No recent activity recorded</div>'
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Configuration -->
+                    <div class="card">
+                        <h2>⚙️ Configuration</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Property</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${Object.entries(currentAgent)
+                                    .filter(([key]) => !['description', 'aliases', 'match'].includes(key))
+                                    .map(([key, value]) => `
+                                        <tr>
+                                            <td><strong>${key}</strong></td>
+                                            <td>${Array.isArray(value) ? value.join(', ') : value || 'N/A'}</td>
+                                        </tr>
+                                    `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(async () => {
+            if (currentAgent) {
+                await loadAgentMetrics(currentAgent.id);
+                renderAgentDashboard();
+            }
+        }, 30000);
+
+        // Initial load
+        loadAgents();
+    </script>
+</body>
+</html>

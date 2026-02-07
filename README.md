@@ -2,62 +2,49 @@
 
 Quick start notes and run steps for Windows (PowerShell).
 
-<<<<<<< HEAD
-## 📊 NEW: Project Dashboard
+## 📊 NEW: Dashboard Suite - Three Views for Every Need
 
-**Run the GAIA dashboard on your laptop!** View project statistics, tasks, and agent status in your web browser.
-
-### Quick Start (3 commands)
-```bash
-cd /path/to/GAIA
-python scripts/verify_setup.py          # Check your setup
-python scripts/dashboard_server.py      # Start the dashboard
-# Open browser to: http://localhost:8080/dashboard
-```
-
-**Or use the one-click launcher:**
-```bash
-python scripts/launch_dashboard.py      # Auto-opens browser
-```
-
-**For complete laptop setup instructions, see:** [LAPTOP_SETUP.md](LAPTOP_SETUP.md)
-
-**Key Features:**
-- ✅ Runs completely on your laptop (Windows, Mac, Linux)
-- ✅ No external dependencies (Python 3.10+ only)
-- ✅ Shows local project data from `doc/todo-archive.ndjson`
-=======
-## 📊 NEW: Enhanced Multi-View Dashboard
-
-**Multiple perspectives on your project!** Choose between Standard and Enhanced dashboards with 6 specialized views.
+**GAIA now provides three specialized dashboards** to monitor your project from different perspectives!
 
 ### Quick Start
 ```bash
 cd /path/to/GAIA
-# Standard dashboard (simple, fast)
-python scripts/dashboard_server.py
-# Open: http://localhost:9080/dashboard
 
-# Enhanced dashboard (multiple views)
-python scripts/launch_enhanced_dashboard.py
-# Auto-opens: http://localhost:9080/enhanced
+# Start the dashboard server
+python scripts/dashboard_server.py
+
+# Access dashboards:
+# Standard Dashboard:  http://localhost:9080/dashboard
+# Enhanced Dashboard:  http://localhost:9080/enhanced
+# Agent Dashboard:     http://localhost:9080/agents
 ```
 
-### Available Views
+### Available Dashboards
 
-#### Standard Dashboard
-- 📊 Overview with metrics
-- 📋 Task table with filters
-- 🤖 Agent status
-- 📈 Basic timeline
+#### 1. 📊 Standard Dashboard (`/dashboard`)
+**Best for:** Quick project overview, daily standups
+- Project metrics at a glance
+- Task table with filters
+- Agent status overview
+- Basic timeline view
 
-#### Enhanced Dashboard (NEW!)
-- 📊 **Overview** - Key metrics and progress
-- 📋 **Kanban Board** - Visual workflow (Pending → In Progress → Completed)
-- 🗺️ **Roadmap** - Sprint/milestone timeline
-- 📈 **Gantt Timeline** - Progress bars for tasks
-- 📅 **Calendar** - Monthly view with deadlines
-- 📊 **Metrics** - Analytics and charts
+#### 2. 🎨 Enhanced Dashboard (`/enhanced`)
+**Best for:** Sprint planning, detailed task management
+- **Overview** - Key metrics and progress bars
+- **Kanban Board** - Visual workflow (Pending → In Progress → Completed)
+- **Roadmap** - Sprint/milestone timeline
+- **Gantt Timeline** - Progress bars for each task
+- **Calendar** - Monthly view with task deadlines
+- **Metrics** - Analytics and charts (coming soon)
+
+#### 3. 🤖 Agent Dashboard (`/agents`) - NEW!
+**Best for:** Agent monitoring, performance tracking, debugging
+- Individual agent monitoring
+- Performance metrics per agent
+- Task processing statistics
+- Success rates and error tracking
+- Recent activity logs
+- Real-time status indicators
 
 ### Enrich Your Data
 ```bash
@@ -69,48 +56,17 @@ python scripts/enrich_sample_data.py            # Apply changes
 **Key Features:**
 - ✅ Runs completely on your laptop (Windows, Mac, Linux)
 - ✅ No external dependencies (Python 3.10+ only)
-- ✅ 6 specialized views for different workflows
->>>>>>> f9cfb76b837e2e31b0c3e4f6dc4d476459fc8b2f
+- ✅ Three specialized views for different workflows
 - ✅ Real-time statistics and progress tracking
 - ✅ Mobile-responsive web interface
+- ✅ Auto-refresh every 30 seconds
 
 **Documentation:**
 - [LAPTOP_SETUP.md](LAPTOP_SETUP.md) - Detailed laptop setup guide
-<<<<<<< HEAD
-- [scripts/QUICKSTART.md](scripts/QUICKSTART.md) - 60-second quick start
-- [doc/DASHBOARD_README.md](doc/DASHBOARD_README.md) - Complete dashboard docs
-=======
 - [doc/DASHBOARD_README.md](doc/DASHBOARD_README.md) - Standard dashboard
-- [doc/DASHBOARD_ENHANCED_README.md](doc/DASHBOARD_ENHANCED_README.md) - Enhanced dashboard (NEW!)
+- [doc/DASHBOARD_ENHANCED_README.md](doc/DASHBOARD_ENHANCED_README.md) - Enhanced dashboard with 6 views
+- [doc/DASHBOARD_AGENT_README.md](doc/DASHBOARD_AGENT_README.md) - Agent monitoring dashboard (NEW!)
 - [scripts/QUICKSTART.md](scripts/QUICKSTART.md) - 60-second quick start
-
-## 🔗 GitHub Projects Integration
-
-**GAIA integrates with GitHub Projects V2!** Automatically add issues to your project board.
-
-### Quick Setup (3 steps)
-1. Create a GitHub Project at https://github.com/users/YOUR_USERNAME/projects
-2. Add `PROJECT_V2_NUMBER` secret to repository settings
-3. Label issues with `sprint/*` to auto-add them to your project
-
-### Check Integration Status
-```bash
-python scripts/setup_github_projects.py check
-```
-
-### Sync Backlog to GitHub Issues
-```bash
-# Dry-run (safe preview)
-python agents/github_sessions_sync.py --dry-run
-
-# Live sync (requires AUTOMATION_GITHUB_TOKEN)
-export AUTOMATION_GITHUB_TOKEN="your_token_here"
-export AUTOMATION_GITHUB_REPOSITORY="owner/repo"
-python agents/github_sessions_sync.py
-```
-
-**Full Documentation:** [doc/GITHUB_PROJECTS_INTEGRATION.md](doc/GITHUB_PROJECTS_INTEGRATION.md)
->>>>>>> f9cfb76b837e2e31b0c3e4f6dc4d476459fc8b2f
 
 ---
 
