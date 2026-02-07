@@ -20,9 +20,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt || true
+          pip install -r requirements-dev.txt || true
+      - name: Prepare pytest basetemp
+        run: |
+          python -c "import os; os.makedirs('.tmp/pytest', exist_ok=True)"
       - name: Run unit tests
         run: |
-          pytest -q
+          python -m pytest -q --basetemp .tmp/pytest
       - name: Start token-cache (smoke)
         run: |
           # In CI we will not keep long-running services; run a quick invocation of helper
