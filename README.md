@@ -2,6 +2,39 @@
 
 Quick start notes and run steps for Windows (PowerShell).
 
+## 📊 NEW: Project Dashboard
+
+**Run the GAIA dashboard on your laptop!** View project statistics, tasks, and agent status in your web browser.
+
+### Quick Start (3 commands)
+```bash
+cd /path/to/GAIA
+python scripts/verify_setup.py          # Check your setup
+python scripts/dashboard_server.py      # Start the dashboard
+# Open browser to: http://localhost:8080/dashboard
+```
+
+**Or use the one-click launcher:**
+```bash
+python scripts/launch_dashboard.py      # Auto-opens browser
+```
+
+**For complete laptop setup instructions, see:** [LAPTOP_SETUP.md](LAPTOP_SETUP.md)
+
+**Key Features:**
+- ✅ Runs completely on your laptop (Windows, Mac, Linux)
+- ✅ No external dependencies (Python 3.10+ only)
+- ✅ Shows local project data from `doc/todo-archive.ndjson`
+- ✅ Real-time statistics and progress tracking
+- ✅ Mobile-responsive web interface
+
+**Documentation:**
+- [LAPTOP_SETUP.md](LAPTOP_SETUP.md) - Detailed laptop setup guide
+- [scripts/QUICKSTART.md](scripts/QUICKSTART.md) - 60-second quick start
+- [doc/DASHBOARD_README.md](doc/DASHBOARD_README.md) - Complete dashboard docs
+
+---
+
 ## Requirements
 - Git
 - GitHub CLI (`gh`) — optional but used by agents
