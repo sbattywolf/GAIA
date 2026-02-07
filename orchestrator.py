@@ -46,6 +46,14 @@ def init_db():
         trace_id TEXT,
         payload TEXT
     )''')
+    # project metadata table for simple project tracking (used by dashboard/agents)
+    cur.execute('''CREATE TABLE IF NOT EXISTS projects (
+        id INTEGER PRIMARY KEY,
+        name TEXT UNIQUE,
+        description TEXT,
+        created_at TEXT,
+        metadata TEXT
+    )''')
     cur.execute('''CREATE TABLE IF NOT EXISTS queue (
         id INTEGER PRIMARY KEY,
         created_at TEXT,
