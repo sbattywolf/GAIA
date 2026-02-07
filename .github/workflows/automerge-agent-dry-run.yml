@@ -16,12 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          lfs: true
           lfs: false
-<<<<<<< feat/add-workflow-dispatch
-=======
         with:
           lfs: true
->>>>>>> master
 
       - name: Install Git LFS
         run: |
