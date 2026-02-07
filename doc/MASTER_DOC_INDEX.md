@@ -34,3 +34,17 @@ Archive policy:
 Backlog approach:
 
 - The `05_backlog/MASTER_BACKLOG.md` will contain a single consolidated backlog grouped by feature, with links to archived detail documents and referenced GitHub issues.
+
+## Special Analysis Documents
+
+**GPS 2026 Analysis** (Italian Education System):
+
+A comprehensive analysis of the Italian GPS (Graduatorie Provinciali per Supplenze - Provincial Rankings for Substitute Teachers) 2026 update has been added to demonstrate GAIA's research and documentation capabilities:
+
+- `GPS_2026_ANALISI.md` — Complete analysis in Italian (409 lines, 14 KB)
+- `GPS_2026_ANALYSIS_EN.md` — Complete analysis in English (409 lines, 13 KB)
+- `GPS_2026_ANALYSIS_SUMMARY_EN.md` — Executive summary in English (197 lines, 5.7 KB)
+- `GPS_2026_INDEX.md` — Navigation index and document guide (158 lines, 5.5 KB)
+- `GPS_2026_QUICK_REFERENCE.md` — Quick reference guide with checklists (191 lines, 5.8 KB)
+
+Total: 1,364 lines of comprehensive policy analysis and operational guidance.
