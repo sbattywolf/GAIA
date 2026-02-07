@@ -1,22 +1,22 @@
-# Base image
-FROM python:3.12-slim
+# Use a slim Python base image
+FROM python:3.11-slim
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    sqlite3 \
-    && rm -rf /var/lib/apt/lists/*
+# Copy the application files into the container
+COPY . .
 
-# Copy project files
-COPY . /app
+# Upgrade pip and install dependencies
+RUN pip install --no-cache-dir --upgrade pip \
+    && if [ -f requirements.txt ]; then pip install --no-cache-dir -r requirements.txt; fi \
+    && if [ -f requirements-dev.txt ]; then pip install --no-cache-dir -r requirements-dev.txt; fi
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Set the PYTHONPATH environment variable
+ENV PYTHONPATH=/app
 
-# Expose ports (if needed for dashboard or API)
-EXPOSE 8000
+# Debugging step to verify environment setup
+RUN echo "PYTHONPATH: $PYTHONPATH" && ls -la /app
 
-# Default command
-CMD ["python", "orchestrator.py"]
+# Default command to run tests
+CMD ["pytest"]
