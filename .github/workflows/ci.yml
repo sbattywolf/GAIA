@@ -14,6 +14,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       PYTHONPATH: ${{ github.workspace }}
+      # Use SQLite for claims in CI to improve test reliability
+      CLAIMS_BACKEND: sqlite
+      # Lock timeout (seconds) used by file-backend when fallback is used
+      CLAIMS_LOCK_TIMEOUT: '5.0'
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]

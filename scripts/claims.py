@@ -35,14 +35,25 @@ def _read_claim(path):
 
 def _acquire_lock_for(path, timeout=0.5):
     lock_path = path + ".lock"
+    # allow overriding lock timeout via env var for noisy systems
+    try:
+        env_timeout = float(os.getenv("CLAIMS_LOCK_TIMEOUT", "5.0"))
+    except Exception:
+        env_timeout = 5.0
+    if timeout is None:
+        timeout = env_timeout
+
     start = time.time()
+    backoff = 0.01
     while time.time() - start < timeout:
         try:
             fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_RDWR)
             os.close(fd)
             return True
         except FileExistsError:
-            time.sleep(0.01)
+            time.sleep(backoff)
+            # exponential backoff with cap to avoid long sleeps
+            backoff = min(backoff * 2, 0.1)
     return False
 
 
@@ -65,17 +76,22 @@ def _write_atomic(path, data):
 
     # simple file-based lock to avoid concurrent replace races on Windows
     lock_path = path + ".lock"
+    try:
+        write_timeout = float(os.getenv("CLAIMS_LOCK_TIMEOUT", "5.0"))
+    except Exception:
+        write_timeout = 5.0
     start = time.time()
-    timeout = 0.5
     got = False
-    while time.time() - start < timeout:
+    backoff = 0.01
+    while time.time() - start < write_timeout:
         try:
             fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_RDWR)
             os.close(fd)
             got = True
             break
         except FileExistsError:
-            time.sleep(0.01)
+            time.sleep(backoff)
+            backoff = min(backoff * 2, 0.1)
     try:
         if not got:
             # fallback to replace without lock (last-wins)
@@ -176,3 +192,17 @@ def refresh(story, todolist, agent_id=None, fingerprint=None, ttl_seconds=None):
         return True, existing
     finally:
         _release_lock_for(path)
+
+
+# Optional SQLite backend override. Enable by setting CLAIMS_BACKEND=sqlite
+_USE_SQLITE = os.getenv("CLAIMS_BACKEND", "").lower() == "sqlite" or os.getenv("CLAIMS_USE_SQLITE", "").lower() in ("1", "true")
+if _USE_SQLITE:
+    try:
+        from .claims_sqlite import inspect_claim as _ci, claim as _cc, release as _cr, refresh as _cf
+        inspect_claim = _ci
+        claim = _cc
+        release = _cr
+        refresh = _cf
+    except Exception:
+        # fall back to file-based implementation if import fails
+        pass
