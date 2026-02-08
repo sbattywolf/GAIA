@@ -32,22 +32,16 @@ def main():
         except Exception:
             pass
 
-    # Prefer a canonical helper first, then canonical env name,
-    # then sensible fallbacks.
-    try:
-        from gaia.env_helpers import get_github_token
-        token = get_github_token()
-    except Exception:
-        token = (
-            os.environ.get('GAIA_GITHUB_TOKEN')
-            or os.environ.get('AUTOMATION_GITHUB_TOKEN')
-            or os.environ.get('AUTOMATION_GITHUB_TOKEN_ORG')
-            or os.environ.get('GITHUB_PAT')
-            or os.environ.get('GITHUB_TOKEN')
-            or os.environ.get('GH_PAT')
-            or os.environ.get('GH_TOKEN')
-        )
-
+    # Prefer canonical GAIA token name, then fall back to legacy names
+    token = (
+        os.environ.get('GAIA_GITHUB_TOKEN') or
+        os.environ.get('AUTOMATION_GITHUB_TOKEN') or
+        os.environ.get('AUTOMATION_GITHUB_TOKEN_ORG') or
+        os.environ.get('GITHUB_PAT') or
+        os.environ.get('GITHUB_TOKEN') or
+        os.environ.get('GH_PAT') or
+        os.environ.get('GH_TOKEN')
+    )
     if not token:
         print('No GitHub token found in environment (.private/.env or env vars). Aborting.', file=sys.stderr)
         return 2
