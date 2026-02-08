@@ -1,4 +1,6 @@
 name: CI (fixed)
+env:
+  GAIA_TOKEN: ${{ secrets.GAIA_GITHUB_TOKEN || github.token }}
 
 on:
   push:

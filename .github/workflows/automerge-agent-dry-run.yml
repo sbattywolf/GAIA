@@ -10,6 +10,18 @@ on:
         required: false
         default: 'true'
 
+name: Automerge Agent (dry-run)
+
+on:
+  schedule:
+    - cron: '0 * * * *' # run hourly
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry-run mode?'
+        required: false
+        default: 'true'
+
 jobs:
   run-agent:
     runs-on: ubuntu-latest
@@ -34,6 +46,7 @@ jobs:
       - name: Run automerge agent
         env:
           DRY_RUN: ${{ github.event.inputs.dry_run || 'true' }}
+          GAIA_TOKEN: ${{ secrets.GAIA_GITHUB_TOKEN || github.token }}
         run: |
           echo "DRY_RUN=$DRY_RUN"
           python -m pip install --upgrade pip

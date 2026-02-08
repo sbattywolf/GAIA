@@ -18,6 +18,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GAIA_TOKEN: ${{ secrets.GAIA_GITHUB_TOKEN || github.token }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
