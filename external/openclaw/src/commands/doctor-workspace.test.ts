@@ -1,12 +1,3 @@
-import path from "node:path";
-import { describe, expect, it } from "vitest";
-import { detectLegacyWorkspaceDirs } from "./doctor-workspace.js";
-
-describe("detectLegacyWorkspaceDirs", () => {
-  it("returns active workspace and no legacy dirs", () => {
-    const workspaceDir = "/home/user/openclaw";
-    const detection = detectLegacyWorkspaceDirs({ workspaceDir });
-    expect(detection.activeWorkspace).toBe(path.resolve(workspaceDir));
-    expect(detection.legacyDirs).toEqual([]);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:99f8b928e999f5df5f9d404ab1f168fd14b6905225730e3ee853bc49174c43bc
+size 494

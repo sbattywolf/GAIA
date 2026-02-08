@@ -1,27 +1,3 @@
-import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
-import { resolveHumanDelayConfig } from "./identity.js";
-
-describe("resolveHumanDelayConfig", () => {
-  it("returns undefined when no humanDelay config is set", () => {
-    const cfg: OpenClawConfig = {};
-    expect(resolveHumanDelayConfig(cfg, "main")).toBeUndefined();
-  });
-
-  it("merges defaults with per-agent overrides", () => {
-    const cfg: OpenClawConfig = {
-      agents: {
-        defaults: {
-          humanDelay: { mode: "natural", minMs: 800, maxMs: 1800 },
-        },
-        list: [{ id: "main", humanDelay: { mode: "custom", minMs: 400 } }],
-      },
-    };
-
-    expect(resolveHumanDelayConfig(cfg, "main")).toEqual({
-      mode: "custom",
-      minMs: 400,
-      maxMs: 1800,
-    });
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:2e16f205b2b6266322bd579972f3d6268503924d1f6c5bcee176248895968594
+size 819

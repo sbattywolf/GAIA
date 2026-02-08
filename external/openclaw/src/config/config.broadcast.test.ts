@@ -1,36 +1,3 @@
-import { describe, expect, it, vi } from "vitest";
-
-describe("broadcast", () => {
-  it("accepts a broadcast peer map with strategy", async () => {
-    vi.resetModules();
-    const { validateConfigObject } = await import("./config.js");
-    const res = validateConfigObject({
-      agents: {
-        list: [{ id: "alfred" }, { id: "baerbel" }],
-      },
-      broadcast: {
-        strategy: "parallel",
-        "120363403215116621@g.us": ["alfred", "baerbel"],
-      },
-    });
-    expect(res.ok).toBe(true);
-  });
-
-  it("rejects invalid broadcast strategy", async () => {
-    vi.resetModules();
-    const { validateConfigObject } = await import("./config.js");
-    const res = validateConfigObject({
-      broadcast: { strategy: "nope" },
-    });
-    expect(res.ok).toBe(false);
-  });
-
-  it("rejects non-array broadcast entries", async () => {
-    vi.resetModules();
-    const { validateConfigObject } = await import("./config.js");
-    const res = validateConfigObject({
-      broadcast: { "120363403215116621@g.us": 123 },
-    });
-    expect(res.ok).toBe(false);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:3e9da64fc7bd418b95e7b81c64b10d36053fcc4ae2393950b6f55367ca9ecf05
+size 1075

@@ -1,14 +1,3 @@
-import { describe, expect, it } from "vitest";
-import { normalizeIMessageMessagingTarget } from "./imessage.js";
-
-describe("imessage target normalization", () => {
-  it("preserves service prefixes for handles", () => {
-    expect(normalizeIMessageMessagingTarget("sms:+1 (555) 222-3333")).toBe("sms:+15552223333");
-  });
-
-  it("drops service prefixes for chat targets", () => {
-    expect(normalizeIMessageMessagingTarget("sms:chat_id:123")).toBe("chat_id:123");
-    expect(normalizeIMessageMessagingTarget("imessage:CHAT_GUID:abc")).toBe("chat_guid:abc");
-    expect(normalizeIMessageMessagingTarget("auto:ChatIdentifier:foo")).toBe("chat_identifier:foo");
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:08fba57dba2d5d26950f0c9ec21984fc3eb5cb88323fbf707d3848c13ecb73f1
+size 668

@@ -1,8 +1,3 @@
-{
-  "epic": "EPC_Telegram",
-  "feature_id": "F-metrics-alerts",
-  "feature_name": "Metrics & alerts",
-  "story_key": "stoy_auto",
-  "agent": "assistant",
-  "tasks": []
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ff04ad040d9a13a223707415863953fc0d125f7f138a9d2d71b7908e8a5337ba
+size 170

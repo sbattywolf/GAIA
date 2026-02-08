@@ -1,16 +1,3 @@
-import {
-  DEFAULT_GATEWAY_DAEMON_RUNTIME,
-  GATEWAY_DAEMON_RUNTIME_OPTIONS,
-  isGatewayDaemonRuntime,
-  type GatewayDaemonRuntime,
-} from "./daemon-runtime.js";
-
-export type NodeDaemonRuntime = GatewayDaemonRuntime;
-
-export const DEFAULT_NODE_DAEMON_RUNTIME = DEFAULT_GATEWAY_DAEMON_RUNTIME;
-
-export const NODE_DAEMON_RUNTIME_OPTIONS = GATEWAY_DAEMON_RUNTIME_OPTIONS;
-
-export function isNodeDaemonRuntime(value: string | undefined): value is NodeDaemonRuntime {
-  return isGatewayDaemonRuntime(value);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ef3e1deebf1b0aa10dc1d1cf9450f8ee52dd8ab0b3e08d9fd037c5406900b9e9
+size 505

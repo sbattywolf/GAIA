@@ -16,13 +16,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          lfs: false
+        with:
           fetch-depth: 0
-          lfs: true
-
-      - name: Install Git LFS
-        run: |
-          git lfs version || echo "git-lfs not available"
-          git lfs install || true
+          lfs: false
 
       - name: Create branch and small change
         id: make_change

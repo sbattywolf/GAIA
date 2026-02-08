@@ -1,22 +1,3 @@
-export type SandboxDockerConfig = {
-  image: string;
-  containerPrefix: string;
-  workdir: string;
-  readOnlyRoot: boolean;
-  tmpfs: string[];
-  network: string;
-  user?: string;
-  capDrop: string[];
-  env?: Record<string, string>;
-  setupCommand?: string;
-  pidsLimit?: number;
-  memory?: string | number;
-  memorySwap?: string | number;
-  cpus?: number;
-  ulimits?: Record<string, string | number | { soft?: number; hard?: number }>;
-  seccompProfile?: string;
-  apparmorProfile?: string;
-  dns?: string[];
-  extraHosts?: string[];
-  binds?: string[];
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:9637396709abeea18c894986217c18fc62c724a06c106b7fc05cf6478281d06e
+size 557

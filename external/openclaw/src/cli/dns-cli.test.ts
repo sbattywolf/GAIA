@@ -1,14 +1,3 @@
-import { describe, expect, it, vi } from "vitest";
-
-const { buildProgram } = await import("./program.js");
-
-describe("dns cli", () => {
-  it("prints setup info (no apply)", async () => {
-    const log = vi.spyOn(console, "log").mockImplementation(() => {});
-    const program = buildProgram();
-    await program.parseAsync(["dns", "setup", "--domain", "openclaw.internal"], { from: "user" });
-    const output = log.mock.calls.map((call) => call.join(" ")).join("\n");
-    expect(output).toContain("DNS setup");
-    expect(output).toContain("openclaw.internal");
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:5913c333d5ae1c12d7b6d58e47f24ab21a218c1e4ce78e812315e6e466228b57
+size 573

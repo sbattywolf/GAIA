@@ -1,19 +1,3 @@
-import type { MSTeamsConfig } from "openclaw/plugin-sdk";
-
-export type MSTeamsCredentials = {
-  appId: string;
-  appPassword: string;
-  tenantId: string;
-};
-
-export function resolveMSTeamsCredentials(cfg?: MSTeamsConfig): MSTeamsCredentials | undefined {
-  const appId = cfg?.appId?.trim() || process.env.MSTEAMS_APP_ID?.trim();
-  const appPassword = cfg?.appPassword?.trim() || process.env.MSTEAMS_APP_PASSWORD?.trim();
-  const tenantId = cfg?.tenantId?.trim() || process.env.MSTEAMS_TENANT_ID?.trim();
-
-  if (!appId || !appPassword || !tenantId) {
-    return undefined;
-  }
-
-  return { appId, appPassword, tenantId };
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:4340630f8bc7d7cf9986571653bea3253700a4353c1aedde53c6b9d3111fa79c
+size 622

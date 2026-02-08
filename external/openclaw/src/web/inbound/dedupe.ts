@@ -1,17 +1,3 @@
-import { createDedupeCache } from "../../infra/dedupe.js";
-
-const RECENT_WEB_MESSAGE_TTL_MS = 20 * 60_000;
-const RECENT_WEB_MESSAGE_MAX = 5000;
-
-const recentInboundMessages = createDedupeCache({
-  ttlMs: RECENT_WEB_MESSAGE_TTL_MS,
-  maxSize: RECENT_WEB_MESSAGE_MAX,
-});
-
-export function resetWebInboundDedupe(): void {
-  recentInboundMessages.clear();
-}
-
-export function isRecentInboundMessage(key: string): boolean {
-  return recentInboundMessages.check(key);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:df06e36040c90f8a4fd54168aa74bacac59cd131eb4922f90ce757f921bfd40d
+size 463

@@ -1,9 +1,3 @@
-{
-  "id": "google-antigravity-auth",
-  "providers": ["google-antigravity"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b6f91351fe1c330ea50e3491162059a02484e5c8a9ab3d4138367c077b20234b
+size 180

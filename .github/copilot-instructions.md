@@ -86,3 +86,34 @@ Please review and tell me which parts need more examples or exact schemas to be 
 - Resume procedure: load environment, ensure `.tmp/telegram.env` exists with `TELEGRAM_BOT_TOKEN` and `CHAT_ID`, then start the approval listener (`scripts/approval_listener.py`) with `--poll` and `--continue-on-approve` as needed. Record PID in `.tmp/approval_listener.pid` and confirm health via `.tmp/telegram_health.json`.
 - Handoff steps: 1) ensure agent is running and heartbeating; 2) append a `handoff` event to `events.ndjson` with `type: agent.handoff`, `source: Don Ciccio - online`, and `payload` describing the state; 3) update `gaia.db` with a trace via `db.write_trace()` noting the handoff; 4) notify approvers via Telegram if required.
 - Notes: tag agent-originated events with `source: Don Ciccio - online` and include `trace_id` for easier filtering. Keep `ALLOW_COMMAND_EXECUTION` off by default for safety; enable only for controlled tests.
+
+# GitHub Project and Branch Strategy Integration
+
+## Purpose
+This document outlines the integration of GitHub Projects and branch strategy to ensure seamless task tracking and development workflows.
+
+## GitHub Projects
+
+### Setup
+1. Create a project board for the roadmap.
+2. Define columns:
+   - To Do
+   - In Progress
+   - Review
+   - Done
+
+### Automation
+1. Use GitHub Actions to move tasks between columns based on PR status.
+2. Automate label assignment for issues and PRs.
+
+## Branch Strategy
+
+### Workflow
+1. Use `feature/*` branches for new features.
+2. Use `bugfix/*` branches for bug fixes.
+3. Merge into `develop` after review.
+4. Use `release/*` branches for production releases.
+
+---
+
+This integration ensures that GitHub Projects and branch workflows are aligned with GAIA's goals.

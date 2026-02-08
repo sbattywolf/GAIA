@@ -1,20 +1,3 @@
-export function parseKeyValueOutput(output: string, separator: string): Record<string, string> {
-  const entries: Record<string, string> = {};
-  for (const rawLine of output.split(/\r?\n/)) {
-    const line = rawLine.trim();
-    if (!line) {
-      continue;
-    }
-    const idx = line.indexOf(separator);
-    if (idx <= 0) {
-      continue;
-    }
-    const key = line.slice(0, idx).trim().toLowerCase();
-    if (!key) {
-      continue;
-    }
-    const value = line.slice(idx + separator.length).trim();
-    entries[key] = value;
-  }
-  return entries;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:98feb0a3816f0ba12e93deeb6254fc05997188806cc7cda6d0cf171aead5faa9
+size 553

@@ -1,18 +1,3 @@
-export type NormalizedChatType = "direct" | "group" | "channel";
-
-export function normalizeChatType(raw?: string): NormalizedChatType | undefined {
-  const value = raw?.trim().toLowerCase();
-  if (!value) {
-    return undefined;
-  }
-  if (value === "direct" || value === "dm") {
-    return "direct";
-  }
-  if (value === "group") {
-    return "group";
-  }
-  if (value === "channel") {
-    return "channel";
-  }
-  return undefined;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:c91a1fc24e6b6752c42173d733da022ae7c487f7458cdb60fde4846b34b65a84
+size 432

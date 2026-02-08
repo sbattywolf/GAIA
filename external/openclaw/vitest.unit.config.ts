@@ -1,19 +1,3 @@
-import { defineConfig } from "vitest/config";
-import baseConfig from "./vitest.config.ts";
-
-const baseTest = (baseConfig as { test?: { include?: string[]; exclude?: string[] } }).test ?? {};
-const include = baseTest.include ?? [
-  "src/**/*.test.ts",
-  "extensions/**/*.test.ts",
-  "test/format-error.test.ts",
-];
-const exclude = baseTest.exclude ?? [];
-
-export default defineConfig({
-  ...baseConfig,
-  test: {
-    ...baseTest,
-    include,
-    exclude: [...exclude, "src/gateway/**", "extensions/**"],
-  },
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:4b8d74a8b4a9f46b3ba4365c89d5266087616aa7856abe1b341f78c2b3c565ec
+size 513

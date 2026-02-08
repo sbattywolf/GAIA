@@ -1,18 +1,3 @@
-import type { RuntimeEnv } from "../../runtime.js";
-import type { MonitorIMessageOpts } from "./types.js";
-
-export function resolveRuntime(opts: MonitorIMessageOpts): RuntimeEnv {
-  return (
-    opts.runtime ?? {
-      log: console.log,
-      error: console.error,
-      exit: (code: number): never => {
-        throw new Error(`exit ${code}`);
-      },
-    }
-  );
-}
-
-export function normalizeAllowList(list?: Array<string | number>) {
-  return (list ?? []).map((entry) => String(entry).trim()).filter(Boolean);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:dadce9bd80886de9e48007719a9a133455ca1861ac39b84b0f124f41746e4716
+size 514

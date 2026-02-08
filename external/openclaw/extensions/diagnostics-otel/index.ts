@@ -1,15 +1,3 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
-import { createDiagnosticsOtelService } from "./src/service.js";
-
-const plugin = {
-  id: "diagnostics-otel",
-  name: "Diagnostics OpenTelemetry",
-  description: "Export diagnostics events to OpenTelemetry",
-  configSchema: emptyPluginConfigSchema(),
-  register(api: OpenClawPluginApi) {
-    api.registerService(createDiagnosticsOtelService());
-  },
-};
-
-export default plugin;
+version https://git-lfs.github.com/spec/v1
+oid sha256:23ceb6771f37f50737709c0e17b348d1cd86f19af3c8bc6ae2d6b6d909dbb6a6
+size 501

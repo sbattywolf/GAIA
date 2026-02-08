@@ -1,24 +1,3 @@
-declare module "@lydell/node-pty" {
-  export type PtyExitEvent = { exitCode: number; signal?: number };
-  export type PtyListener<T> = (event: T) => void;
-  export type PtyHandle = {
-    pid: number;
-    write: (data: string | Buffer) => void;
-    onData: (listener: PtyListener<string>) => void;
-    onExit: (listener: PtyListener<PtyExitEvent>) => void;
-  };
-
-  export type PtySpawn = (
-    file: string,
-    args: string[] | string,
-    options: {
-      name?: string;
-      cols?: number;
-      rows?: number;
-      cwd?: string;
-      env?: Record<string, string>;
-    },
-  ) => PtyHandle;
-
-  export const spawn: PtySpawn;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:4d84e511319a9ea4a8a255bc9aee6cc67f68f029abcd89b3f86afb6c527c3516
+size 630

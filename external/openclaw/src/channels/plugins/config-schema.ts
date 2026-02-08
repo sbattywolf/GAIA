@@ -1,11 +1,3 @@
-import type { ZodTypeAny } from "zod";
-import type { ChannelConfigSchema } from "./types.plugin.js";
-
-export function buildChannelConfigSchema(schema: ZodTypeAny): ChannelConfigSchema {
-  return {
-    schema: schema.toJSONSchema({
-      target: "draft-07",
-      unrepresentable: "any",
-    }) as Record<string, unknown>,
-  };
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:27b8234ab1431ad61b4dac2e3dad313f9a57cc14ea934a6d9997266c7bb6961f
+size 329

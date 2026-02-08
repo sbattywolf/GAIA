@@ -1,14 +1,3 @@
-import type { PluginRuntime } from "openclaw/plugin-sdk";
-
-let runtime: PluginRuntime | null = null;
-
-export function setMatrixRuntime(next: PluginRuntime) {
-  runtime = next;
-}
-
-export function getMatrixRuntime(): PluginRuntime {
-  if (!runtime) {
-    throw new Error("Matrix runtime not initialized");
-  }
-  return runtime;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:337c84cae0df83fd213d35231034b83c0abb3e4843d2e86143a82e243b5d14f9
+size 328

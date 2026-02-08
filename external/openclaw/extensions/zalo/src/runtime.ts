@@ -1,14 +1,3 @@
-import type { PluginRuntime } from "openclaw/plugin-sdk";
-
-let runtime: PluginRuntime | null = null;
-
-export function setZaloRuntime(next: PluginRuntime): void {
-  runtime = next;
-}
-
-export function getZaloRuntime(): PluginRuntime {
-  if (!runtime) {
-    throw new Error("Zalo runtime not initialized");
-  }
-  return runtime;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6f8ecfd9363db1f93490732d6a3e0da52466d988d6324e9c1d9a118eb41183ef
+size 328

@@ -1,26 +1,3 @@
-import type { ChannelChoice } from "../onboard-types.js";
-import type { ChannelOnboardingAdapter } from "./types.js";
-import { listChannelPlugins } from "../../channels/plugins/index.js";
-
-const CHANNEL_ONBOARDING_ADAPTERS = () =>
-  new Map<ChannelChoice, ChannelOnboardingAdapter>(
-    listChannelPlugins()
-      .map((plugin) => (plugin.onboarding ? ([plugin.id, plugin.onboarding] as const) : null))
-      .filter((entry): entry is readonly [ChannelChoice, ChannelOnboardingAdapter] =>
-        Boolean(entry),
-      ),
-  );
-
-export function getChannelOnboardingAdapter(
-  channel: ChannelChoice,
-): ChannelOnboardingAdapter | undefined {
-  return CHANNEL_ONBOARDING_ADAPTERS().get(channel);
-}
-
-export function listChannelOnboardingAdapters(): ChannelOnboardingAdapter[] {
-  return Array.from(CHANNEL_ONBOARDING_ADAPTERS().values());
-}
-
-// Legacy aliases (pre-rename).
-export const getProviderOnboardingAdapter = getChannelOnboardingAdapter;
-export const listProviderOnboardingAdapters = listChannelOnboardingAdapters;
+version https://git-lfs.github.com/spec/v1
+oid sha256:a043427d7ca4bb1ebd983890c2c578e2c846a9f49d2333a8c3b56427a76de5f0
+size 1021

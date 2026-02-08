@@ -1,33 +1,3 @@
-export { githubCopilotLoginCommand } from "../providers/github-copilot-auth.js";
-export {
-  modelsAliasesAddCommand,
-  modelsAliasesListCommand,
-  modelsAliasesRemoveCommand,
-} from "./models/aliases.js";
-export {
-  modelsAuthAddCommand,
-  modelsAuthLoginCommand,
-  modelsAuthPasteTokenCommand,
-  modelsAuthSetupTokenCommand,
-} from "./models/auth.js";
-export {
-  modelsAuthOrderClearCommand,
-  modelsAuthOrderGetCommand,
-  modelsAuthOrderSetCommand,
-} from "./models/auth-order.js";
-export {
-  modelsFallbacksAddCommand,
-  modelsFallbacksClearCommand,
-  modelsFallbacksListCommand,
-  modelsFallbacksRemoveCommand,
-} from "./models/fallbacks.js";
-export {
-  modelsImageFallbacksAddCommand,
-  modelsImageFallbacksClearCommand,
-  modelsImageFallbacksListCommand,
-  modelsImageFallbacksRemoveCommand,
-} from "./models/image-fallbacks.js";
-export { modelsListCommand, modelsStatusCommand } from "./models/list.js";
-export { modelsScanCommand } from "./models/scan.js";
-export { modelsSetCommand } from "./models/set.js";
-export { modelsSetImageCommand } from "./models/set-image.js";
+version https://git-lfs.github.com/spec/v1
+oid sha256:bfeed79b80634575cd4bd71f2fe2bc3633be6950cd1870c4456ff4c8d917fad9
+size 1080

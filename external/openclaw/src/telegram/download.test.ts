@@ -1,35 +1,3 @@
-import { describe, expect, it, vi } from "vitest";
-import { downloadTelegramFile, getTelegramFile, type TelegramFileInfo } from "./download.js";
-
-describe("telegram download", () => {
-  it("fetches file info", async () => {
-    const json = vi.fn().mockResolvedValue({ ok: true, result: { file_path: "photos/1.jpg" } });
-    vi.spyOn(global, "fetch" as never).mockResolvedValueOnce({
-      ok: true,
-      status: 200,
-      statusText: "OK",
-      json,
-    } as Response);
-    const info = await getTelegramFile("tok", "fid");
-    expect(info.file_path).toBe("photos/1.jpg");
-  });
-
-  it("downloads and saves", async () => {
-    const info: TelegramFileInfo = {
-      file_id: "fid",
-      file_path: "photos/1.jpg",
-    };
-    const arrayBuffer = async () => new Uint8Array([1, 2, 3, 4]).buffer;
-    vi.spyOn(global, "fetch" as never).mockResolvedValueOnce({
-      ok: true,
-      status: 200,
-      statusText: "OK",
-      body: true,
-      arrayBuffer,
-      headers: { get: () => "image/jpeg" },
-    } as Response);
-    const saved = await downloadTelegramFile("tok", info, 1024 * 1024);
-    expect(saved.path).toBeTruthy();
-    expect(saved.contentType).toBe("image/jpeg");
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:42f342cae1e21b9eefd4cd215ec720eea549b37234c1e9c22c92809c7cf64c6f
+size 1191

@@ -1,20 +1,3 @@
-import type { PairingChannel } from "./pairing-store.js";
-import { formatCliCommand } from "../cli/command-format.js";
-
-export function buildPairingReply(params: {
-  channel: PairingChannel;
-  idLine: string;
-  code: string;
-}): string {
-  const { channel, idLine, code } = params;
-  return [
-    "OpenClaw: access not configured.",
-    "",
-    idLine,
-    "",
-    `Pairing code: ${code}`,
-    "",
-    "Ask the bot owner to approve with:",
-    formatCliCommand(`openclaw pairing approve ${channel} <code>`),
-  ].join("\n");
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:19212939bfc3d77002942aa16e777b4086bd75e979aee22f2f9448820c3cb03c
+size 526

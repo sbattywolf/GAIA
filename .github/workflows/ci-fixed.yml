@@ -18,6 +18,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          lfs: false
+        with:
           fetch-depth: 0
           lfs: true
 
@@ -61,5 +63,7 @@ jobs:
 
       - name: Run tests
         run: |
+          # ensure pytest basetemp directory exists (cross-platform)
+          python -c "import os; os.makedirs('.tmp/pytest', exist_ok=True)"
           python -m pytest -q --basetemp .tmp/pytest
         shell: bash

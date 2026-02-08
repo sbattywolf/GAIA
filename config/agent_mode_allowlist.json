@@ -1,12 +1,3 @@
-{
-  "allowed_commands": [
-    "send_telegram",
-    "send_notification",
-    "micro_commit",
-    "create_issue"
-  ],
-  "allowed_paths": [
-    ".tmp/",
-    "logs/"
-  ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6d219f3569ea33d73e925870e2d5e1af35af7f4ed06bc06a3644a0cc70380bf1
+size 168

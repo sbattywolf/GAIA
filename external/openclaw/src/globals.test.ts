@@ -1,29 +1,3 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { isVerbose, isYes, logVerbose, setVerbose, setYes } from "./globals.js";
-
-describe("globals", () => {
-  afterEach(() => {
-    setVerbose(false);
-    setYes(false);
-    vi.restoreAllMocks();
-  });
-
-  it("toggles verbose flag and logs when enabled", () => {
-    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
-    setVerbose(false);
-    logVerbose("hidden");
-    expect(logSpy).not.toHaveBeenCalled();
-
-    setVerbose(true);
-    logVerbose("shown");
-    expect(isVerbose()).toBe(true);
-    expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("shown"));
-  });
-
-  it("stores yes flag", () => {
-    setYes(true);
-    expect(isYes()).toBe(true);
-    setYes(false);
-    expect(isYes()).toBe(false);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:f3294c6aebaf5d455744cb03ee90eeb74031372aa574ca243c5d612a26d79989
+size 802

@@ -1,32 +1,3 @@
-export type MapConfig = {
-  ensureLogins?: string[];
-  displayName?: Record<string, string>;
-  nameToLogin?: Record<string, string>;
-  emailToLogin?: Record<string, string>;
-  placeholderAvatar?: string;
-  seedCommit?: string;
-};
-
-export type ApiContributor = {
-  login?: string;
-  html_url?: string;
-  avatar_url?: string;
-  name?: string;
-  email?: string;
-  contributions?: number;
-};
-
-export type User = {
-  login: string;
-  html_url: string;
-  avatar_url: string;
-};
-
-export type Entry = {
-  key: string;
-  login?: string;
-  display: string;
-  html_url: string;
-  avatar_url: string;
-  lines: number;
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:f83918bb59b77a5a3283d99cff82c8be9515bb2c26f59b42086715b014527ab7
+size 609

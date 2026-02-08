@@ -1,28 +1,3 @@
-import type { PluginLogger } from "../plugins/types.js";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import { loadConfig } from "../config/config.js";
-import { createSubsystemLogger } from "../logging.js";
-import { loadOpenClawPlugins } from "../plugins/loader.js";
-
-const log = createSubsystemLogger("plugins");
-let pluginRegistryLoaded = false;
-
-export function ensurePluginRegistryLoaded(): void {
-  if (pluginRegistryLoaded) {
-    return;
-  }
-  const config = loadConfig();
-  const workspaceDir = resolveAgentWorkspaceDir(config, resolveDefaultAgentId(config));
-  const logger: PluginLogger = {
-    info: (msg) => log.info(msg),
-    warn: (msg) => log.warn(msg),
-    error: (msg) => log.error(msg),
-    debug: (msg) => log.debug(msg),
-  };
-  loadOpenClawPlugins({
-    config,
-    workspaceDir,
-    logger,
-  });
-  pluginRegistryLoaded = true;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e0228b211e6250d9b854b3984dc0a6c3898b12066b86b68d3458ad84fc66c205
+size 897

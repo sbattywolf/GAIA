@@ -1,36 +1,3 @@
-{
-  "name": "@openclaw/zalo",
-  "version": "2026.2.1",
-  "description": "OpenClaw Zalo channel plugin",
-  "type": "module",
-  "dependencies": {
-    "openclaw": "workspace:*",
-    "undici": "7.20.0"
-  },
-  "devDependencies": {
-    "openclaw": "workspace:*"
-  },
-  "openclaw": {
-    "extensions": [
-      "./index.ts"
-    ],
-    "channel": {
-      "id": "zalo",
-      "label": "Zalo",
-      "selectionLabel": "Zalo (Bot API)",
-      "docsPath": "/channels/zalo",
-      "docsLabel": "zalo",
-      "blurb": "Vietnam-focused messaging platform with Bot API.",
-      "aliases": [
-        "zl"
-      ],
-      "order": 80,
-      "quickstartAllowFrom": true
-    },
-    "install": {
-      "npmSpec": "@openclaw/zalo",
-      "localPath": "extensions/zalo",
-      "defaultChoice": "npm"
-    }
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:38f740f711332a40242d1b0883bc9593cc0635536ac9e2a467a40bcce6837f8c
+size 787

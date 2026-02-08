@@ -1,14 +1,3 @@
-import type { PluginRuntime } from "openclaw/plugin-sdk";
-
-let runtime: PluginRuntime | null = null;
-
-export function setGoogleChatRuntime(next: PluginRuntime) {
-  runtime = next;
-}
-
-export function getGoogleChatRuntime(): PluginRuntime {
-  if (!runtime) {
-    throw new Error("Google Chat runtime not initialized");
-  }
-  return runtime;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3c01a0927fbfc4833f1bf8747e62d0d9d31e8f0aa075aa938f4112fe42e24abb
+size 341

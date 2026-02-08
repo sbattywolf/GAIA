@@ -1,8 +1,3 @@
-{
-  "epic": "EPC_Telegram",
-  "feature_id": "F-command-safety",
-  "feature_name": "Command execution safety",
-  "story_key": "stoy_auto",
-  "agent": "assistant",
-  "tasks": []
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:a30c6ebe3811ac555c5a18cecfab498199cf0e2bcc6c2a1e75036c755913ede4
+size 178

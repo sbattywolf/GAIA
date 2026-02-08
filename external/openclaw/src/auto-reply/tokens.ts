@@ -1,22 +1,3 @@
-export const HEARTBEAT_TOKEN = "HEARTBEAT_OK";
-export const SILENT_REPLY_TOKEN = "NO_REPLY";
-
-function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-export function isSilentReplyText(
-  text: string | undefined,
-  token: string = SILENT_REPLY_TOKEN,
-): boolean {
-  if (!text) {
-    return false;
-  }
-  const escaped = escapeRegExp(token);
-  const prefix = new RegExp(`^\\s*${escaped}(?=$|\\W)`);
-  if (prefix.test(text)) {
-    return true;
-  }
-  const suffix = new RegExp(`\\b${escaped}\\b\\W*$`);
-  return suffix.test(text);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:1a84a0c941b897ae61b2568ec1a7fe7d3cc71c343424f24bb374fc94bc9da92b
+size 578

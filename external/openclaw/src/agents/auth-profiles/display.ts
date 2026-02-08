@@ -1,17 +1,3 @@
-import type { OpenClawConfig } from "../../config/config.js";
-import type { AuthProfileStore } from "./types.js";
-
-export function resolveAuthProfileDisplayLabel(params: {
-  cfg?: OpenClawConfig;
-  store: AuthProfileStore;
-  profileId: string;
-}): string {
-  const { cfg, store, profileId } = params;
-  const profile = store.profiles[profileId];
-  const configEmail = cfg?.auth?.profiles?.[profileId]?.email?.trim();
-  const email = configEmail || (profile && "email" in profile ? profile.email?.trim() : undefined);
-  if (email) {
-    return `${profileId} (${email})`;
-  }
-  return profileId;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:92f6c14e06b145897b775ac04393e50ce8b4d47ffb55e5729218dfcc79e45a3a
+size 596

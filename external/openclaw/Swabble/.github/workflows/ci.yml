@@ -16,6 +16,7 @@ jobs:
       - name: Checkout swabble
         uses: actions/checkout@v4
         with:
+          lfs: false
           path: swabble
 
       - name: Select Xcode 26.1 (prefer 26.1.1)

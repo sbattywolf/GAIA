@@ -1,9 +1,3 @@
-{
-  "id": "tlon",
-  "channels": ["tlon"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:242aca79000b53a28ca3b422e47db564de8ab78ad12eda759a4c53992ed9c7b4
+size 146

@@ -1,20 +1,3 @@
-import dotenv from "dotenv";
-import fs from "node:fs";
-import path from "node:path";
-import { resolveConfigDir } from "../utils.js";
-
-export function loadDotEnv(opts?: { quiet?: boolean }) {
-  const quiet = opts?.quiet ?? true;
-
-  // Load from process CWD first (dotenv default).
-  dotenv.config({ quiet });
-
-  // Then load global fallback: ~/.openclaw/.env (or OPENCLAW_STATE_DIR/.env),
-  // without overriding any env vars already present.
-  const globalEnvPath = path.join(resolveConfigDir(process.env), ".env");
-  if (!fs.existsSync(globalEnvPath)) {
-    return;
-  }
-
-  dotenv.config({ quiet, path: globalEnvPath, override: false });
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:182193604bce0f709543f2d9a3d889ac48d19dfd824ea972d04f47ae281a405c
+size 640

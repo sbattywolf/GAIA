@@ -1,18 +1,3 @@
-{
-  "publisher": {
-    "ok": false,
-    "error": "Key file not found: .private\\gaia_app.pem\n"
-  },
-  "ci": {
-    "ok": false,
-    "error": "Key file not found: .private\\gaia_app.pem\n"
-  },
-  "token_cache": {
-    "ok": false,
-    "error": "Key file not found: .private\\gaia_app.pem\n"
-  },
-  "online_agent": {
-    "ok": false,
-    "error": "Key file not found: .private\\gaia_app.pem\n"
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:1d8f2d3b2f08fec459cb521edf16105ead9ee7a2db2a1d3c6506e26c5cf2fb8e
+size 396

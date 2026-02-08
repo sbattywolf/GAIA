@@ -5,6 +5,7 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -19,37 +20,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: false
+          submodules: true
           lfs: true
-
-      - name: Install Git LFS
-        run: |
-          git lfs version || echo "git-lfs not available"
-          git lfs install || true
 
       - name: Neutralize broken submodule entries
         shell: bash
         run: |
           if [ -f .gitmodules ]; then
-            python - <<'PY'
-            import re,os
-            content=open('.gitmodules','r',encoding='utf-8').read()
-            sections=re.findall(r'\[submodule "([^\"]+)"\]([\s\S]*?)(?=\n\[|\Z)',content)
-            out=[]
-            removed=[]
-            for name,body in sections:
-              if re.search(r'\burl\s*=\s*.+',body):
-                out.append(f'[submodule "{name}"]'+body)
-              else:
-                removed.append(name)
-            if removed:
-              open('.gitmodules','w',encoding='utf-8').write('\n'.join(out)+('\n' if out else ''))
-              for n in removed:
-                os.system(f"git config -f .git/config --remove-section submodule.{n} 2>/dev/null || true")
-              print('Removed broken submodule entries:', removed)
-            else:
-              print('No broken submodule entries found')
-            PY
+            python .github/scripts/neutralize_submodules.py
           fi
 
       - name: Set up Python
@@ -84,7 +62,15 @@ jobs:
           python -c "import agents, scripts, orchestrator"
         shell: bash
 
-      - name: Smoke - online agent dry_run
+      - name: Smoke - Validate Environment
+        run: |
+          python -c "import os; assert 'TELEGRAM_BOT_TOKEN' in os.environ, 'Missing TELEGRAM_BOT_TOKEN'"
+
+      - name: Smoke - Validate Tokens
+        run: |
+          bash scripts/smoke_check_with_token.sh $TELEGRAM_BOT_TOKEN
+
+      - name: Smoke - Online Agent Dry Run
         run: |
           python -u scripts/online_agent.py --command dry_run
         shell: bash
@@ -94,4 +80,12 @@ jobs:
         run: |
           # ensure repo path is available to python via .pth in the user site-packages (cross-platform)
           python .github/scripts/write_pth.py
+          # ensure pytest basetemp directory exists (cross-platform)
+          python -c "import os; os.makedirs('.tmp/pytest', exist_ok=True)"
           python -m pytest -q --basetemp .tmp/pytest
+
+      - name: Build Docker Image
+        run: docker build -t gaia-ci-test .
+
+      - name: Run Tests in Docker
+        run: docker run --rm gaia-ci-test

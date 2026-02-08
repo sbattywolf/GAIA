@@ -1,16 +1,3 @@
-import type { OpenClawConfig } from "../../../config/config.js";
-import type { OnboardOptions } from "../../onboard-types.js";
-import { resolveUserPath } from "../../../utils.js";
-
-export function resolveNonInteractiveWorkspaceDir(params: {
-  opts: OnboardOptions;
-  baseConfig: OpenClawConfig;
-  defaultWorkspaceDir: string;
-}) {
-  const raw = (
-    params.opts.workspace ??
-    params.baseConfig.agents?.defaults?.workspace ??
-    params.defaultWorkspaceDir
-  ).trim();
-  return resolveUserPath(raw);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:761178b71759eef6edec78873dc93a56519f64f19c82bd278782358f67eeeb0a
+size 505

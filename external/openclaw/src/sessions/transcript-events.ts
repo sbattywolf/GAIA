@@ -1,25 +1,3 @@
-type SessionTranscriptUpdate = {
-  sessionFile: string;
-};
-
-type SessionTranscriptListener = (update: SessionTranscriptUpdate) => void;
-
-const SESSION_TRANSCRIPT_LISTENERS = new Set<SessionTranscriptListener>();
-
-export function onSessionTranscriptUpdate(listener: SessionTranscriptListener): () => void {
-  SESSION_TRANSCRIPT_LISTENERS.add(listener);
-  return () => {
-    SESSION_TRANSCRIPT_LISTENERS.delete(listener);
-  };
-}
-
-export function emitSessionTranscriptUpdate(sessionFile: string): void {
-  const trimmed = sessionFile.trim();
-  if (!trimmed) {
-    return;
-  }
-  const update = { sessionFile: trimmed };
-  for (const listener of SESSION_TRANSCRIPT_LISTENERS) {
-    listener(update);
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:bba6df80a82c56082796e2c1b98efbdae22506d924ab6719678c832b0eb91b1d
+size 701

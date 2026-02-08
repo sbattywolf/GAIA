@@ -1,14 +1,3 @@
-{
-  "name": "@openclaw/copilot-proxy",
-  "version": "2026.2.1",
-  "description": "OpenClaw Copilot Proxy provider plugin",
-  "type": "module",
-  "devDependencies": {
-    "openclaw": "workspace:*"
-  },
-  "openclaw": {
-    "extensions": [
-      "./index.ts"
-    ]
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0d49d844bed9436892b7c152f01801230644a9813b46a656f6b8ccc6fbae7f55
+size 268

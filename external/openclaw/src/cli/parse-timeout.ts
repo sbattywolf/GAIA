@@ -1,18 +1,3 @@
-export function parseTimeoutMs(raw: unknown): number | undefined {
-  if (raw === undefined || raw === null) {
-    return undefined;
-  }
-  let value = Number.NaN;
-  if (typeof raw === "number") {
-    value = raw;
-  } else if (typeof raw === "bigint") {
-    value = Number(raw);
-  } else if (typeof raw === "string") {
-    const trimmed = raw.trim();
-    if (!trimmed) {
-      return undefined;
-    }
-    value = Number.parseInt(trimmed, 10);
-  }
-  return Number.isFinite(value) ? value : undefined;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:7f12e575a08d547e9128c02c3e3acc7f4ec518b9634e62ceeb135998a785ffe3
+size 500

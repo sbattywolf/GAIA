@@ -1,20 +1,3 @@
-import { type RetryOptions, type WebClientOptions, WebClient } from "@slack/web-api";
-
-export const SLACK_DEFAULT_RETRY_OPTIONS: RetryOptions = {
-  retries: 2,
-  factor: 2,
-  minTimeout: 500,
-  maxTimeout: 3000,
-  randomize: true,
-};
-
-export function resolveSlackWebClientOptions(options: WebClientOptions = {}): WebClientOptions {
-  return {
-    ...options,
-    retryConfig: options.retryConfig ?? SLACK_DEFAULT_RETRY_OPTIONS,
-  };
-}
-
-export function createSlackWebClient(token: string, options: WebClientOptions = {}) {
-  return new WebClient(token, resolveSlackWebClientOptions(options));
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:26fa4bda8d8fc490f4b975cdb2d91bcbb4f34b454ddae4e91aec1d835bc12a57
+size 594

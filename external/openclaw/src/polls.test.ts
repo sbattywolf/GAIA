@@ -1,31 +1,3 @@
-import { describe, expect, it } from "vitest";
-import { normalizePollDurationHours, normalizePollInput } from "./polls.js";
-
-describe("polls", () => {
-  it("normalizes question/options and validates maxSelections", () => {
-    expect(
-      normalizePollInput({
-        question: "  Lunch? ",
-        options: [" Pizza ", " ", "Sushi"],
-        maxSelections: 2,
-      }),
-    ).toEqual({
-      question: "Lunch?",
-      options: ["Pizza", "Sushi"],
-      maxSelections: 2,
-      durationHours: undefined,
-    });
-  });
-
-  it("enforces max option count when configured", () => {
-    expect(() =>
-      normalizePollInput({ question: "Q", options: ["A", "B", "C"] }, { maxOptions: 2 }),
-    ).toThrow(/at most 2/);
-  });
-
-  it("clamps poll duration with defaults", () => {
-    expect(normalizePollDurationHours(undefined, { defaultHours: 24, maxHours: 48 })).toBe(24);
-    expect(normalizePollDurationHours(999, { defaultHours: 24, maxHours: 48 })).toBe(48);
-    expect(normalizePollDurationHours(1, { defaultHours: 24, maxHours: 48 })).toBe(1);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:85de2eff99d8891edea6cc1812d52d38b97171b553777e98f6fdc64a98bfbdbc
+size 1055

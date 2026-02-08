@@ -1,30 +1,3 @@
-import type { Command } from "commander";
-import type { MessageCliHelpers } from "./helpers.js";
-import { collectOption } from "../helpers.js";
-
-export function registerMessagePermissionsCommand(message: Command, helpers: MessageCliHelpers) {
-  helpers
-    .withMessageBase(
-      helpers.withRequiredMessageTarget(
-        message.command("permissions").description("Fetch channel permissions"),
-      ),
-    )
-    .action(async (opts) => {
-      await helpers.runMessageAction("permissions", opts);
-    });
-}
-
-export function registerMessageSearchCommand(message: Command, helpers: MessageCliHelpers) {
-  helpers
-    .withMessageBase(message.command("search").description("Search Discord messages"))
-    .requiredOption("--guild-id <id>", "Guild id")
-    .requiredOption("--query <text>", "Search query")
-    .option("--channel-id <id>", "Channel id")
-    .option("--channel-ids <id>", "Channel id (repeat)", collectOption, [] as string[])
-    .option("--author-id <id>", "Author id")
-    .option("--author-ids <id>", "Author id (repeat)", collectOption, [] as string[])
-    .option("--limit <n>", "Result limit")
-    .action(async (opts) => {
-      await helpers.runMessageAction("search", opts);
-    });
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6dba24543e658f816f42a1141f692454d322cc8054b657025c506c535cc3468c
+size 1210

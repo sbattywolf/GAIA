@@ -1,17 +1,3 @@
-/**
- * Conformance snapshot for tool policy.
- *
- * Security note:
- * - This is static, build-time information (no runtime I/O, no network exposure).
- * - Intended for CI/tools to detect drift between the implementation policy and
- *   the formal models/extractors.
- */
-
-import { TOOL_GROUPS } from "./tool-policy.js";
-
-// Tool name aliases are intentionally not exported from tool-policy today.
-// Keep the conformance snapshot focused on exported policy constants.
-
-export const TOOL_POLICY_CONFORMANCE = {
-  toolGroups: TOOL_GROUPS,
-} as const;
+version https://git-lfs.github.com/spec/v1
+oid sha256:e504ea61ba43cc466eeeae116481eee2ebb6792036f59c2a03a5f14c43c47df0
+size 547

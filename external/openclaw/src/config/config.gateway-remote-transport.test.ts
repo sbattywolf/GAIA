@@ -1,33 +1,3 @@
-import { describe, expect, it, vi } from "vitest";
-
-describe("gateway.remote.transport", () => {
-  it("accepts direct transport", async () => {
-    vi.resetModules();
-    const { validateConfigObject } = await import("./config.js");
-    const res = validateConfigObject({
-      gateway: {
-        remote: {
-          transport: "direct",
-          url: "wss://gateway.example.ts.net",
-        },
-      },
-    });
-    expect(res.ok).toBe(true);
-  });
-
-  it("rejects unknown transport", async () => {
-    vi.resetModules();
-    const { validateConfigObject } = await import("./config.js");
-    const res = validateConfigObject({
-      gateway: {
-        remote: {
-          transport: "udp",
-        },
-      },
-    });
-    expect(res.ok).toBe(false);
-    if (!res.ok) {
-      expect(res.issues[0]?.path).toBe("gateway.remote.transport");
-    }
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:0a6076bd938eda4b2e8af4c3076ae22f43c5b190027536dae769aa1049c5a70b
+size 853

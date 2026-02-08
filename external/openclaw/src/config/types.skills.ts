@@ -1,31 +1,3 @@
-export type SkillConfig = {
-  enabled?: boolean;
-  apiKey?: string;
-  env?: Record<string, string>;
-  config?: Record<string, unknown>;
-};
-
-export type SkillsLoadConfig = {
-  /**
-   * Additional skill folders to scan (lowest precedence).
-   * Each directory should contain skill subfolders with `SKILL.md`.
-   */
-  extraDirs?: string[];
-  /** Watch skill folders for changes and refresh the skills snapshot. */
-  watch?: boolean;
-  /** Debounce for the skills watcher (ms). */
-  watchDebounceMs?: number;
-};
-
-export type SkillsInstallConfig = {
-  preferBrew?: boolean;
-  nodeManager?: "npm" | "pnpm" | "yarn" | "bun";
-};
-
-export type SkillsConfig = {
-  /** Optional bundled-skill allowlist (only affects bundled skills). */
-  allowBundled?: string[];
-  load?: SkillsLoadConfig;
-  install?: SkillsInstallConfig;
-  entries?: Record<string, SkillConfig>;
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:a107116e9d2aa45c87b15985737a5bfb92f8e73a5deeb4df954141936ae57ab0
+size 855

@@ -1,15 +1,3 @@
-import type { WebInboundMsg } from "../types.js";
-import { jidToE164, normalizeE164 } from "../../../utils.js";
-
-export function resolvePeerId(msg: WebInboundMsg) {
-  if (msg.chatType === "group") {
-    return msg.conversationId ?? msg.from;
-  }
-  if (msg.senderE164) {
-    return normalizeE164(msg.senderE164) ?? msg.senderE164;
-  }
-  if (msg.from.includes("@")) {
-    return jidToE164(msg.from) ?? msg.from;
-  }
-  return normalizeE164(msg.from) ?? msg.from;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:148a3a594d571d17638362a5c91b63738a6492eaf3a9641d230266d9d84e9e2a
+size 462

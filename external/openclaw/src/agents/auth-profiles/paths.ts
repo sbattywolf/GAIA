@@ -1,33 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
-import type { AuthProfileStore } from "./types.js";
-import { saveJsonFile } from "../../infra/json-file.js";
-import { resolveUserPath } from "../../utils.js";
-import { resolveOpenClawAgentDir } from "../agent-paths.js";
-import { AUTH_PROFILE_FILENAME, AUTH_STORE_VERSION, LEGACY_AUTH_FILENAME } from "./constants.js";
-
-export function resolveAuthStorePath(agentDir?: string): string {
-  const resolved = resolveUserPath(agentDir ?? resolveOpenClawAgentDir());
-  return path.join(resolved, AUTH_PROFILE_FILENAME);
-}
-
-export function resolveLegacyAuthStorePath(agentDir?: string): string {
-  const resolved = resolveUserPath(agentDir ?? resolveOpenClawAgentDir());
-  return path.join(resolved, LEGACY_AUTH_FILENAME);
-}
-
-export function resolveAuthStorePathForDisplay(agentDir?: string): string {
-  const pathname = resolveAuthStorePath(agentDir);
-  return pathname.startsWith("~") ? pathname : resolveUserPath(pathname);
-}
-
-export function ensureAuthStoreFile(pathname: string) {
-  if (fs.existsSync(pathname)) {
-    return;
-  }
-  const payload: AuthProfileStore = {
-    version: AUTH_STORE_VERSION,
-    profiles: {},
-  };
-  saveJsonFile(pathname, payload);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b5b0d107748c3e28e6bd77a2d1f15fda790c924f0692c0192d245cb5dc2a793d
+size 1214

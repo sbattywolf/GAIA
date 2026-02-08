@@ -1,8 +1,3 @@
-{
-  "app_id": "<APP_ID>",
-  "consumers": {
-    "publisher": { "installation_id": "1", "secret_name": "GAIA_GITHUB_TOKEN" },
-    "ci": { "installation_id": "1", "secret_name": "GAIA_CI_TOKEN" },
-    "token_cache": { "installation_id": "1", "secret_name": "GAIA_TOKEN_CACHE_TOKEN" }
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:f9a35b77ac0fbecd0c65a06b4f76de481f2ce410110fe2c48d36e63066cc9506
+size 287

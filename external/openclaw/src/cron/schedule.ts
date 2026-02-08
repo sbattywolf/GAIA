@@ -1,30 +1,3 @@
-import { Cron } from "croner";
-import type { CronSchedule } from "./types.js";
-
-export function computeNextRunAtMs(schedule: CronSchedule, nowMs: number): number | undefined {
-  if (schedule.kind === "at") {
-    return schedule.atMs > nowMs ? schedule.atMs : undefined;
-  }
-
-  if (schedule.kind === "every") {
-    const everyMs = Math.max(1, Math.floor(schedule.everyMs));
-    const anchor = Math.max(0, Math.floor(schedule.anchorMs ?? nowMs));
-    if (nowMs < anchor) {
-      return anchor;
-    }
-    const elapsed = nowMs - anchor;
-    const steps = Math.max(1, Math.floor((elapsed + everyMs - 1) / everyMs));
-    return anchor + steps * everyMs;
-  }
-
-  const expr = schedule.expr.trim();
-  if (!expr) {
-    return undefined;
-  }
-  const cron = new Cron(expr, {
-    timezone: schedule.tz?.trim() || undefined,
-    catch: false,
-  });
-  const next = cron.nextRun(new Date(nowMs));
-  return next ? next.getTime() : undefined;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:6540a0f77eac8c1a9fb5ab29b37fe5679b167227c5b2e9d7e67f22572b5f1f72
+size 928

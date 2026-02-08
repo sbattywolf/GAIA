@@ -1,17 +1,3 @@
-import fs from "node:fs/promises";
-import os from "node:os";
-import path from "node:path";
-import { describe, expect, it } from "vitest";
-import { readSessionStoreJson5 } from "./state-migrations.fs.js";
-
-describe("state migrations fs", () => {
-  it("treats array session stores as invalid", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-store-"));
-    const storePath = path.join(dir, "sessions.json");
-    await fs.writeFile(storePath, "[]", "utf-8");
-
-    const result = readSessionStoreJson5(storePath);
-    expect(result.ok).toBe(false);
-    expect(result.store).toEqual({});
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:d7b85dfccf57831d42f80787dca170e60ab5df775fbe6d74f0b12f8359091c7a
+size 633

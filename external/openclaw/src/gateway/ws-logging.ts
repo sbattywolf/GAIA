@@ -1,13 +1,3 @@
-export type GatewayWsLogStyle = "auto" | "full" | "compact";
-
-let gatewayWsLogStyle: GatewayWsLogStyle = "auto";
-
-export function setGatewayWsLogStyle(style: GatewayWsLogStyle): void {
-  gatewayWsLogStyle = style;
-}
-
-export function getGatewayWsLogStyle(): GatewayWsLogStyle {
-  return gatewayWsLogStyle;
-}
-
-export const DEFAULT_WS_SLOW_MS = 50;
+version https://git-lfs.github.com/spec/v1
+oid sha256:ab85ad3c5e4b56450b04ab9ad2eb6d8449645f88a107e14a57a50f7ad112fd34
+size 346

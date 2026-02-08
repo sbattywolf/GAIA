@@ -1,10 +1,3 @@
-import type { loadConfig } from "../config/config.js";
-import { resolveAgentMaxConcurrent, resolveSubagentMaxConcurrent } from "../config/agent-limits.js";
-import { setCommandLaneConcurrency } from "../process/command-queue.js";
-import { CommandLane } from "../process/lanes.js";
-
-export function applyGatewayLaneConcurrency(cfg: ReturnType<typeof loadConfig>) {
-  setCommandLaneConcurrency(CommandLane.Cron, cfg.cron?.maxConcurrentRuns ?? 1);
-  setCommandLaneConcurrency(CommandLane.Main, resolveAgentMaxConcurrent(cfg));
-  setCommandLaneConcurrency(CommandLane.Subagent, resolveSubagentMaxConcurrent(cfg));
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:8b1823073bd118bd828828f679e54b72617a1c430a3ee15eee262294b92806ea
+size 611

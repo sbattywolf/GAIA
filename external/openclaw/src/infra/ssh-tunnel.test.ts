@@ -1,26 +1,3 @@
-import { describe, expect, it } from "vitest";
-import { parseSshTarget } from "./ssh-tunnel.js";
-
-describe("parseSshTarget", () => {
-  it("parses user@host:port targets", () => {
-    expect(parseSshTarget("me@example.com:2222")).toEqual({
-      user: "me",
-      host: "example.com",
-      port: 2222,
-    });
-  });
-
-  it("parses host-only targets with default port", () => {
-    expect(parseSshTarget("example.com")).toEqual({
-      user: undefined,
-      host: "example.com",
-      port: 22,
-    });
-  });
-
-  it("rejects hostnames that start with '-'", () => {
-    expect(parseSshTarget("-V")).toBeNull();
-    expect(parseSshTarget("me@-badhost")).toBeNull();
-    expect(parseSshTarget("-oProxyCommand=echo")).toBeNull();
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:eb9972ddf09ba4a04b8a388c53cb72c0ca95c7740922aa6ab386e03b8f58fdd8
+size 734

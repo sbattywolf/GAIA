@@ -1,17 +1,3 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
-import { nextcloudTalkPlugin } from "./src/channel.js";
-import { setNextcloudTalkRuntime } from "./src/runtime.js";
-
-const plugin = {
-  id: "nextcloud-talk",
-  name: "Nextcloud Talk",
-  description: "Nextcloud Talk channel plugin",
-  configSchema: emptyPluginConfigSchema(),
-  register(api: OpenClawPluginApi) {
-    setNextcloudTalkRuntime(api.runtime);
-    api.registerChannel({ plugin: nextcloudTalkPlugin });
-  },
-};
-
-export default plugin;
+version https://git-lfs.github.com/spec/v1
+oid sha256:625b03fc2d01040204b5581b84b9f29eec2a00f8f37079302f4be22c6e8e9bde
+size 569

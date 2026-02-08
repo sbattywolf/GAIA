@@ -1,19 +1,3 @@
-import type { Component, TUI } from "@mariozechner/pi-tui";
-
-type OverlayHost = Pick<TUI, "showOverlay" | "hideOverlay" | "hasOverlay" | "setFocus">;
-
-export function createOverlayHandlers(host: OverlayHost, fallbackFocus: Component) {
-  const openOverlay = (component: Component) => {
-    host.showOverlay(component);
-  };
-
-  const closeOverlay = () => {
-    if (host.hasOverlay()) {
-      host.hideOverlay();
-      return;
-    }
-    host.setFocus(fallbackFocus);
-  };
-
-  return { openOverlay, closeOverlay };
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:d277994e82ceacaba2f2565a5341b981d81a9035cfc85cd73657738d4d87d423
+size 513

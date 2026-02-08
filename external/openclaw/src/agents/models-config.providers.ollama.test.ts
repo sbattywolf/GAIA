@@ -1,15 +1,3 @@
-import { mkdtempSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
-import { describe, expect, it } from "vitest";
-import { resolveImplicitProviders } from "./models-config.providers.js";
-
-describe("Ollama provider", () => {
-  it("should not include ollama when no API key is configured", async () => {
-    const agentDir = mkdtempSync(join(tmpdir(), "openclaw-test-"));
-    const providers = await resolveImplicitProviders({ agentDir });
-
-    // Ollama requires explicit configuration via OLLAMA_API_KEY env var or profile
-    expect(providers?.ollama).toBeUndefined();
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:4a308bc689bbff8085fe9a72d62053f40d8c098b41ee8ae7865e6cd56d820791
+size 620

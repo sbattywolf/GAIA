@@ -1,26 +1,3 @@
-declare module "proper-lockfile" {
-  export type RetryOptions = {
-    retries?: number;
-    factor?: number;
-    minTimeout?: number;
-    maxTimeout?: number;
-    randomize?: boolean;
-  };
-
-  export type LockOptions = {
-    retries?: number | RetryOptions;
-    stale?: number;
-    update?: number;
-    realpath?: boolean;
-  };
-
-  export type ReleaseFn = () => Promise<void>;
-
-  export function lock(path: string, options?: LockOptions): Promise<ReleaseFn>;
-
-  const lockfile: {
-    lock: typeof lock;
-  };
-
-  export default lockfile;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e14e704c4a017d3f5776f1806346b6ade630ec69284702c1ee2ac7a41094fbba
+size 536

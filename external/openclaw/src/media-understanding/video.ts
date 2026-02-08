@@ -1,10 +1,3 @@
-import { DEFAULT_VIDEO_MAX_BASE64_BYTES } from "./defaults.js";
-
-export function estimateBase64Size(bytes: number): number {
-  return Math.ceil(bytes / 3) * 4;
-}
-
-export function resolveVideoMaxBase64Bytes(maxBytes: number): number {
-  const expanded = Math.floor(maxBytes * (4 / 3));
-  return Math.min(expanded, DEFAULT_VIDEO_MAX_BASE64_BYTES);
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:5a3edd961edd1b21e9c8414166419db88ba086bf16620e0a2b547259b1840f56
+size 348

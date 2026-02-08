@@ -1,29 +1,3 @@
-import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/config.js";
-import { DEFAULT_BOOTSTRAP_MAX_CHARS, resolveBootstrapMaxChars } from "./pi-embedded-helpers.js";
-import { DEFAULT_AGENTS_FILENAME } from "./workspace.js";
-
-const _makeFile = (overrides: Partial<WorkspaceBootstrapFile>): WorkspaceBootstrapFile => ({
-  name: DEFAULT_AGENTS_FILENAME,
-  path: "/tmp/AGENTS.md",
-  content: "",
-  missing: false,
-  ...overrides,
-});
-describe("resolveBootstrapMaxChars", () => {
-  it("returns default when unset", () => {
-    expect(resolveBootstrapMaxChars()).toBe(DEFAULT_BOOTSTRAP_MAX_CHARS);
-  });
-  it("uses configured value when valid", () => {
-    const cfg = {
-      agents: { defaults: { bootstrapMaxChars: 12345 } },
-    } as OpenClawConfig;
-    expect(resolveBootstrapMaxChars(cfg)).toBe(12345);
-  });
-  it("falls back when invalid", () => {
-    const cfg = {
-      agents: { defaults: { bootstrapMaxChars: -1 } },
-    } as OpenClawConfig;
-    expect(resolveBootstrapMaxChars(cfg)).toBe(DEFAULT_BOOTSTRAP_MAX_CHARS);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:d352969d75f0d096a27768e82fc2fff4576fd26d16fa4e368f33b3cb574591a1
+size 1072

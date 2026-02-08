@@ -1,17 +1,3 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
-import { msteamsPlugin } from "./src/channel.js";
-import { setMSTeamsRuntime } from "./src/runtime.js";
-
-const plugin = {
-  id: "msteams",
-  name: "Microsoft Teams",
-  description: "Microsoft Teams channel plugin (Bot Framework)",
-  configSchema: emptyPluginConfigSchema(),
-  register(api: OpenClawPluginApi) {
-    setMSTeamsRuntime(api.runtime);
-    api.registerChannel({ plugin: msteamsPlugin });
-  },
-};
-
-export default plugin;
+version https://git-lfs.github.com/spec/v1
+oid sha256:af00906bd3484522a5a250c2436554e1b5a8fe7b978a34338d5d5ad62c7a687a
+size 556

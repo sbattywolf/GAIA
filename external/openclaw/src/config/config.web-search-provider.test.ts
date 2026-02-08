@@ -1,24 +1,3 @@
-import { describe, expect, it } from "vitest";
-import { validateConfigObject } from "./config.js";
-
-describe("web search provider config", () => {
-  it("accepts perplexity provider and config", () => {
-    const res = validateConfigObject({
-      tools: {
-        web: {
-          search: {
-            enabled: true,
-            provider: "perplexity",
-            perplexity: {
-              apiKey: "test-key",
-              baseUrl: "https://api.perplexity.ai",
-              model: "perplexity/sonar-pro",
-            },
-          },
-        },
-      },
-    });
-
-    expect(res.ok).toBe(true);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:673dda98600ff13a0e8f875de08a1c6eeb9ab0eb9f47fda3e6542f647368e084
+size 609

@@ -1,16 +1,3 @@
-{
-  "epic": "EPC_Telegram",
-  "feature_id": "F-helper-gise-part2",
-  "feature_name": "Helper Gise — Prototype & Acceptance",
-  "story_key": "stoy_alby_prototype",
-  "agent": "assistant",
-  "tasks": [
-    { "id": "t41", "title": "Run alby_agent prototype in dry-run", "status": "todo", "priority": "high", "description": "Execute `scripts/alby_agent.py --dry-run` over current drafts and verify candidate output." },
-    { "id": "t41a", "title": "Run alby_agent live (local-only) with PROTOTYPE_USE_LOCAL_EVENTS=1", "status": "todo", "priority": "high", "description": "Execute live archive+validate+tests using local event mode to avoid remote GH calls." },
-    { "id": "t41b", "title": "Collect timings and metrics for prototype runs", "status": "todo", "priority": "medium", "description": "Record durations of validate/test/archive steps to `.tmp/metrics/` for estimation." },
-    { "id": "t42", "title": "Implement mocked Telegram harness for acceptance tests", "status": "todo", "priority": "high", "description": "Create a local stub of Telegram Bot API to drive approval flows in CI/local tests." },
-    { "id": "t43", "title": "Run acceptance scenario: create claim → approve → archive event", "status": "todo", "priority": "high", "description": "Execute scripted scenario against mocked Telegram and assert events and audit traces." },
-    { "id": "t44", "title": "Add idempotency and replay tests", "status": "todo", "priority": "high", "description": "Ensure duplicate updates do not produce duplicate side-effects." },
-    { "id": "t45", "title": "Document prototype results and update scoring", "status": "todo", "priority": "medium", "description": "Append results to `doc/EPC_Telegram_report_addendum.md` and update story/feature estimates." }
-  ]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:4d8696c7ab0f8bec37d70c772e5ed2ff4dbb6366ec70eba08f59aebe7b5b0c6a
+size 1772

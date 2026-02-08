@@ -1,19 +1,3 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
-import { googlechatDock, googlechatPlugin } from "./src/channel.js";
-import { handleGoogleChatWebhookRequest } from "./src/monitor.js";
-import { setGoogleChatRuntime } from "./src/runtime.js";
-
-const plugin = {
-  id: "googlechat",
-  name: "Google Chat",
-  description: "OpenClaw Google Chat channel plugin",
-  configSchema: emptyPluginConfigSchema(),
-  register(api: OpenClawPluginApi) {
-    setGoogleChatRuntime(api.runtime);
-    api.registerChannel({ plugin: googlechatPlugin, dock: googlechatDock });
-    api.registerHttpHandler(handleGoogleChatWebhookRequest);
-  },
-};
-
-export default plugin;
+version https://git-lfs.github.com/spec/v1
+oid sha256:a93ff7661093dbbd7cbf2d329fc983959bb26618bc169920e8401bdb72c8dbb8
+size 722

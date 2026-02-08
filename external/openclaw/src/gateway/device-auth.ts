@@ -1,31 +1,3 @@
-export type DeviceAuthPayloadParams = {
-  deviceId: string;
-  clientId: string;
-  clientMode: string;
-  role: string;
-  scopes: string[];
-  signedAtMs: number;
-  token?: string | null;
-  nonce?: string | null;
-  version?: "v1" | "v2";
-};
-
-export function buildDeviceAuthPayload(params: DeviceAuthPayloadParams): string {
-  const version = params.version ?? (params.nonce ? "v2" : "v1");
-  const scopes = params.scopes.join(",");
-  const token = params.token ?? "";
-  const base = [
-    version,
-    params.deviceId,
-    params.clientId,
-    params.clientMode,
-    params.role,
-    scopes,
-    String(params.signedAtMs),
-    token,
-  ];
-  if (version === "v2") {
-    base.push(params.nonce ?? "");
-  }
-  return base.join("|");
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b37458abf31138eeca206b0e334633e4f9ed35ba4dcd3c9fb2f73ca2704f5511
+size 728

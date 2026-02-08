@@ -1,26 +1,3 @@
-/**
- * Redraws Extension
- *
- * Exposes /tui to show TUI redraw stats.
- */
-
-import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
-import { Text } from "@mariozechner/pi-tui";
-
-export default function (pi: ExtensionAPI) {
-  pi.registerCommand("tui", {
-    description: "Show TUI stats",
-    handler: async (_args, ctx) => {
-      if (!ctx.hasUI) {
-        return;
-      }
-      let redraws = 0;
-      await ctx.ui.custom<void>((tui, _theme, _keybindings, done) => {
-        redraws = tui.fullRedraws;
-        done(undefined);
-        return new Text("", 0, 0);
-      });
-      ctx.ui.notify(`TUI full redraws: ${redraws}`, "info");
-    },
-  });
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:8da914f59eb5c6fb9db5d9291c6d2846e2d4e9cc8d614b0f7242bdaf21e4089d
+size 658

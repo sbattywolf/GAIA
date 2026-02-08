@@ -1,35 +1,3 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-
-const execFileMock = vi.hoisted(() => vi.fn());
-
-vi.mock("node:child_process", () => ({
-  execFile: execFileMock,
-}));
-
-import { isSystemdUserServiceAvailable } from "./systemd.js";
-
-describe("systemd availability", () => {
-  beforeEach(() => {
-    execFileMock.mockReset();
-  });
-
-  it("returns true when systemctl --user succeeds", async () => {
-    execFileMock.mockImplementation((_cmd, _args, _opts, cb) => {
-      cb(null, "", "");
-    });
-    await expect(isSystemdUserServiceAvailable()).resolves.toBe(true);
-  });
-
-  it("returns false when systemd user bus is unavailable", async () => {
-    execFileMock.mockImplementation((_cmd, _args, _opts, cb) => {
-      const err = new Error("Failed to connect to bus") as Error & {
-        stderr?: string;
-        code?: number;
-      };
-      err.stderr = "Failed to connect to bus";
-      err.code = 1;
-      cb(err, "", "");
-    });
-    await expect(isSystemdUserServiceAvailable()).resolves.toBe(false);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:21c5a1dac6ff92a9f1ece72ee83276b9ea2984aae35d8a34af55d83950cf5785
+size 1033

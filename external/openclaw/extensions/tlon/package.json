@@ -1,33 +1,3 @@
-{
-  "name": "@openclaw/tlon",
-  "version": "2026.2.1",
-  "description": "OpenClaw Tlon/Urbit channel plugin",
-  "type": "module",
-  "dependencies": {
-    "@urbit/aura": "^3.0.0",
-    "@urbit/http-api": "^3.0.0"
-  },
-  "devDependencies": {
-    "openclaw": "workspace:*"
-  },
-  "openclaw": {
-    "extensions": [
-      "./index.ts"
-    ],
-    "channel": {
-      "id": "tlon",
-      "label": "Tlon",
-      "selectionLabel": "Tlon (Urbit)",
-      "docsPath": "/channels/tlon",
-      "docsLabel": "tlon",
-      "blurb": "decentralized messaging on Urbit; install the plugin to enable.",
-      "order": 90,
-      "quickstartAllowFrom": true
-    },
-    "install": {
-      "npmSpec": "@openclaw/tlon",
-      "localPath": "extensions/tlon",
-      "defaultChoice": "npm"
-    }
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:5c69a05974cf35c84931b7353833ad187136318a2c248af58febb7fd177a32e6
+size 772

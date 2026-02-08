@@ -1,5 +1,3 @@
-export { buildSlackSlashCommandMatcher } from "./monitor/commands.js";
-export { isSlackChannelAllowedByPolicy } from "./monitor/policy.js";
-export { monitorSlackProvider } from "./monitor/provider.js";
-export { resolveSlackThreadTs } from "./monitor/replies.js";
-export type { MonitorSlackOpts } from "./monitor/types.js";
+version https://git-lfs.github.com/spec/v1
+oid sha256:ae90f00907bdde18a0d89d1ea5b80ebaefd76370b1bd338f9497e0ff9308cd4e
+size 323

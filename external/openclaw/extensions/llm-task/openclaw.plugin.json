@@ -1,21 +1,3 @@
-{
-  "id": "llm-task",
-  "name": "LLM Task",
-  "description": "Generic JSON-only LLM tool for structured tasks callable from workflows.",
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {
-      "defaultProvider": { "type": "string" },
-      "defaultModel": { "type": "string" },
-      "defaultAuthProfileId": { "type": "string" },
-      "allowedModels": {
-        "type": "array",
-        "items": { "type": "string" },
-        "description": "Allowlist of provider/model keys like openai-codex/gpt-5.2."
-      },
-      "maxTokens": { "type": "number" },
-      "timeoutMs": { "type": "number" }
-    }
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b56283a3b9e705c873511f0e5dc145549b90a046ca41724f9877c82d40784437
+size 653

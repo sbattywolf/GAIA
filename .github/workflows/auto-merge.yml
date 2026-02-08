@@ -16,6 +16,7 @@ jobs:
       - name: Auto-merge if approved and checks passed
         uses: actions/github-script@v6
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const pr = context.payload.pull_request;
             if (!pr) {

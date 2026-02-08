@@ -1,9 +1,3 @@
-{
-  "id": "discord",
-  "channels": ["discord"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:dc128d78021f457f21d1cb5206add0e5c2cb95bd4abf22015e772aef1e707f0f
+size 152

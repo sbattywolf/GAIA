@@ -1,8 +1,3 @@
-export const DEFAULT_OPENCLAW_BROWSER_ENABLED = true;
-export const DEFAULT_BROWSER_EVALUATE_ENABLED = true;
-export const DEFAULT_OPENCLAW_BROWSER_COLOR = "#FF4500";
-export const DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME = "openclaw";
-export const DEFAULT_BROWSER_DEFAULT_PROFILE_NAME = "chrome";
-export const DEFAULT_AI_SNAPSHOT_MAX_CHARS = 80_000;
-export const DEFAULT_AI_SNAPSHOT_EFFICIENT_MAX_CHARS = 10_000;
-export const DEFAULT_AI_SNAPSHOT_EFFICIENT_DEPTH = 6;
+version https://git-lfs.github.com/spec/v1
+oid sha256:92bb1e4a6732aa3b50af61dbe8f5f9b9e3194616e36e96d54db46efbb61586ea
+size 462

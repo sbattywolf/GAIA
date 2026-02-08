@@ -1,9 +1,3 @@
-{
-  "id": "signal",
-  "channels": ["signal"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:50c492d7ac681ca6aa43b9124f9371ff2fe0bed7a6009608f3977cf0b5a10c16
+size 150

@@ -1,25 +1,3 @@
-import { describe, expect, it } from "vitest";
-import { isFailoverErrorMessage } from "./pi-embedded-helpers.js";
-import { DEFAULT_AGENTS_FILENAME } from "./workspace.js";
-
-const _makeFile = (overrides: Partial<WorkspaceBootstrapFile>): WorkspaceBootstrapFile => ({
-  name: DEFAULT_AGENTS_FILENAME,
-  path: "/tmp/AGENTS.md",
-  content: "",
-  missing: false,
-  ...overrides,
-});
-describe("isFailoverErrorMessage", () => {
-  it("matches auth/rate/billing/timeout", () => {
-    const samples = [
-      "invalid api key",
-      "429 rate limit exceeded",
-      "Your credit balance is too low",
-      "request timed out",
-      "invalid request format",
-    ];
-    for (const sample of samples) {
-      expect(isFailoverErrorMessage(sample)).toBe(true);
-    }
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:78add22d1066adcdfb5c171c6338bff40f3a2c5a69fbc92a7a3c17c5e2cf205c
+size 766

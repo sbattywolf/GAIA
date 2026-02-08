@@ -1,31 +1,3 @@
-import type { OpenClawConfig } from "./types.js";
-
-export function collectConfigEnvVars(cfg?: OpenClawConfig): Record<string, string> {
-  const envConfig = cfg?.env;
-  if (!envConfig) {
-    return {};
-  }
-
-  const entries: Record<string, string> = {};
-
-  if (envConfig.vars) {
-    for (const [key, value] of Object.entries(envConfig.vars)) {
-      if (!value) {
-        continue;
-      }
-      entries[key] = value;
-    }
-  }
-
-  for (const [key, value] of Object.entries(envConfig)) {
-    if (key === "shellEnv" || key === "vars") {
-      continue;
-    }
-    if (typeof value !== "string" || !value.trim()) {
-      continue;
-    }
-    entries[key] = value;
-  }
-
-  return entries;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:c6b74686448c5d0a198c7bf4206e696112393655f54b75c234735f1bf93a3881
+size 682

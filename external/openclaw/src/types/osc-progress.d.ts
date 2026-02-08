@@ -1,16 +1,3 @@
-declare module "osc-progress" {
-  export type OscProgressController = {
-    setIndeterminate: (label: string) => void;
-    setPercent: (label: string, percent: number) => void;
-    clear: () => void;
-    done?: () => void;
-  };
-
-  export function createOscProgressController(params: {
-    env: NodeJS.ProcessEnv;
-    isTty: boolean;
-    write: (chunk: string) => void;
-  }): OscProgressController;
-
-  export function supportsOscProgress(env: NodeJS.ProcessEnv, isTty: boolean): boolean;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:4d36b898fc8263bdc6d3e9438de56c4f7ee059317eb3b34a057c41eef6ab8b5a
+size 489

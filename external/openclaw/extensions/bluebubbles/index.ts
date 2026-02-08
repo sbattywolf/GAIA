@@ -1,19 +1,3 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
-import { bluebubblesPlugin } from "./src/channel.js";
-import { handleBlueBubblesWebhookRequest } from "./src/monitor.js";
-import { setBlueBubblesRuntime } from "./src/runtime.js";
-
-const plugin = {
-  id: "bluebubbles",
-  name: "BlueBubbles",
-  description: "BlueBubbles channel plugin (macOS app)",
-  configSchema: emptyPluginConfigSchema(),
-  register(api: OpenClawPluginApi) {
-    setBlueBubblesRuntime(api.runtime);
-    api.registerChannel({ plugin: bluebubblesPlugin });
-    api.registerHttpHandler(handleBlueBubblesWebhookRequest);
-  },
-};
-
-export default plugin;
+version https://git-lfs.github.com/spec/v1
+oid sha256:3fe1e006c4a26759aa7f04f31e6072fc6f79a43fecdb777fd2d32aec6f406f77
+size 694

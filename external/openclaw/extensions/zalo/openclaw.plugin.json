@@ -1,9 +1,3 @@
-{
-  "id": "zalo",
-  "channels": ["zalo"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0f108b87d0dd89dc91b8a0b4d0ea9a3dbab7b5821d4e85087eda49a21f8278c1
+size 146

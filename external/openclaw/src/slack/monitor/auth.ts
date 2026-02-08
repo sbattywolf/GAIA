@@ -1,26 +1,3 @@
-import type { SlackMonitorContext } from "./context.js";
-import { readChannelAllowFromStore } from "../../pairing/pairing-store.js";
-import { allowListMatches, normalizeAllowList, normalizeAllowListLower } from "./allow-list.js";
-
-export async function resolveSlackEffectiveAllowFrom(ctx: SlackMonitorContext) {
-  const storeAllowFrom = await readChannelAllowFromStore("slack").catch(() => []);
-  const allowFrom = normalizeAllowList([...ctx.allowFrom, ...storeAllowFrom]);
-  const allowFromLower = normalizeAllowListLower(allowFrom);
-  return { allowFrom, allowFromLower };
-}
-
-export function isSlackSenderAllowListed(params: {
-  allowListLower: string[];
-  senderId: string;
-  senderName?: string;
-}) {
-  const { allowListLower, senderId, senderName } = params;
-  return (
-    allowListLower.length === 0 ||
-    allowListMatches({
-      allowList: allowListLower,
-      id: senderId,
-      name: senderName,
-    })
-  );
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:42247cd7267f8feae5b9b397fe3ff1208e9344b081cc3442c6472e219648d97a
+size 924

@@ -1,15 +1,3 @@
-export type {
-  MatrixActionClientOpts,
-  MatrixMessageSummary,
-  MatrixReactionSummary,
-} from "./actions/types.js";
-export {
-  sendMatrixMessage,
-  editMatrixMessage,
-  deleteMatrixMessage,
-  readMatrixMessages,
-} from "./actions/messages.js";
-export { listMatrixReactions, removeMatrixReactions } from "./actions/reactions.js";
-export { pinMatrixMessage, unpinMatrixMessage, listMatrixPins } from "./actions/pins.js";
-export { getMatrixMemberInfo, getMatrixRoomInfo } from "./actions/room.js";
-export { reactMatrixMessage } from "./send.js";
+version https://git-lfs.github.com/spec/v1
+oid sha256:17af10eb7ebc6087a83c418eae00607b9afdedec84b4872aadd4af987b3f1b60
+size 545

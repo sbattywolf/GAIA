@@ -1,20 +1,3 @@
-import { Container, Markdown, Spacer } from "@mariozechner/pi-tui";
-import { markdownTheme, theme } from "../theme/theme.js";
-
-export class UserMessageComponent extends Container {
-  private body: Markdown;
-
-  constructor(text: string) {
-    super();
-    this.body = new Markdown(text, 1, 1, markdownTheme, {
-      bgColor: (line) => theme.userBg(line),
-      color: (line) => theme.userText(line),
-    });
-    this.addChild(new Spacer(1));
-    this.addChild(this.body);
-  }
-
-  setText(text: string) {
-    this.body.setText(text);
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ee8d2e90b90f18b2b42acd0c8c56152189cce0281810ebaf15d0caf3aac5a034
+size 537

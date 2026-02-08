@@ -1,11 +1,3 @@
-export type NodeHostBrowserProxyConfig = {
-  /** Enable the browser proxy on the node host (default: true). */
-  enabled?: boolean;
-  /** Optional allowlist of profile names exposed via the proxy. */
-  allowProfiles?: string[];
-};
-
-export type NodeHostConfig = {
-  /** Browser proxy settings for node hosts. */
-  browserProxy?: NodeHostBrowserProxyConfig;
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:38eac16d4fbf00c703b9c0bc7324ab0c904eb76bf9f55a3700b667ad68aec500
+size 359

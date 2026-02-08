@@ -1,28 +1,3 @@
-import { z } from "zod";
-
-const ExecApprovalForwardTargetSchema = z
-  .object({
-    channel: z.string().min(1),
-    to: z.string().min(1),
-    accountId: z.string().optional(),
-    threadId: z.union([z.string(), z.number()]).optional(),
-  })
-  .strict();
-
-const ExecApprovalForwardingSchema = z
-  .object({
-    enabled: z.boolean().optional(),
-    mode: z.union([z.literal("session"), z.literal("targets"), z.literal("both")]).optional(),
-    agentFilter: z.array(z.string()).optional(),
-    sessionFilter: z.array(z.string()).optional(),
-    targets: z.array(ExecApprovalForwardTargetSchema).optional(),
-  })
-  .strict()
-  .optional();
-
-export const ApprovalsSchema = z
-  .object({
-    exec: ExecApprovalForwardingSchema,
-  })
-  .strict()
-  .optional();
+version https://git-lfs.github.com/spec/v1
+oid sha256:2e68571c785f1dafe04da9bd277e3ca7ada5619509134654a2fe93c8b0c289c7
+size 755

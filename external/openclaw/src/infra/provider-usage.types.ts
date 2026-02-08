@@ -1,28 +1,3 @@
-export type UsageWindow = {
-  label: string;
-  usedPercent: number;
-  resetAt?: number;
-};
-
-export type ProviderUsageSnapshot = {
-  provider: UsageProviderId;
-  displayName: string;
-  windows: UsageWindow[];
-  plan?: string;
-  error?: string;
-};
-
-export type UsageSummary = {
-  updatedAt: number;
-  providers: ProviderUsageSnapshot[];
-};
-
-export type UsageProviderId =
-  | "anthropic"
-  | "github-copilot"
-  | "google-gemini-cli"
-  | "google-antigravity"
-  | "minimax"
-  | "openai-codex"
-  | "xiaomi"
-  | "zai";
+version https://git-lfs.github.com/spec/v1
+oid sha256:6f7a5bd8f9bdbef5041732142271820377752e67e9e7b6eb6a058acd9b9e6fb9
+size 512

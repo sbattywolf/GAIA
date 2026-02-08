@@ -1,13 +1,3 @@
-import { describe, expect, test } from "vitest";
-import { TOOL_POLICY_CONFORMANCE } from "./tool-policy.conformance.js";
-import { TOOL_GROUPS } from "./tool-policy.js";
-
-describe("TOOL_POLICY_CONFORMANCE", () => {
-  test("matches exported TOOL_GROUPS exactly", () => {
-    expect(TOOL_POLICY_CONFORMANCE.toolGroups).toEqual(TOOL_GROUPS);
-  });
-
-  test("is JSON-serializable", () => {
-    expect(() => JSON.stringify(TOOL_POLICY_CONFORMANCE)).not.toThrow();
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:5e0982d5533e9df90be7cff7982edd8fcb9bf4b21ffb82f2f4b986c56c0d42f0
+size 467

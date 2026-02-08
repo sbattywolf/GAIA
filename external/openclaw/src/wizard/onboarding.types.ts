@@ -1,25 +1,3 @@
-import type { GatewayAuthChoice } from "../commands/onboard-types.js";
-
-export type WizardFlow = "quickstart" | "advanced";
-
-export type QuickstartGatewayDefaults = {
-  hasExisting: boolean;
-  port: number;
-  bind: "loopback" | "lan" | "auto" | "custom" | "tailnet";
-  authMode: GatewayAuthChoice;
-  tailscaleMode: "off" | "serve" | "funnel";
-  token?: string;
-  password?: string;
-  customBindHost?: string;
-  tailscaleResetOnExit: boolean;
-};
-
-export type GatewayWizardSettings = {
-  port: number;
-  bind: "loopback" | "lan" | "auto" | "custom" | "tailnet";
-  customBindHost?: string;
-  authMode: GatewayAuthChoice;
-  gatewayToken?: string;
-  tailscaleMode: "off" | "serve" | "funnel";
-  tailscaleResetOnExit: boolean;
-};
+version https://git-lfs.github.com/spec/v1
+oid sha256:d8c0cb587006c529b9c17e4e9e8f06c692ea4d08a1a0b4f9cf6001d7aac6d9ff
+size 724

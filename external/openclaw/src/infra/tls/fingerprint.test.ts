@@ -1,10 +1,3 @@
-import { describe, expect, it } from "vitest";
-import { normalizeFingerprint } from "./fingerprint.js";
-
-describe("normalizeFingerprint", () => {
-  it("strips sha256 prefixes and separators", () => {
-    expect(normalizeFingerprint("sha256:AA:BB:cc")).toBe("aabbcc");
-    expect(normalizeFingerprint("SHA-256 11-22-33")).toBe("112233");
-    expect(normalizeFingerprint("aa:bb:cc")).toBe("aabbcc");
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:8c14a3f0473ededa097549f887ddcec43162ed57023eeb1b61a5a4a406320a29
+size 408

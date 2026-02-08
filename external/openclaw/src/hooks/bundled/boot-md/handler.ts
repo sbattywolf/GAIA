@@ -1,27 +1,3 @@
-import type { CliDeps } from "../../../cli/deps.js";
-import type { OpenClawConfig } from "../../../config/config.js";
-import type { HookHandler } from "../../hooks.js";
-import { createDefaultDeps } from "../../../cli/deps.js";
-import { runBootOnce } from "../../../gateway/boot.js";
-
-type BootHookContext = {
-  cfg?: OpenClawConfig;
-  workspaceDir?: string;
-  deps?: CliDeps;
-};
-
-const runBootChecklist: HookHandler = async (event) => {
-  if (event.type !== "gateway" || event.action !== "startup") {
-    return;
-  }
-
-  const context = (event.context ?? {}) as BootHookContext;
-  if (!context.cfg || !context.workspaceDir) {
-    return;
-  }
-
-  const deps = context.deps ?? createDefaultDeps();
-  await runBootOnce({ cfg: context.cfg, deps, workspaceDir: context.workspaceDir });
-};
-
-export default runBootChecklist;
+version https://git-lfs.github.com/spec/v1
+oid sha256:8742e1314570351c9eaa7df75386c16f0984366b4f66f5abbd78a965405ee22a
+size 816

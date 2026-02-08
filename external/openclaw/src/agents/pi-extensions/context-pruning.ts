@@ -1,19 +1,3 @@
-/**
- * Opt-in context pruning (“microcompact”-style) for Pi sessions.
- *
- * This only affects the in-memory context for the current request; it does not rewrite session
- * history persisted on disk.
- */
-
-export { default } from "./context-pruning/extension.js";
-
-export { pruneContextMessages } from "./context-pruning/pruner.js";
-export type {
-  ContextPruningConfig,
-  ContextPruningToolMatch,
-  EffectiveContextPruningSettings,
-} from "./context-pruning/settings.js";
-export {
-  computeEffectiveSettings,
-  DEFAULT_CONTEXT_PRUNING_SETTINGS,
-} from "./context-pruning/settings.js";
+version https://git-lfs.github.com/spec/v1
+oid sha256:e0abb9bf976af75e1ffb432d4ac8f38bceca51d3c299bcbdff08e5f1f1274a7d
+size 588

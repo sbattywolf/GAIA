@@ -1,28 +1,3 @@
-import { setTimeout as delay } from "node:timers/promises";
-
-export type BackoffPolicy = {
-  initialMs: number;
-  maxMs: number;
-  factor: number;
-  jitter: number;
-};
-
-export function computeBackoff(policy: BackoffPolicy, attempt: number) {
-  const base = policy.initialMs * policy.factor ** Math.max(attempt - 1, 0);
-  const jitter = base * policy.jitter * Math.random();
-  return Math.min(policy.maxMs, Math.round(base + jitter));
-}
-
-export async function sleepWithAbort(ms: number, abortSignal?: AbortSignal) {
-  if (ms <= 0) {
-    return;
-  }
-  try {
-    await delay(ms, undefined, { signal: abortSignal });
-  } catch (err) {
-    if (abortSignal?.aborted) {
-      throw new Error("aborted", { cause: err });
-    }
-    throw err;
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:2429dad6c126f9bdaf03120892f71d8d167316d8a4329522d746a60908222726
+size 740

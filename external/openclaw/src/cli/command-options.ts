@@ -1,8 +1,3 @@
-import type { Command } from "commander";
-
-export function hasExplicitOptions(command: Command, names: readonly string[]): boolean {
-  if (typeof command.getOptionValueSource !== "function") {
-    return false;
-  }
-  return names.some((name) => command.getOptionValueSource(name) === "cli");
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b12582421b7a83f1009f72bcc29038a4561d07ae9ffea4d380cef14c000a3dc7
+size 294

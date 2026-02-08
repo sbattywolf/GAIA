@@ -1,9 +1,0 @@
-{
-  "agent_id": "325eba91-86d9-4ff0-bd46-dc6690f4f609",
-  "agent_name": "Alby 0.3",
-  "required_packages": [
-    "packageA==1.2.3",
-    "packageB>=4.0"
-  ],
-  "timestamp": "2026-02-03T23:34:39.821806Z"
-}

@@ -1,9 +1,3 @@
-{
-  "id": "google-gemini-cli-auth",
-  "providers": ["google-gemini-cli"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:079d4a064208f936ecb363b80be2c8cbdc1a9a4060ddee985ab59b9d8be8416b
+size 178

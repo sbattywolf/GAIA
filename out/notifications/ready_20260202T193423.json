@@ -1,7 +1,3 @@
-{
-  "agent_id": "8c5ae77f-a47f-411a-b943-b19e075bfa9c",
-  "agent_name": "Alby 0.3",
-  "state": "ready",
-  "message": "Agent Alby 0.3 is ready.",
-  "timestamp": "2026-02-02T19:34:23.495101Z"
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:a46d42b4c53a8e3318a9d2da2068945827ab290d318e3a1d3b8a4c08c1c721e3
+size 192

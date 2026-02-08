@@ -1,28 +1,3 @@
-import type { ZcaUserInfo } from "./types.js";
-import { runZca, parseJsonOutput } from "./zca.js";
-
-export interface ZalouserProbeResult {
-  ok: boolean;
-  user?: ZcaUserInfo;
-  error?: string;
-}
-
-export async function probeZalouser(
-  profile: string,
-  timeoutMs?: number,
-): Promise<ZalouserProbeResult> {
-  const result = await runZca(["me", "info", "-j"], {
-    profile,
-    timeout: timeoutMs,
-  });
-
-  if (!result.ok) {
-    return { ok: false, error: result.stderr || "Failed to probe" };
-  }
-
-  const user = parseJsonOutput<ZcaUserInfo>(result.stdout);
-  if (!user) {
-    return { ok: false, error: "Failed to parse user info" };
-  }
-  return { ok: true, user };
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:cbe4db81ad97fb85bf65f3bb9cd23c69e72cec767aaa049c820238fc761fc549
+size 673

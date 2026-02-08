@@ -1,30 +1,3 @@
-import { describe, expect, it, vi } from "vitest";
-import type { SlackMessageEvent } from "../types.js";
-import { createSlackThreadTsResolver } from "./thread-resolution.js";
-
-describe("createSlackThreadTsResolver", () => {
-  it("caches resolved thread_ts lookups", async () => {
-    const historyMock = vi.fn().mockResolvedValue({
-      messages: [{ ts: "1", thread_ts: "9" }],
-    });
-    const resolver = createSlackThreadTsResolver({
-      // oxlint-disable-next-line typescript/no-explicit-any
-      client: { conversations: { history: historyMock } } as any,
-      cacheTtlMs: 60_000,
-      maxSize: 5,
-    });
-
-    const message = {
-      channel: "C1",
-      parent_user_id: "U2",
-      ts: "1",
-    } as SlackMessageEvent;
-
-    const first = await resolver.resolve({ message, source: "message" });
-    const second = await resolver.resolve({ message, source: "message" });
-
-    expect(first.thread_ts).toBe("9");
-    expect(second.thread_ts).toBe("9");
-    expect(historyMock).toHaveBeenCalledTimes(1);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:95e7138a35363f9a763404272981ba5b8c4e8e4a160f37bf1f96bfe116383fe8
+size 1022

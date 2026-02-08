@@ -46,6 +46,14 @@ def init_db():
         trace_id TEXT,
         payload TEXT
     )''')
+    # project metadata table for simple project tracking (used by dashboard/agents)
+    cur.execute('''CREATE TABLE IF NOT EXISTS projects (
+        id INTEGER PRIMARY KEY,
+        name TEXT UNIQUE,
+        description TEXT,
+        created_at TEXT,
+        metadata TEXT
+    )''')
     cur.execute('''CREATE TABLE IF NOT EXISTS queue (
         id INTEGER PRIMARY KEY,
         created_at TEXT,
@@ -72,19 +80,28 @@ def init_db():
             cur.execute('ALTER TABLE queue ADD COLUMN last_reclaimed_at TEXT')
         except Exception:
             pass
+    conn.commit()
 
-        # ensure migration: add `timestamp` column to `audit` if missing
-        try:
-            cur.execute("PRAGMA table_info(audit)")
-            audit_cols = {r[1] for r in cur.fetchall()}
-            if 'timestamp' not in audit_cols:
+    # ensure migration: add common columns to `audit` if missing
+    try:
+        cur.execute("PRAGMA table_info(audit)")
+        audit_cols = {r[1] for r in cur.fetchall()}
+        # desired audit columns and their SQL types
+        required_audit_cols = {
+            'timestamp': 'TEXT',
+            'actor': 'TEXT',
+            'action': 'TEXT',
+            'details': 'TEXT'
+        }
+        for col, sql_type in required_audit_cols.items():
+            if col not in audit_cols:
                 try:
-                    cur.execute("ALTER TABLE audit ADD COLUMN timestamp TEXT")
+                    cur.execute(f"ALTER TABLE audit ADD COLUMN {col} {sql_type}")
                 except Exception:
                     # best-effort migration; ignore if not possible
                     pass
-        except Exception:
-            pass
+    except Exception:
+        pass
 
     conn.commit()
     conn.close()

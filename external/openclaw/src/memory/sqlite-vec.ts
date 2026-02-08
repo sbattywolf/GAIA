@@ -1,24 +1,3 @@
-import type { DatabaseSync } from "node:sqlite";
-
-export async function loadSqliteVecExtension(params: {
-  db: DatabaseSync;
-  extensionPath?: string;
-}): Promise<{ ok: boolean; extensionPath?: string; error?: string }> {
-  try {
-    const sqliteVec = await import("sqlite-vec");
-    const resolvedPath = params.extensionPath?.trim() ? params.extensionPath.trim() : undefined;
-    const extensionPath = resolvedPath ?? sqliteVec.getLoadablePath();
-
-    params.db.enableLoadExtension(true);
-    if (resolvedPath) {
-      params.db.loadExtension(extensionPath);
-    } else {
-      sqliteVec.load(params.db);
-    }
-
-    return { ok: true, extensionPath };
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    return { ok: false, error: message };
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:f73b851af60ac20640251f703931801f4d85a38064596a3dfc575c241bf9a776
+size 789

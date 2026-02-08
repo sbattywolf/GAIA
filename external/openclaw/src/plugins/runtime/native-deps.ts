@@ -1,28 +1,3 @@
-export type NativeDependencyHintParams = {
-  packageName: string;
-  manager?: "pnpm" | "npm" | "yarn";
-  rebuildCommand?: string;
-  approveBuildsCommand?: string;
-  downloadCommand?: string;
-};
-
-export function formatNativeDependencyHint(params: NativeDependencyHintParams): string {
-  const manager = params.manager ?? "pnpm";
-  const rebuildCommand =
-    params.rebuildCommand ??
-    (manager === "npm"
-      ? `npm rebuild ${params.packageName}`
-      : manager === "yarn"
-        ? `yarn rebuild ${params.packageName}`
-        : `pnpm rebuild ${params.packageName}`);
-  const approveBuildsCommand =
-    params.approveBuildsCommand ??
-    (manager === "pnpm" ? `pnpm approve-builds (select ${params.packageName})` : undefined);
-  const steps = [approveBuildsCommand, rebuildCommand, params.downloadCommand].filter(
-    (step): step is string => Boolean(step),
-  );
-  if (steps.length === 0) {
-    return `Install ${params.packageName} and rebuild its native module.`;
-  }
-  return `Install ${params.packageName} and rebuild its native module (${steps.join("; ")}).`;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:c5a4fe866a47f1592f5a3d8a45a2789901418995664b4943e15539618d8e2256
+size 1072

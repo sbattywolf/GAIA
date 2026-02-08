@@ -1,18 +1,3 @@
-export async function authenticate(url: string, code: string): Promise<string> {
-  const resp = await fetch(`${url}/~/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `password=${code}`,
-  });
-
-  if (!resp.ok) {
-    throw new Error(`Login failed with status ${resp.status}`);
-  }
-
-  await resp.text();
-  const cookie = resp.headers.get("set-cookie");
-  if (!cookie) {
-    throw new Error("No authentication cookie received");
-  }
-  return cookie;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3b9d5ef067b23a27ff4eaf93df045659c2c9a28cd93b958aef5f9a2a5736503b
+size 510

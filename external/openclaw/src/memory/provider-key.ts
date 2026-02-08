@@ -1,33 +1,3 @@
-import { fingerprintHeaderNames } from "./headers-fingerprint.js";
-import { hashText } from "./internal.js";
-
-export function computeEmbeddingProviderKey(params: {
-  providerId: string;
-  providerModel: string;
-  openAi?: { baseUrl: string; model: string; headers: Record<string, string> };
-  gemini?: { baseUrl: string; model: string; headers: Record<string, string> };
-}): string {
-  if (params.openAi) {
-    const headerNames = fingerprintHeaderNames(params.openAi.headers);
-    return hashText(
-      JSON.stringify({
-        provider: "openai",
-        baseUrl: params.openAi.baseUrl,
-        model: params.openAi.model,
-        headerNames,
-      }),
-    );
-  }
-  if (params.gemini) {
-    const headerNames = fingerprintHeaderNames(params.gemini.headers);
-    return hashText(
-      JSON.stringify({
-        provider: "gemini",
-        baseUrl: params.gemini.baseUrl,
-        model: params.gemini.model,
-        headerNames,
-      }),
-    );
-  }
-  return hashText(JSON.stringify({ provider: params.providerId, model: params.providerModel }));
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:af840358bf4f40e4d2b267de8e73013349f78af77d644fc1a85ca17276df28f9
+size 1051

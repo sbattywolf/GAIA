@@ -1,23 +1,3 @@
-import type { ErrorShape } from "./types.js";
-
-export const ErrorCodes = {
-  NOT_LINKED: "NOT_LINKED",
-  NOT_PAIRED: "NOT_PAIRED",
-  AGENT_TIMEOUT: "AGENT_TIMEOUT",
-  INVALID_REQUEST: "INVALID_REQUEST",
-  UNAVAILABLE: "UNAVAILABLE",
-} as const;
-
-export type ErrorCode = (typeof ErrorCodes)[keyof typeof ErrorCodes];
-
-export function errorShape(
-  code: ErrorCode,
-  message: string,
-  opts?: { details?: unknown; retryable?: boolean; retryAfterMs?: number },
-): ErrorShape {
-  return {
-    code,
-    message,
-    ...opts,
-  };
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:46a5a3c52fe21c73f640ce8ddb07595e037ff8d9bea4a4ef4f0f2e33471e6412
+size 529

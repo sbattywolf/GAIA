@@ -1,12 +1,3 @@
-// Lobster palette tokens for CLI/UI theming. "lobster seam" == use this palette.
-// Keep in sync with docs/cli/index.md (CLI palette section).
-export const LOBSTER_PALETTE = {
-  accent: "#FF5A2D",
-  accentBright: "#FF7A3D",
-  accentDim: "#D14A22",
-  info: "#FF8A5B",
-  success: "#2FBF71",
-  warn: "#FFB020",
-  error: "#E23D2D",
-  muted: "#8B7F77",
-} as const;
+version https://git-lfs.github.com/spec/v1
+oid sha256:f2f0be0376855deea11b836f1c70403c5e7dd5b742c882c9e343599f0f65cd66
+size 361

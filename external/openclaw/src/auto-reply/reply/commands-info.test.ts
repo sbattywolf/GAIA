@@ -1,13 +1,3 @@
-import { describe, expect, it } from "vitest";
-import { buildCommandsPaginationKeyboard } from "./commands-info.js";
-
-describe("buildCommandsPaginationKeyboard", () => {
-  it("adds agent id to callback data when provided", () => {
-    const keyboard = buildCommandsPaginationKeyboard(2, 3, "agent-main");
-    expect(keyboard[0]).toEqual([
-      { text: "◀ Prev", callback_data: "commands_page_1:agent-main" },
-      { text: "2/3", callback_data: "commands_page_noop:agent-main" },
-      { text: "Next ▶", callback_data: "commands_page_3:agent-main" },
-    ]);
-  });
-});
+version https://git-lfs.github.com/spec/v1
+oid sha256:00eaf77130123818dc0cd55377e64a24a6c6311660f0b15566f0400f80a18767
+size 574

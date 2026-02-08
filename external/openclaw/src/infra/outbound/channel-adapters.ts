@@ -1,26 +1,3 @@
-import type { ChannelId } from "../../channels/plugins/types.js";
-
-export type ChannelMessageAdapter = {
-  supportsEmbeds: boolean;
-  buildCrossContextEmbeds?: (originLabel: string) => unknown[];
-};
-
-const DEFAULT_ADAPTER: ChannelMessageAdapter = {
-  supportsEmbeds: false,
-};
-
-const DISCORD_ADAPTER: ChannelMessageAdapter = {
-  supportsEmbeds: true,
-  buildCrossContextEmbeds: (originLabel: string) => [
-    {
-      description: `From ${originLabel}`,
-    },
-  ],
-};
-
-export function getChannelMessageAdapter(channel: ChannelId): ChannelMessageAdapter {
-  if (channel === "discord") {
-    return DISCORD_ADAPTER;
-  }
-  return DEFAULT_ADAPTER;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:475e89c9a3c663b444a74653b39d00f1adec9861018ff7c0377ea14d3fb6050f
+size 646

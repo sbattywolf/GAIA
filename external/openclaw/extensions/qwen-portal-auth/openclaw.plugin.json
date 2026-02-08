@@ -1,9 +1,3 @@
-{
-  "id": "qwen-portal-auth",
-  "providers": ["qwen-portal"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:3908c6bdbd872966debbdb39adaa93428d087d44d1f2bc6216fbfd82f92894ae
+size 166

@@ -1,30 +1,3 @@
-import { vi } from "vitest";
-
-const stubTool = (name: string) => ({
-  name,
-  description: `${name} stub`,
-  parameters: { type: "object", properties: {} },
-  execute: vi.fn(),
-});
-
-vi.mock("../tools/browser-tool.js", () => ({
-  createBrowserTool: () => stubTool("browser"),
-}));
-
-vi.mock("../tools/canvas-tool.js", () => ({
-  createCanvasTool: () => stubTool("canvas"),
-}));
-
-vi.mock("../tools/image-tool.js", () => ({
-  createImageTool: () => stubTool("image"),
-}));
-
-vi.mock("../tools/web-tools.js", () => ({
-  createWebSearchTool: () => null,
-  createWebFetchTool: () => null,
-}));
-
-vi.mock("../../plugins/tools.js", () => ({
-  resolvePluginTools: () => [],
-  getPluginToolMeta: () => undefined,
-}));
+version https://git-lfs.github.com/spec/v1
+oid sha256:4bd2e062c26edcd73735b3f05df71d83f502f809fe3cf16d72011f07d22be818
+size 705

@@ -1,9 +1,3 @@
-{
-  "id": "matrix",
-  "channels": ["matrix"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:855b28bcd1868d75d39d57f9c7de8617f9ad3f5fc9f8cfc8c0ef2b9228dd7fdd
+size 150

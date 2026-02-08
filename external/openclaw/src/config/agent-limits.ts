@@ -1,20 +1,3 @@
-import type { OpenClawConfig } from "./types.js";
-
-export const DEFAULT_AGENT_MAX_CONCURRENT = 4;
-export const DEFAULT_SUBAGENT_MAX_CONCURRENT = 8;
-
-export function resolveAgentMaxConcurrent(cfg?: OpenClawConfig): number {
-  const raw = cfg?.agents?.defaults?.maxConcurrent;
-  if (typeof raw === "number" && Number.isFinite(raw)) {
-    return Math.max(1, Math.floor(raw));
-  }
-  return DEFAULT_AGENT_MAX_CONCURRENT;
-}
-
-export function resolveSubagentMaxConcurrent(cfg?: OpenClawConfig): number {
-  const raw = cfg?.agents?.defaults?.subagents?.maxConcurrent;
-  if (typeof raw === "number" && Number.isFinite(raw)) {
-    return Math.max(1, Math.floor(raw));
-  }
-  return DEFAULT_SUBAGENT_MAX_CONCURRENT;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ba511254be5c196325afb81a4608fab24c8b85b7f1bbc2f40c9c32db0e183910
+size 705

@@ -1,15 +1,3 @@
-export const PROJECT_NAME = "openclaw" as const;
-
-export const LEGACY_PROJECT_NAMES = [] as const;
-
-export const MANIFEST_KEY = PROJECT_NAME;
-
-export const LEGACY_MANIFEST_KEYS = LEGACY_PROJECT_NAMES;
-
-export const LEGACY_PLUGIN_MANIFEST_FILENAMES = [] as const;
-
-export const LEGACY_CANVAS_HANDLER_NAMES = [] as const;
-
-export const MACOS_APP_SOURCES_DIR = "apps/macos/Sources/OpenClaw" as const;
-
-export const LEGACY_MACOS_APP_SOURCES_DIRS = [] as const;
+version https://git-lfs.github.com/spec/v1
+oid sha256:ab481f85896a01b0615e008668996b689aea0d0fff7341e87d9d38554fe89b94
+size 457

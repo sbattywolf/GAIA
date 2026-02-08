@@ -1,14 +1,3 @@
-export async function fetchJson(
-  url: string,
-  init: RequestInit,
-  timeoutMs: number,
-  fetchFn: typeof fetch,
-): Promise<Response> {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    return await fetchFn(url, { ...init, signal: controller.signal });
-  } finally {
-    clearTimeout(timer);
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:7b8817305c6000193688e753f3a0a87029e05260909ec3ad215d7694e3caf473
+size 371

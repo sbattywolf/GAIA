@@ -1,17 +1,3 @@
-{
-  "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "lib": ["DOM", "DOM.Iterable", "ES2023", "ScriptHost"],
-    "noEmit": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "es2023"
-  },
-  "include": ["src/**/*.ts", "extensions/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:70ecbe9e20a7c79d6722e84338ee0c2963d39be0ac70b6a3b9e04b7950d04e48
+size 481

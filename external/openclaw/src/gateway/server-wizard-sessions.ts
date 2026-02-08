@@ -1,27 +1,3 @@
-import type { WizardSession } from "../wizard/session.js";
-
-export function createWizardSessionTracker() {
-  const wizardSessions = new Map<string, WizardSession>();
-
-  const findRunningWizard = (): string | null => {
-    for (const [id, session] of wizardSessions) {
-      if (session.getStatus() === "running") {
-        return id;
-      }
-    }
-    return null;
-  };
-
-  const purgeWizardSession = (id: string) => {
-    const session = wizardSessions.get(id);
-    if (!session) {
-      return;
-    }
-    if (session.getStatus() === "running") {
-      return;
-    }
-    wizardSessions.delete(id);
-  };
-
-  return { wizardSessions, findRunningWizard, purgeWizardSession };
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:e0cde157602428b7f435d3b62d6dd2bc7961708e79ebe19bf1be1417fd1d8874
+size 674
