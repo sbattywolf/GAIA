@@ -64,6 +64,33 @@ GAIA is a hybrid configuration platform integrating AI/LLM capabilities with ser
   docker-compose up
   ```
 
+## Runtime Configuration
+
+Certain runtime behaviours for local coordination can be configured via environment variables.
+
+- `CLAIMS_BACKEND`: choose the claims backend. Values: `sqlite` (default) or `file`.
+  - `sqlite` uses a repo-local SQLite DB at `.tmp/claims.db` for atomic, transactional claims.
+  - `file` uses the legacy file-based `.tmp/claims/*.json` with `.lock` files.
+- `CLAIMS_LOCK_TIMEOUT`: (float seconds) lock acquisition timeout used by the file lock fallback. Default `5.0` seconds.
+
+To force the file-based backend in a shell session:
+
+```bash
+export CLAIMS_BACKEND=file
+# or on Windows PowerShell
+$env:CLAIMS_BACKEND='file'
+```
+
+To explicitly enable the SQLite backend (normally the default):
+
+```bash
+export CLAIMS_BACKEND=sqlite
+# or on Windows PowerShell
+$env:CLAIMS_BACKEND='sqlite'
+```
+
+The CI uses the SQLite backend by default to make tests more reliable; you can override these variables in CI if needed.
+
 ## Roadmap
 - **Short-Term Goals**:
   - Optimize GitHub workflows.
