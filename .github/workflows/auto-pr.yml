@@ -24,7 +24,7 @@ jobs:
       - name: Create branch and small change
         id: make_change
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GAIA_GITHUB_TOKEN }}
         run: |
           git config user.name "gaia-bot"
           git config user.email "gaia-bot@example.com"

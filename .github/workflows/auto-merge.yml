@@ -97,7 +97,7 @@ jobs:
       - name: Auto-merge when CI passed and PR approved
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GAIA_GITHUB_TOKEN }}
           script: |
             const run = context.payload.workflow_run;
             const head_sha = run.head_sha;

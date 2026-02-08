@@ -50,7 +50,7 @@ jobs:
       - name: Create branch and make change
         id: make_change
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GAIA_GITHUB_TOKEN }}
         run: |
           set -e
           git config user.name "gaia-bot"
