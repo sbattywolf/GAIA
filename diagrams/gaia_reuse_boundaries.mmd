@@ -1,0 +1,7 @@
+flowchart TB
+  Core[GAIA Core: contracts, policy, approval, audit]
+  Home[Home Assistant boundary] <--> Core
+  Telegram[Channel adapter] <--> Core
+  Runtime[Local runtime adapter] <--> Core
+  Memory[Knowledge and memory adapter] <--> Core
+  Workflow[Optional workflow framework] -. evaluate .-> Core
