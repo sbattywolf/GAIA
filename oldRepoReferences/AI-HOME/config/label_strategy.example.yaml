@@ -1,0 +1,17 @@
+labels:
+  capability:
+    - zeus_cap_lighting
+    - zeus_cap_opening
+    - zeus_cap_presence
+    - zeus_cap_climate
+  policy:
+    - zeus_control_allowed
+    - zeus_read_only
+    - zeus_exclude
+    - zeus_confirm_required
+  technology_optional:
+    - zeus_wall_switch
+    - zeus_smart_bulb
+notes:
+  - Labels assigned to areas or devices must not be assumed to propagate to entities.
+  - Select one canonical target per area/capability when possible.

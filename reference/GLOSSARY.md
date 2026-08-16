@@ -1,49 +1,41 @@
 # Glossary
 
-## Status markers
+> Recovery status: Recovered in substance and conservatively normalised  
+> Source basis: surviving Microsoft 365 GAIA reference artefacts and conversation history  
+> Confidence: High  
+> Preservation rule: This file retains its original role. Reconstructed passages are not presented as verbatim recovery.
 
-- **Established:** canonical working vocabulary.
-- **Partial:** in active architectural discussion.
-- **Proposed:** candidate requiring validation.
+Status: Established, Partially Established, Proposed.
 
-## Established terms
+## Established
 
-- **GAIA:** local-first Personal AI Operating System with specialised collaborators and explicit capabilities.
-- **Identity:** durable definition of what GAIA is.
-- **Core:** minimal internal coordination layer preserving coherence and essential contracts; exact scope is open.
-- **Collaborator:** bounded digital role with a specific responsibility.
-- **Domain:** coherent area of responsibility.
-- **Capability:** explicit contract for action or access with constraints.
-- **Resource:** anything GAIA may reference or affect.
-- **Shared Context:** scoped context shared across parts of GAIA.
-- **Local-First:** preference for local ownership, control, and execution, with remote services explicit and replaceable.
-- **Human Control:** important decisions and sensitive actions remain visible, governable, and correctable.
+- **GAIA**: local-first Personal AI Operating System.
+- **Identity**: durable definition of what GAIA is.
+- **Core**: minimal coordination layer preserving identity, boundaries and essential contracts.
+- **Collaborator**: bounded digital role with a specific responsibility.
+- **Domain**: coherent area of responsibility such as home, research or communication.
+- **Capability**: explicit contract for an action or access pattern under constraints.
+- **Resource**: anything GAIA may read, reference, modify, control or reason about.
+- **Shared Context**: scoped context shared across parts of GAIA, not an unbounded state dump.
+- **Local-First**: preference for local ownership, control and execution with optional replaceable cloud use.
+- **Human Control**: important behaviour remains visible, governable and correctable.
 
-## Partially established terms
+## Partially established
 
-- **Memory:** structured retention, retrieval, correction, and forgetting over time.
-- **Planner:** coordination function combining intents, collaborators, capabilities, resources, and policy.
-- **Policy:** rule or constraint governing allowed behaviour.
-- **Approval:** explicit authorisation before an action.
-- **Audit:** record of important decisions, actions, approvals, denials, changes, and interactions.
-- **Boundary:** separation between responsibilities or trust zones.
-- **Adapter:** component connecting GAIA to an external system while limiting coupling.
-- **Tool:** callable operation or external capability.
-- **Workflow:** sequence or graph coordinating work and state.
-- **Registry:** discoverable catalogue of components.
-- **Runtime:** environment executing inference, tools, workflows, or computation.
-- **Model:** AI model used for reasoning or other AI functions.
+- **Memory**: structured retention, retrieval, correction and forgetting over time.
+- **Planner**: coordination function combining intent, collaborators, capabilities, resources and policy.
+- **Policy**: enforceable decision constraint.
+- **Approval**: explicit authorisation before execution.
+- **Audit**: record of important decisions, calls, approvals, denials and changes.
+- **Boundary**: conceptual or technical separation of responsibility or trust.
+- **Adapter**: component connecting an external system while limiting coupling.
+- **Tool**: callable operation or service.
+- **Workflow**: structured steps or graph coordinating work.
+- **Registry**: discoverable catalogue of collaborators, capabilities, tools, adapters or runtimes.
+- **Runtime**: environment executing inference, tools or workflows.
 
-## Proposed/external terms
+## Proposed / external ecosystem vocabulary
 
-- **Event:** recorded occurrence such as message, tool call, state change, approval, or failure.
-- **Run:** bounded execution from trigger to result, action, or failure.
-- **Agent:** external ecosystem term; prefer Collaborator for GAIA-native roles.
-- **MCP:** Model Context Protocol for connecting AI applications to tools and data.
-- **RAG:** retrieval-augmented generation.
-- **LLM:** large language model.
-- **Vector Store:** embedding and similarity-search storage.
-- **Connector:** integration to an external source or service.
-- **Plugin:** packaged extension to a host system.
-- **Event Bus:** publish/consume mechanism; not currently required.
-- **Knowledge Base:** curated or indexed information for retrieval and grounding.
+Event, Run, Agent, Tool Calling, Function Calling, MCP, RAG, LLM, Vector Store, Connector, Plugin, Event Bus and Knowledge Base remain external or candidate terms until GAIA assigns explicit semantics.
+
+Prefer **Collaborator** for GAIA-native roles and use **Agent** only when discussing the external ecosystem.

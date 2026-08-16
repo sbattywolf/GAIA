@@ -1,21 +1,21 @@
 # Design Principles
 
-- **Version:** 0.2
-- **Status:** Consolidated reference
+> Recovery status: Recovered in substance and conservatively normalised  
+> Source basis: surviving Microsoft 365 GAIA reference artefacts and conversation history  
+> Confidence: High  
+> Preservation rule: This file retains its original role. Reconstructed passages are not presented as verbatim recovery.
 
-1. **Human First:** amplify capability without replacing judgement.
-2. **Local First:** prefer local ownership, operation, resilience, and recoverability where practical.
-3. **Simplicity Before Power:** complexity must justify its maintenance cost.
-4. **Explicit Boundaries:** important responsibilities have visible ownership.
-5. **Capability-Based Design:** action and access use explicit, auditable, revocable contracts.
-6. **Replaceability:** models, frameworks, providers, channels, and adapters should be replaceable.
-7. **Memory With Intent:** remembering and forgetting are deliberate, inspectable decisions.
-8. **Observable Systems:** important requests, interpretations, approvals, actions, denials, and failures are traceable.
-9. **Progressive Evolution:** prefer small experiments and evidence to large speculative designs.
-10. **Sustainable Complexity:** one human maintainer supported by AI collaborators can operate the system.
-11. **Identity Over Implementation:** goals and boundaries shape architecture, not tools or trends.
-12. **Build Less:** reuse responsibly, but reject reuse that creates unnecessary dependency.
+1. **Human First** - Important actions and sensitive decisions remain visible, governable and correctable.
+2. **Local First** - Prefer local ownership, local control and local execution when practical. Cloud use must be explicit and replaceable.
+3. **Simplicity** - Complexity needs demonstrated value and a clear boundary.
+4. **Replaceability** - Models, frameworks, runtimes, channels and adapters must not define GAIA's identity.
+5. **Bounded Collaborators** - A collaborator has a named responsibility and must not become an unbounded assistant.
+6. **Explicit Capabilities** - Authority is expressed through enforceable capabilities, not implied by prompts.
+7. **Intentional Memory** - Remembered information is inspectable, correctable and forgettable.
+8. **Observable Behaviour** - Important interpretation, retrieval, approval, action, denial and failure are explainable.
+9. **Sustainable Complexity** - A very small team must remain able to understand, operate and replace the system.
+10. **Identity Over Implementation** - Architecture protects the durable identity; implementation does not redefine it.
 
-## Final question
+## Decision test
 
-Does this change make GAIA easier to understand, evolve, replace, and maintain ten years from now? If unclear, challenge it before adoption.
+A proposal should identify the problem solved, the new state owned, the failure mode introduced, the replacement path and the operational burden. If these are unclear, the proposal remains experimental.

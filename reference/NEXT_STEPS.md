@@ -1,37 +1,32 @@
 # Next Steps
 
-## Current status
+> Recovery status: Recovered in substance and conservatively normalised  
+> Source basis: surviving Microsoft 365 GAIA reference artefacts and conversation history  
+> Confidence: High  
+> Preservation rule: This file retains its original role. Reconstructed passages are not presented as verbatim recovery.
 
-GAIA is in Research and Architectural Validation. The documentation foundation exists; final architecture, framework, memory, orchestration, deployment, and plugin decisions remain intentionally open.
+GAIA advances by reducing uncertainty, not by accumulating features.
 
-## Phase 0: Research foundation
+## Maturity phases
 
-**Complete when:** canonical reference documents exist, vocabulary and model are clear, duplicate research is consolidated, and uncertainties are not hidden.
+0. Research Foundation
+1. Architectural Validation
+2. Core Prototype
+3. First Domain Validation
+4. Production Readiness
+5. Ecosystem Expansion
+6. Long-Term Evolution
 
-## Phase 1: Architectural validation
+![Maturity roadmap](../assets/diagrams/04_gaia_maturity_roadmap.png)
 
-Create proposed ADRs for Core boundary, memory semantics, capability model, Home Assistant boundary, communication state, tool trust, and event semantics. Execute the validation briefs in `validation/`.
+## Immediate architectural validation
 
-## Phase 2: Core prototype
+Create proposed ADRs for Core boundary, Memory semantics, Capability model, Home Assistant boundary, Communication state, Tool trust and Event semantics. Pair them with validation briefs that state uncertainty, evidence required and decisions informed.
 
-Create the smallest replaceable prototype of Collaborator, Capability, Resource, Shared Context, execution trace, and audit. Explicitly exclude full memory, general planner, plugin ecosystem, full UI, and production security.
+## Prototype discipline
 
-## Phase 3: First-domain validation
+The smallest Core prototype should expose boundaries among Core, Collaborator, Capability, Resource, Shared Context and external adapters. It should not attempt a general planner, complete memory, plugin ecosystem, full UI, multi-domain orchestration or production security.
 
-Validate bounded Home automation through Home Assistant, Telegram, and a local runtime. Include approval, failure modes, degraded operation, explicit capability allow-list, and domain-state boundaries.
+## First domain
 
-## Phase 4: Production readiness
-
-Threat model, capability governance, tool trust, audit and observability, backup and recovery, secrets, upgrade and rollback, regression testing, and operational documentation.
-
-## Phase 5: Ecosystem expansion
-
-Evaluate a second domain, cross-domain capabilities, Shared Context, memory strategy, collaborator lifecycle, registry need, and domain onboarding.
-
-## Phase 6: Long-term evolution
-
-Periodic architecture and principle reviews, glossary evolution, ADR supersession, dependency review, collaborator deprecation, memory governance, security review, and incubator review.
-
-## Progress rule
-
-Advance based on reduced uncertainty and evidence, not perceived feature completeness.
+Home automation is the first validation domain. Home Assistant is the home source of truth, Telegram is an initial channel and local runtime is preferred. The purpose is learning, not feature completeness.

@@ -1,0 +1,58 @@
+- platform: min_max
+  name: Temp Soggiorno Group
+  type: mean
+  entity_ids:
+    - sensor.sensore_finestra_soggiorno_dx_device_temperature
+    - sensor.sensore_finestra_soggiorno_sx_device_temperature
+    - sensor.sensore_meteo_soggiorno_temperature
+- platform: min_max
+  name: Temp Camera Group
+  type: mean
+  entity_ids:
+    - sensor.sensore_finestra_letto_dx_device_temperature
+    - sensor.sensore_finestra_letto_piccola_device_temperature
+    - sensor.sensore_movimento_letto_device_temperature
+    - sensor.bottone_camera_da_letto_temperature
+    - sensor.term_bedroom_room_temp
+    - sensor.sensore_meteo_letto_temperature
+- platform: min_max
+  name: Temp Open Group
+  type: mean
+  entity_ids:
+    - sensor.sensore_finestra_soggiorno_dx_device_temperature
+    - sensor.sensore_finestra_soggiorno_sx_device_temperature
+    - sensor.sensore_movimento_ingresso_temperature
+    - sensor.sensore_porta_ingresso_device_temperature
+    - sensor.term_living_room_temp
+    - sensor.sensore_meteo_soggiorno_temperature
+    - sensor.ariel_temperature
+#    - sensor.sensore_meteo_cucina_temperature
+    - sensor.sensore_meteo_ingresso_temperature
+- platform: min_max
+  name: Temp Ufficio Group
+  type: mean
+  entity_ids:
+    - sensor.sensore_finestra_ufficio_device_temperature
+    - sensor.term_office_room_temp
+    - sensor.sensore_meteo_ufficio_temperature
+- platform: min_max
+  name: Temp Bagno Group
+  type: mean
+  entity_ids:
+    - sensor.sensore_movimento_bagno_temperature
+    - sensor.sensore_meteo_bagno_temperature
+- platform: min_max
+  name: Temp Cucina Group
+  type: mean
+  entity_ids:
+    - sensor.sensore_meteo_cucina_temperature
+- platform: min_max
+  name: Temp Corridoio Group
+  type: mean
+  entity_ids:
+    - sensor.sensore_movimento_corridoio_temperature
+    - sensor.sensore_movimento_ingresso_temperature
+    - sensor.sensore_porta_ingresso_device_temperature
+    - sensor.sensore_meteo_ingresso_temperature
+
+
