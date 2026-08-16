@@ -1,11 +1,11 @@
 ---
-name: GAIA Local Engineer
+name: GAIA Engineer DeepSeek Lite
 description: Read-only local engineer for GAIA repository analysis and architecture work.
 tools:
   - read
   - search
 agents: []  
-model: qwen2.5-coder:14b
+model: deepseek-coder-v2:lite
 user-invocable: true
 disable-model-invocation: true
 ---

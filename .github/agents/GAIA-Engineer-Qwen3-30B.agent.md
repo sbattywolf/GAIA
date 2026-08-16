@@ -1,11 +1,11 @@
 ---
-name: GAIA Local Engineer
+name: GAIA Engineer Qwen3 30B
 description: Read-only local engineer for GAIA repository analysis and architecture work.
 tools:
   - read
   - search
 agents: []  
-model: qwen2.5-coder:14b
+model: qwen3-coder:30b
 user-invocable: true
 disable-model-invocation: true
 ---

@@ -1,5 +1,5 @@
 ---
-name: GAIA Local Engineer
+name: GAIA Engineer Qwen25 14B
 description: Read-only local engineer for GAIA repository analysis and architecture work.
 tools:
   - read

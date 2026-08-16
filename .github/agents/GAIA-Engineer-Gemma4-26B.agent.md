@@ -1,11 +1,11 @@
 ---
-name: GAIA Local Engineer
+name: GAIA Engineer Gemma4 26B
 description: Read-only local engineer for GAIA repository analysis and architecture work.
 tools:
   - read
   - search
 agents: []  
-model: qwen2.5-coder:14b
+model: gemma4:26b
 user-invocable: true
 disable-model-invocation: true
 ---
