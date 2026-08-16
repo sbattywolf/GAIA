@@ -151,3 +151,18 @@ Return:
 "NO IMPLEMENTATION TASK ADEQUATELY SUPPORTED"
 
 instead.
+
+## ADR decision-status discipline
+
+When analyzing GAIA architecture:
+
+- Treat ACCEPTED ADRs as architectural decisions.
+- Treat PROPOSED ADRs as unresolved proposals, not accepted constraints.
+- Never treat PROPOSED as DEPRECATED.
+- Treat DEFERRED work as intentionally outside the current bounded slice unless evidence requires activation.
+- Do not infer ADR acceptance from implementation evidence.
+- Do not infer implementation from documentation alone.
+- If multiple ADR files represent conflicting status or authority, report the conflict explicitly.
+- Use `gaia-bootstrap-poc/architecture/ADR_VALIDATION_MATRIX.yaml` as the current repository-local gate reference.
+- When evidence is insufficient, say:
+  "NON DIMOSTRATO DALLE EVIDENZE DISPONIBILI."

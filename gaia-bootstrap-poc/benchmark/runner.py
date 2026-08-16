@@ -38,6 +38,10 @@ TESTS = [
         "name": "T04_evidence_verification",
         "required_tools": ["search"],
     },
+    {
+        "name": "T05_adr_status_and_gate",
+        "required_tools": ["read_file", "search"],
+    },
 ]
 
 

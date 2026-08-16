@@ -1,0 +1,98 @@
+version: 1
+
+purpose: >
+  Define the minimum ADR baseline and feature gates that a GAIA Engineer
+  must respect when evaluating repository architecture evidence.
+
+rules:
+  accepted_is_architectural_baseline: true
+  proposed_is_not_accepted: true
+  proposed_is_not_deprecated: true
+  deferred_is_not_rejected: true
+  missing_is_not_deprecated: true
+  do_not_infer_acceptance_from_implementation: true
+  do_not_infer_deprecation_from_absence: true
+
+baseline:
+  required:
+    - id: ADR-0001
+      file: adr/ADR-0001-Core-Boundary.md
+      status: ACCEPTED
+      role: core_boundary
+
+    - id: ADR-0003
+      authoritative_file: adr/ADR-0003-Capability-Model_Accepted.md
+      status: ACCEPTED
+      role: capability_model
+      repository_note: >
+        adr/ADR-0003-Capability-Model.md also exists and remains Proposed.
+        Do not treat the Proposed copy as the authoritative accepted decision.
+
+feature_gates:
+  home_assistant:
+    required:
+      - ADR-0004
+    status: PROPOSED
+    gate: >
+      Do not treat the Home Assistant boundary as a finalized architectural
+      decision until ADR-0004 is explicitly accepted.
+
+  tool_execution:
+    required:
+      - ADR-0006
+    status: PROPOSED
+    gate: >
+      Do not treat Tool Trust as a finalized architectural decision until
+      ADR-0006 is explicitly accepted.
+
+deferred:
+  - id: ADR-0002
+    file: adr/ADR-0002-Memory-Semantics.md
+    status: PROPOSED
+    scope: memory
+    activation: evidence_required
+
+  - id: ADR-0005
+    file: adr/ADR-0005-Communication-State.md
+    status: PROPOSED
+    scope: communication_state
+    activation: continuity_pressure
+
+  - id: ADR-0007
+    file: adr/ADR-0007-Event-Semantics.md
+    status: PROPOSED
+    scope: event_run
+    activation: correctness_or_coordination_need
+
+classification:
+  ACCEPTED:
+    meaning: >
+      Accepted architectural decision. May be used as an architectural constraint.
+
+  DEFERRED:
+    meaning: >
+      Deferred implementation or activation scope. DEFERRED is not an ADR status
+      unless the authoritative ADR explicitly declares it. A PROPOSED ADR may
+      belong to the deferred implementation scope.
+
+
+  PROPOSED:
+    meaning: >
+      Open proposal. It is evidence of an unresolved architectural question,
+      not an accepted constraint and not a deprecated decision.
+
+  DEFERRED:
+    meaning: >
+      Not required by the current bounded slice. Do not implement infrastructure
+      merely because the ADR exists.
+
+  CONFLICTED:
+    meaning: >
+      Repository contains materially different status/authority signals.
+      Report the conflict instead of inventing a resolution.
+
+evidence_policy:
+  documentation_alone_does_not_prove_implementation: true
+  implementation_does_not_prove_adr_acceptance: true
+  when_status_is_unclear: >
+    Report the ambiguity explicitly and identify the conflicting files.
