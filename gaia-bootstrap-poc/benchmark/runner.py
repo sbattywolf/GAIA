@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import json
 import os
 import subprocess
@@ -71,7 +72,7 @@ def ollama_show(model):
     return response.json()
 
 
-def ollama_generate(model, prompt):
+def ollama_generate(model, prompt, collect_model_metrics=False):
     """
     Uses the Ollama chat API with the benchmark tool definitions.
 
@@ -132,6 +133,16 @@ def ollama_generate(model, prompt):
 
     tool_calls = []
 
+    model_metrics = {
+        "request_count": 0,
+        "prompt_tokens": 0,
+        "output_tokens": 0,
+        "prompt_eval_duration_ns": 0,
+        "eval_duration_ns": 0,
+        "load_duration_ns": 0,
+        "total_duration_ns": 0,
+    } if collect_model_metrics else None
+
     for _ in range(20):
         response = requests.post(
             f"{OLLAMA_URL}/api/chat",
@@ -146,6 +157,36 @@ def ollama_generate(model, prompt):
 
         response.raise_for_status()
         data = response.json()
+
+        if collect_model_metrics:
+            model_metrics["request_count"] += 1
+
+            for key in (
+                "prompt_eval_count",
+                "eval_count",
+                "prompt_eval_duration",
+                "eval_duration",
+                "load_duration",
+                "total_duration",
+            ):
+                value = data.get(key)
+
+                if value is None:
+                    continue
+
+                if key == "prompt_eval_count":
+                    model_metrics["prompt_tokens"] += value
+                elif key == "eval_count":
+                    model_metrics["output_tokens"] += value
+                elif key == "prompt_eval_duration":
+                    model_metrics["prompt_eval_duration_ns"] += value
+                elif key == "eval_duration":
+                    model_metrics["eval_duration_ns"] += value
+                elif key == "load_duration":
+                    model_metrics["load_duration_ns"] += value
+                elif key == "total_duration":
+                    model_metrics["total_duration_ns"] += value
+
         message = data.get("message", {})
 
         messages.append(message)
@@ -156,6 +197,11 @@ def ollama_generate(model, prompt):
             return {
                 "response": message.get("content", ""),
                 "tool_calls": tool_calls,
+                "model_metrics": (
+                    finalize_model_metrics(model_metrics)
+                    if collect_model_metrics
+                    else None
+                ),
             }
 
         for call in calls:
@@ -182,7 +228,34 @@ def ollama_generate(model, prompt):
     return {
         "response": "",
         "tool_calls": tool_calls,
+        "model_metrics": (
+            finalize_model_metrics(model_metrics)
+            if collect_model_metrics
+            else None
+        ),
         "error": "maximum tool iterations exceeded",
+    }
+
+
+def finalize_model_metrics(metrics):
+    eval_duration = metrics["eval_duration_ns"]
+    prompt_duration = metrics["prompt_eval_duration_ns"]
+
+    output_tokens = metrics["output_tokens"]
+    prompt_tokens = metrics["prompt_tokens"]
+
+    return {
+        **metrics,
+        "prompt_tokens_per_second": (
+            prompt_tokens / (prompt_duration / 1_000_000_000)
+            if prompt_duration > 0
+            else None
+        ),
+        "output_tokens_per_second": (
+            output_tokens / (eval_duration / 1_000_000_000)
+            if eval_duration > 0
+            else None
+        ),
     }
 
 
@@ -341,7 +414,7 @@ def verify_tools(test, tool_calls):
     }
 
 
-def run_test(model, test):
+def run_test(model, test, collect_model_metrics=False):
     name = test["name"]
     prompt = load_test(name)
 
@@ -357,6 +430,7 @@ def run_test(model, test):
     result = ollama_generate(
         model,
         prompt,
+        collect_model_metrics=collect_model_metrics,
     )
 
     telemetry.sample()
@@ -401,6 +475,9 @@ def run_test(model, test):
         "tool_calls": tool_calls,
         "tool_verification": tool_verification,
         "telemetry": telemetry.result(),
+        "model_metrics": result.get(
+            "model_metrics"
+        ),
         "response": result.get(
             "response",
             "",
@@ -409,7 +486,7 @@ def run_test(model, test):
     }
 
 
-def run_model(model_info, index, total):
+def run_model(model_info, index, total, collect_model_metrics=False):
     name = model_info["name"]
     ollama_model = model_info["ollama"]
 
@@ -447,6 +524,7 @@ def run_model(model_info, index, total):
         result = run_test(
             ollama_model,
             test,
+            collect_model_metrics=collect_model_metrics,
         )
         tests.append(result)
 
@@ -510,6 +588,16 @@ def run_model(model_info, index, total):
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="GAIA Engineer Benchmark"
+    )
+    parser.add_argument(
+        "--performance",
+        action="store_true",
+        help="Collect Ollama model performance metrics.",
+    )
+    args = parser.parse_args()
+
     print(
         "=== GAIA Engineer Benchmark v1.2 ==="
     )
@@ -538,6 +626,7 @@ def main():
             model,
             index,
             len(models),
+            collect_model_metrics=args.performance,
         )
 
     print()
