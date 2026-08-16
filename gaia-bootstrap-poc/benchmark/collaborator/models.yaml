@@ -1,0 +1,3 @@
+models:
+  - name: devstral-small-2-24b
+    ollama: devstral-small-2:latest
