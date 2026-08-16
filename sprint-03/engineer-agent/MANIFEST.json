@@ -1,0 +1,35 @@
+{
+  "package": "sprint-current-full",
+  "documents": [
+    {
+      "name": "BOOTSTRAP_DOMAIN_MODEL.md",
+      "bytes": 5315,
+      "sha256": "a266baa807dedc614e9c95985466ed4f5020c2b6eb12d4ba5dd715337af76895"
+    },
+    {
+      "name": "DETERMINISTIC_TEST_PLAN.md",
+      "bytes": 5970,
+      "sha256": "1c4a33ceffe7601de47cfd9cc1527fa6a9ad08394c00b7dbc4265c43a66bda49"
+    },
+    {
+      "name": "IMPLEMENTATION_SKELETON.md",
+      "bytes": 5116,
+      "sha256": "611c67cd3d38589d34095ce26dd7f2ecf9efe52b1fe06e037663e184ab4e4a47"
+    },
+    {
+      "name": "POC_REUSE_ASSESSMENT.md",
+      "bytes": 12859,
+      "sha256": "da628fde9fb916f73d1c70036fb4979c5d5d27daa1b918f19924561b8548c933"
+    },
+    {
+      "name": "PROJECT_HISTORY.md",
+      "bytes": 4982,
+      "sha256": "9567df931856ba1200d8f1933c2dc570956b4372811345a1e81023af86aa8ac6"
+    },
+    {
+      "name": "PROTOTYPE_BOOTSTRAP_PROPOSAL.md",
+      "bytes": 6724,
+      "sha256": "f28697cb4108d0c3c263e13a4c072fcf6c6262dc8fbed7a2eb8205f9c7100988"
+    }
+  ]
+}

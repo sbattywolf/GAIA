@@ -1,47 +1,63 @@
-# ADR-0006-Tool-Trust: Tool Trust
+# ADR-0006: Tool Trust
 
 - **Status:** Proposed
-- **Decision date:** Not decided
-- **Owners:** Project owner / architect
-- **Related validation:** See `validation/`
+- **Decision:** Not yet made
+- **Recovery status:** Individual ADR reconstructed from surviving ADR candidate lists, Sprint materials and reference documents
+- **Confidence:** Medium
+- **Rule:** This file preserves the decision topic and analysis space. It does not invent an accepted decision.
 
 ## Context
 
-How are tool provenance, risk, approval, sandboxing, and failure handled?
+How should GAIA classify and govern tool access so prompts do not become the security boundary?
+
+This question is repeatedly identified as architecturally significant in the surviving GAIA material. It must be resolved explicitly rather than being decided accidentally by the first implementation or by an adopted framework.
 
 ## Decision drivers
 
-- Human control
-- Local-first ownership
-- Simplicity and sustainable complexity
-- Explicit boundaries
-- Replaceability
-- Observability and recovery
+- Read versus write tools
+- Physical and irreversible impact
+- Credential and data scope
+- Timeout, retry and idempotency
+- Audit and post-action verification
 
-## Options considered
+## Alternatives to evaluate
 
-1. Minimal internal implementation.
-2. Reuse behind a GAIA-owned adapter or contract.
-3. Adopt an external framework abstraction.
-4. Defer until evidence exists.
+- Static allowlist
+- Capability-mediated tools
+- Risk-tiered approval
+- Sandboxed execution
+- Policy-backed gateway
 
-## Current evidence
+## Required evidence before decision
 
-Documentation identifies this as an open architectural concern. Evidence from representative prototypes is still required.
+- Evidence from bounded first-domain scenarios.
+- State ownership and failure-mode analysis.
+- Operational burden for a very small team.
+- Human-control and observability consequences.
+- Replacement, migration and rollback path.
+- Impact on GAIA-native vocabulary and identity tests.
 
-## Decision
+## Questions that must remain open
 
-**Not decided.** This ADR remains Proposed.
+- What is the smallest decision that reduces uncertainty?
+- Which assumptions are facts, observations, external practices or opinions?
+- What implementation evidence is valid, and what is merely prototype bias?
+- What would cause this ADR to be rejected or superseded?
+
+## Decision outcome
+
+Not decided. Do not populate this section until review explicitly accepts an alternative.
 
 ## Consequences
 
-To be completed after validation and decision.
+Not yet applicable. Consequences must be recorded only with an accepted decision.
 
-## Validation required before acceptance
+## Related material
 
-- representative scenario;
-- failure and degraded-mode behaviour;
-- ownership and boundary test;
-- replacement or exit test;
-- operational cost for a very small team;
-- security and audit implications.
+- `../reference/IDENTITY.md`
+- `../reference/GAIA_MODEL.md`
+- `../reference/DESIGN_PRINCIPLES.md`
+- `../sprint-01/04_Architectural_Critique.md`
+- `../sprint-01/05_Architecture_Discussion_Guide.md`
+- `../sprint-02/02_Architectural_Stress_Test.md`
+- `../sprint-02/06_Sprint2_Synthesis.md`

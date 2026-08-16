@@ -1,34 +1,34 @@
 # Manifesto
 
-GAIA is built on the belief that personal AI should become durable personal infrastructure, not disposable interaction.
+> Recovery status: Recovered in substance and conservatively normalised  
+> Source basis: surviving Microsoft 365 GAIA reference artefacts and conversation history  
+> Confidence: High  
+> Preservation rule: This file retains its original role. Reconstructed passages are not presented as verbatim recovery.
 
-## Commitments
+GAIA exists because personal AI should become personal infrastructure, not disposable interaction.
 
-- The human remains the source of authority.
-- Personal AI should reduce cognitive load, not create a second job.
-- Local-first is a form of ownership, resilience, privacy, and control.
-- Simplicity is a long-term feature.
-- Modularity preserves freedom to change.
-- Memory must be intentional, correctable, and forgettable.
-- Capabilities require explicit boundaries.
-- Collaborators clarify responsibility rather than hide complexity.
-- Important behaviour must be observable.
-- Evolution matters more than initial completeness.
+## Core beliefs
 
-## Refusals
+1. The human remains the source of authority.
+2. Personal AI should reduce cognitive load, not become a second job.
+3. Local-first is a form of ownership.
+4. Simplicity is a long-term feature.
+5. Modularity preserves freedom.
+6. Memory must be intentional.
+7. Capabilities must have boundaries.
+8. Collaborators should clarify responsibility.
+9. The system should be observable.
+10. Evolution matters more than initial completeness.
 
-GAIA refuses to become:
+## We refuse to become
 
 - a chatbot with extra tools;
-- an autonomous replacement for its owner;
+- an autonomous replacement for the user;
 - a framework-first project;
-- a cloud dependency disguised as personal software;
-- a home automation dashboard;
+- a hidden cloud dependency;
+- a home automation dashboard presented as a general OS;
 - a memory black hole;
 - a plugin swamp;
-- invisible intelligence;
-- maximum capability at any cost.
+- invisible intelligence.
 
-## Closing declaration
-
-GAIA is a commitment to sustainable personal augmentation: useful without becoming opaque, capable without becoming ungovernable, personal without becoming invasive, and ambitious without becoming unmaintainable.
+The purpose is sustainable augmentation: capable without being presumptuous, useful without being intrusive and extensible without becoming chaotic.

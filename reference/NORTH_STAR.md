@@ -1,30 +1,29 @@
 # North Star
 
-## Statement
+> Recovery status: Recovered in substance and conservatively normalised  
+> Source basis: surviving Microsoft 365 GAIA reference artefacts and conversation history  
+> Confidence: High  
+> Preservation rule: This file retains its original role. Reconstructed passages are not presented as verbatim recovery.
 
-Build a personal AI ecosystem that remains simple, understandable, local-first, and evolvable while helping a human think, decide, remember, coordinate, and act more effectively over time.
+## Direction
 
-## Desired outcomes
+Build a personal AI operating environment that remains useful, understandable and evolvable over many years.
 
-1. Reduced unnecessary cognitive load.
-2. Sustainable personal context that is inspectable, correctable, removable, and owner-controlled.
-3. Continuity across model, framework, interface, and vendor changes.
-4. Stronger human agency, not eliminated judgement.
-5. Greater capability without unmaintainable complexity.
+## Desired outcome
 
-## Success questions
+GAIA should help its owner think, decide, remember, coordinate and act with less unnecessary cognitive load, while preserving agency, privacy, reversibility and inspectability.
 
-- Does the owner trust and understand the system?
-- Can important components be replaced?
-- Is the system maintainable and recoverable?
-- Is cognitive load lower?
-- Is ownership preserved?
-- Can the ecosystem evolve without losing coherence?
+## Long-term qualities
 
-## Drift signals
+- many specialised collaborators without a monolithic framework;
+- multiple domains without the first domain becoming the whole architecture;
+- local operation with optional, explicit cloud augmentation;
+- memory that is useful because it is intentional and governed;
+- capabilities that are safe because authority is bounded and auditable;
+- replaceable models, runtimes, adapters and interfaces;
+- graceful degradation when the 3090, NAS, cloud or network is unavailable;
+- sustainable operation by one human plus AI collaborators.
 
-GAIA is drifting if it becomes chatbot-centric, framework-centric, automation-first, complexity-driven, vendor-dependent, opaque, or impossible for its owner to explain.
+## Not the goal
 
-## Final statement
-
-The goal is not the most powerful assistant. It is durable personal infrastructure that improves clarity and action without sacrificing control.
+Maximum autonomy, maximum integration count, framework competition, invisible intelligence, unbounded memory and feature accumulation are not success measures.

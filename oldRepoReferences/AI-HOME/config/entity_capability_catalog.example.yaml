@@ -1,0 +1,27 @@
+# Documentation aid only. Home Assistant registries remain authoritative.
+areas:
+  Ufficio:
+    lighting:
+      canonical_target: null
+      candidates:
+        - switch.wall_switch_ufficio_switch
+        - light.lights_ufficio_group
+      policy: review
+  Camera da letto:
+    lighting:
+      canonical_target: switch.wall_switch_camera_letto_switch
+      policy: simple_wall_switch
+  Corridoio:
+    lighting:
+      canonical_target: null
+      candidates:
+        - switch.wall_switch_corridoio_switch
+        - light.lights_tetto_corridoio_group
+      policy: smart_bulb_exception_review
+  Ingresso:
+    lighting:
+      canonical_target: null
+      candidates:
+        - switch.wall_switch_ingresso_switch
+        - light.luce_tetto_ingresso
+      policy: smart_bulb_exception_review
