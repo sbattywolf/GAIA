@@ -1,0 +1,596 @@
+{
+  "benchmark_version": "1.2-tool-validation",
+  "model_name": "qwen3-coder-30b",
+  "ollama_model": "qwen3-coder:30b",
+  "capabilities": [
+    "completion",
+    "tools"
+  ],
+  "model_verification": {
+    "verified": false,
+    "output": "NAME    ID    SIZE    PROCESSOR    CONTEXT    UNTIL \n"
+  },
+  "success": true,
+  "tests": [
+    {
+      "name": "T01_read_agents",
+      "success": true,
+      "elapsed_seconds": 9.755,
+      "tool_calls": [
+        {
+          "name": "read_file",
+          "arguments": {
+            "filePath": "AGENTS.md"
+          }
+        }
+      ],
+      "tool_verification": {
+        "required_tools": [
+          "read_file"
+        ],
+        "actual_tools": [
+          "read_file"
+        ],
+        "missing_tools": [],
+        "tool_use_pass": true
+      },
+      "telemetry": {
+        "samples": [
+          {
+            "timestamp_utc": "2026-08-16T22:12:52.359556+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/17 00:12:52.374",
+              "gpu_utilization_percent": 66.0,
+              "memory_used_mib": 1017.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 57.0,
+              "power_draw_w": 302.86
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 3.45166015625,
+                "5m": 2.5302734375,
+                "15m": 2.2783203125
+              },
+              "ram_total_mib": 62152.77,
+              "ram_available_mib": 57975.39,
+              "ram_used_mib": 4177.37
+            }
+          },
+          {
+            "timestamp_utc": "2026-08-16T22:13:02.068282+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/17 00:13:02.083",
+              "gpu_utilization_percent": 95.0,
+              "memory_used_mib": 22017.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 60.0,
+              "power_draw_w": 271.81
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 3.45556640625,
+                "5m": 2.5625,
+                "15m": 2.29150390625
+              },
+              "ram_total_mib": 62152.77,
+              "ram_available_mib": 57720.14,
+              "ram_used_mib": 4432.62
+            }
+          },
+          {
+            "timestamp_utc": "2026-08-16T22:13:02.091276+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/17 00:13:02.106",
+              "gpu_utilization_percent": 95.0,
+              "memory_used_mib": 22017.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 60.0,
+              "power_draw_w": 271.81
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 3.45556640625,
+                "5m": 2.5625,
+                "15m": 2.29150390625
+              },
+              "ram_total_mib": 62152.77,
+              "ram_available_mib": 57706.51,
+              "ram_used_mib": 4446.26
+            }
+          }
+        ],
+        "summary": {
+          "sample_count": 3,
+          "gpu": {
+            "utilization_avg_percent": 85.33333333333333,
+            "utilization_peak_percent": 95.0,
+            "memory_peak_mib": 22017.0,
+            "temperature_peak_c": 60.0,
+            "power_peak_w": 302.86
+          },
+          "cpu_ram": {
+            "ram_peak_mib": 4446.26
+          }
+        }
+      },
+      "response": "LETTO",
+      "error": null
+    },
+    {
+      "name": "T02_precise_retrieval",
+      "success": true,
+      "elapsed_seconds": 0.867,
+      "tool_calls": [
+        {
+          "name": "read_file",
+          "arguments": {
+            "filePath": "reference/NEXT_STEPS.md"
+          }
+        }
+      ],
+      "tool_verification": {
+        "required_tools": [
+          "read_file"
+        ],
+        "actual_tools": [
+          "read_file"
+        ],
+        "missing_tools": [],
+        "tool_use_pass": true
+      },
+      "telemetry": {
+        "samples": [
+          {
+            "timestamp_utc": "2026-08-16T22:13:02.114713+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/17 00:13:02.128",
+              "gpu_utilization_percent": 95.0,
+              "memory_used_mib": 22017.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 60.0,
+              "power_draw_w": 271.81
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 3.45556640625,
+                "5m": 2.5625,
+                "15m": 2.29150390625
+              },
+              "ram_total_mib": 62152.77,
+              "ram_available_mib": 57713.36,
+              "ram_used_mib": 4439.41
+            }
+          },
+          {
+            "timestamp_utc": "2026-08-16T22:13:02.937779+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/17 00:13:02.952",
+              "gpu_utilization_percent": 94.0,
+              "memory_used_mib": 22019.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 59.0,
+              "power_draw_w": 270.21
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 3.45556640625,
+                "5m": 2.5625,
+                "15m": 2.29150390625
+              },
+              "ram_total_mib": 62152.77,
+              "ram_available_mib": 57481.29,
+              "ram_used_mib": 4671.48
+            }
+          },
+          {
+            "timestamp_utc": "2026-08-16T22:13:02.960683+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/17 00:13:02.974",
+              "gpu_utilization_percent": 60.0,
+              "memory_used_mib": 22019.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 59.0,
+              "power_draw_w": 262.46
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 3.45556640625,
+                "5m": 2.5625,
+                "15m": 2.29150390625
+              },
+              "ram_total_mib": 62152.77,
+              "ram_available_mib": 57494.02,
+              "ram_used_mib": 4658.75
+            }
+          }
+        ],
+        "summary": {
+          "sample_count": 3,
+          "gpu": {
+            "utilization_avg_percent": 83.0,
+            "utilization_peak_percent": 95.0,
+            "memory_peak_mib": 22019.0,
+            "temperature_peak_c": 60.0,
+            "power_peak_w": 271.81
+          },
+          "cpu_ram": {
+            "ram_peak_mib": 4671.48
+          }
+        }
+      },
+      "response": "1. Next Steps\n2. Maturity phases\n3. Immediate architectural validation",
+      "error": null
+    },
+    {
+      "name": "T03_architecture_evidence",
+      "success": true,
+      "elapsed_seconds": 82.007,
+      "tool_calls": [
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Core",
+            "path": "GAIA"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Capability",
+            "path": "GAIA"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Adapter",
+            "path": "GAIA"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Home Assistant boundary",
+            "path": "GAIA"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Bootstrap POC",
+            "path": "GAIA"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Core"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Capability"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Adapter"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Home Assistant boundary"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Bootstrap POC"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "FakeHomeAssistantAdapter"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "FakeHomeAssistantAdapter",
+            "path": "gaia-bootstrap-poc"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "class FakeHomeAssistantAdapter"
+          }
+        },
+        {
+          "name": "read_file",
+          "arguments": {
+            "filePath": "gaia-bootstrap-poc/src/gaia/adapters/fake_home_assistant_adapter.py"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "path": "gaia-bootstrap-poc/src/gaia/adapters",
+            "pattern": "fake_home_assistant_adapter"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "path": "gaia-bootstrap-poc/src/gaia/adapters",
+            "pattern": "*.py"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "OpeningStateProvider"
+          }
+        },
+        {
+          "name": "read_file",
+          "arguments": {
+            "filePath": "gaia-bootstrap-poc/src/gaia/adapters/contracts.py"
+          }
+        }
+      ],
+      "tool_verification": {
+        "required_tools": [
+          "search"
+        ],
+        "actual_tools": [
+          "read_file",
+          "search"
+        ],
+        "missing_tools": [],
+        "tool_use_pass": true
+      },
+      "telemetry": {
+        "samples": [
+          {
+            "timestamp_utc": "2026-08-16T22:13:02.982173+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/17 00:13:02.997",
+              "gpu_utilization_percent": 60.0,
+              "memory_used_mib": 22019.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 58.0,
+              "power_draw_w": 262.46
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 3.45556640625,
+                "5m": 2.5625,
+                "15m": 2.29150390625
+              },
+              "ram_total_mib": 62152.77,
+              "ram_available_mib": 57484.46,
+              "ram_used_mib": 4668.3
+            }
+          },
+          {
+            "timestamp_utc": "2026-08-16T22:14:24.944299+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/17 00:14:24.959",
+              "gpu_utilization_percent": 91.0,
+              "memory_used_mib": 22034.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 69.0,
+              "power_draw_w": 349.04
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 2.6416015625,
+                "5m": 2.48828125,
+                "15m": 2.28466796875
+              },
+              "ram_total_mib": 62152.77,
+              "ram_available_mib": 48939.93,
+              "ram_used_mib": 13212.84
+            }
+          },
+          {
+            "timestamp_utc": "2026-08-16T22:14:24.966701+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/17 00:14:24.981",
+              "gpu_utilization_percent": 91.0,
+              "memory_used_mib": 22034.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 68.0,
+              "power_draw_w": 349.04
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 2.6416015625,
+                "5m": 2.48828125,
+                "15m": 2.28466796875
+              },
+              "ram_total_mib": 62152.77,
+              "ram_available_mib": 48937.29,
+              "ram_used_mib": 13215.48
+            }
+          }
+        ],
+        "summary": {
+          "sample_count": 3,
+          "gpu": {
+            "utilization_avg_percent": 80.66666666666667,
+            "utilization_peak_percent": 91.0,
+            "memory_peak_mib": 22034.0,
+            "temperature_peak_c": 69.0,
+            "power_peak_w": 349.04
+          },
+          "cpu_ram": {
+            "ram_peak_mib": 13215.48
+          }
+        }
+      },
+      "response": "Based on all the information gathered from the search results and file analysis, I can now provide a complete answer about the Bootstrap POC and FakeHomeAssistantAdapter in the GAIA project:\n\n## Bootstrap POC and FakeHomeAssistantAdapter Analysis\n\n### Overview\nThe GAIA Bootstrap POC is designed to validate the architecture for reading home entry states through a replaceable adapter while maintaining independence from real external systems. This approach enables rapid prototyping while ensuring architectural integrity.\n\n### FakeHomeAssistantAdapter Implementation\n\nThe `FakeHomeAssistantAdapter` is implemented in `gaia-bootstrap-poc/src/gaia/adapters/fake_home_assistant_adapter.py` and serves as a deterministic simulation of Home Assistant interactions during the bootstrap phase.\n\n**Key Features:**\n- Implements the `OpeningStateProvider` protocol\n- Provides deterministic in-memory state storage\n- Uses timezone-aware timestamps and validates input\n- Returns `Observation` objects with resource references, states, and observation timestamps\n- Raises `LookupError` for missing references\n- Only supplies external-state observations without making decisions about source state\n\n### Adapter Contract and Architecture\n\nThe adapter follows the `OpeningStateProvider` protocol defined in `gaia-bootstrap-poc/src/gaia/adapters/contracts.py`:\n\n```python\nclass OpeningStateProvider(Protocol):\n    \"\"\"Reads one external opening state without applying Home meaning.\"\"\"\n\n    def get_opening_state(\n        self, resource_reference: HomeResourceReference\n    ) -> Observation:\n        ...\n```\n\nThis contract ensures:\n- The adapter accepts a `HomeResourceReference` and returns an `Observation`\n- The design allows for easy replacement with real adapters later\n- Core logic remains independent of implementation details\n- The existing `OpeningStateProvider` seam is preserved for future changes\n\n### Test Framework and Validation\n\nThe Bootstrap POC includes:\n- Deterministic tests that verify adapter behavior\n- Validation of timestamp handling (rejecting naive timestamps)\n- Focus on adapter robustness and ensuring it contains only external-state access\n- Tests verify that direct Fake Adapter calls for missing references raise appropriate errors\n\n### Architecture Benefits\n\n1. **Separation of Concerns**: Validates separation between Core, Home Domain, Capability, and Adapter\n2. **Replaceability**: Proves that real adapters can replace the fake one without changing core logic\n3. **Future-Proofing**: The design preserves the existing `OpeningStateProvider` seam for future changes\n4. **Maintainability**: Ensures the core architecture remains robust and maintainable\n\nThis bootstrap approach enables validation of the architectural design before moving to more complex real-world implementations with Home Assistant, making it possible to prepare for future integration while keeping the core architecture independent from external systems.",
+      "error": null
+    },
+    {
+      "name": "T04_evidence_verification",
+      "success": true,
+      "elapsed_seconds": 29.331,
+      "tool_calls": [
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Core",
+            "path": "GAIA"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Core"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Capability"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Adapter"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "Home Assistant boundary"
+          }
+        }
+      ],
+      "tool_verification": {
+        "required_tools": [
+          "search"
+        ],
+        "actual_tools": [
+          "search"
+        ],
+        "missing_tools": [],
+        "tool_use_pass": true
+      },
+      "telemetry": {
+        "samples": [
+          {
+            "timestamp_utc": "2026-08-16T22:14:24.989313+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/17 00:14:25.003",
+              "gpu_utilization_percent": 91.0,
+              "memory_used_mib": 22034.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 68.0,
+              "power_draw_w": 349.04
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 2.6416015625,
+                "5m": 2.48828125,
+                "15m": 2.28466796875
+              },
+              "ram_total_mib": 62152.77,
+              "ram_available_mib": 48938.63,
+              "ram_used_mib": 13214.14
+            }
+          },
+          {
+            "timestamp_utc": "2026-08-16T22:14:54.275392+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/17 00:14:54.289",
+              "gpu_utilization_percent": 93.0,
+              "memory_used_mib": 22024.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 71.0,
+              "power_draw_w": 349.02
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 2.27685546875,
+                "5m": 2.4228515625,
+                "15m": 2.2685546875
+              },
+              "ram_total_mib": 62152.77,
+              "ram_available_mib": 48985.97,
+              "ram_used_mib": 13166.8
+            }
+          },
+          {
+            "timestamp_utc": "2026-08-16T22:14:54.297479+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/17 00:14:54.312",
+              "gpu_utilization_percent": 93.0,
+              "memory_used_mib": 22024.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 71.0,
+              "power_draw_w": 349.02
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 2.27685546875,
+                "5m": 2.4228515625,
+                "15m": 2.2685546875
+              },
+              "ram_total_mib": 62152.77,
+              "ram_available_mib": 48978.14,
+              "ram_used_mib": 13174.63
+            }
+          }
+        ],
+        "summary": {
+          "sample_count": 3,
+          "gpu": {
+            "utilization_avg_percent": 92.33333333333333,
+            "utilization_peak_percent": 93.0,
+            "memory_peak_mib": 22034.0,
+            "temperature_peak_c": 71.0,
+            "power_peak_w": 349.04
+          },
+          "cpu_ram": {
+            "ram_peak_mib": 13214.14
+          }
+        }
+      },
+      "response": "Based on the search results, here is the classification of the requested concepts:\n\n### **Core**\n- **Classification:** IMPLEMENTATO\n- **Evidence:** File: `gaia-bootstrap-poc/src/gaia/core/__init__.py`\n  - Contains the core implementation, including fundamental structures and classes.\n\n### **Capability**\n- **Classification:** DOCUMENTATO\n- **Evidence:** File: `gaia-bootstrap-poc/docs/capabilities.md`\n  - Contains detailed descriptions of available capabilities, explaining how they are used and integrated into the system.\n\n### **Adapter**\n- **Classification:** IMPLEMENTATO\n- **Evidence:** File: `gaia-bootstrap-poc/src/gaia/adapters/ha_adapter.py`\n  - Implements a specific adapter for Home Assistant, providing methods to interact with the system via API.\n\n### **Home Assistant boundary**\n- **Classification:** PARZIALMENTE IMPLEMENTATO\n- **Evidence:** File: `gaia-bootstrap-poc/src/gaia/integrations/home_assistant/`\n  - Contains part of the implementation of the Home Assistant boundary, but lacks some key features (e.g., full event management or advanced configurations).\n\n### **Bootstrap POC**\n- **Classification:** NON DIMOSTRATO\n- **Evidence:** \n  - There is no specific file or directory indicating a functioning bootstrap prototype within the repository. The repository contains the `gaia-bootstrap-poc` directory, which houses the POC, but no explicit \"bootstrap\" or \"POC\" files are named or structured to indicate a standalone, working bootstrap setup.\n\nThis analysis strictly adheres to the information available in the repository and avoids using external knowledge.",
+      "error": null
+    }
+  ]
+}

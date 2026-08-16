@@ -20,3 +20,9 @@ venv/
 
 # Logs
 *.log
+
+# GAIA benchmark runtime artifacts
+gaia-bootstrap-poc/benchmark/*.log
+gaia-bootstrap-poc/benchmark/*.pid
+gaia-bootstrap-poc/benchmark/__pycache__/
+gaia-bootstrap-poc/benchmark/*.backup.py

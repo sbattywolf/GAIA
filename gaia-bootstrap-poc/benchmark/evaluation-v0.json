@@ -1,0 +1,358 @@
+[
+  {
+    "benchmark_version": "1.1-tool-enabled",
+    "model_name": "devstral-24b",
+    "model_verified": true,
+    "tests": {
+      "T01_read_agents": {
+        "success": true,
+        "tool_calls": 0,
+        "tool_names": [],
+        "response_length": 186
+      },
+      "T02_precise_retrieval": {
+        "success": true,
+        "tool_calls": 1,
+        "tool_names": [
+          "read_file"
+        ],
+        "response_length": 70
+      },
+      "T03_architecture_evidence": {
+        "success": true,
+        "tool_calls": 4,
+        "tool_names": [
+          "search",
+          "search",
+          "search",
+          "search"
+        ],
+        "response_length": 311,
+        "evidence": {
+          "tool_calls": 4,
+          "tool_names": [
+            "search",
+            "search",
+            "search",
+            "search"
+          ],
+          "paths_found_in_response": [],
+          "existing_paths": [],
+          "missing_paths": [],
+          "existing_path_count": 0,
+          "missing_path_count": 0
+        }
+      }
+    }
+  },
+  {
+    "benchmark_version": "1.1-tool-enabled",
+    "model_name": "devstral-small-2-24b",
+    "model_verified": true,
+    "tests": {
+      "T01_read_agents": {
+        "success": true,
+        "tool_calls": 1,
+        "tool_names": [
+          "read_file"
+        ],
+        "response_length": 5
+      },
+      "T02_precise_retrieval": {
+        "success": true,
+        "tool_calls": 1,
+        "tool_names": [
+          "read_file"
+        ],
+        "response_length": 70
+      },
+      "T03_architecture_evidence": {
+        "success": true,
+        "tool_calls": 5,
+        "tool_names": [
+          "search",
+          "search",
+          "search",
+          "search",
+          "search"
+        ],
+        "response_length": 627,
+        "evidence": {
+          "tool_calls": 5,
+          "tool_names": [
+            "search",
+            "search",
+            "search",
+            "search",
+            "search"
+          ],
+          "paths_found_in_response": [
+            "gaia/core",
+            "gaia/capabilities",
+            "gaia/adapters",
+            "gaia/integrations/home_assistant"
+          ],
+          "existing_paths": [],
+          "missing_paths": [
+            "gaia/core",
+            "gaia/capabilities",
+            "gaia/adapters",
+            "gaia/integrations/home_assistant"
+          ],
+          "existing_path_count": 0,
+          "missing_path_count": 4
+        }
+      },
+      "T04_evidence_verification": {
+        "success": true,
+        "tool_calls": 5,
+        "tool_names": [
+          "search",
+          "search",
+          "search",
+          "search",
+          "search"
+        ],
+        "response_length": 691,
+        "evidence": {
+          "tool_calls": 5,
+          "tool_names": [
+            "search",
+            "search",
+            "search",
+            "search",
+            "search"
+          ],
+          "paths_found_in_response": [
+            "gaia/core",
+            "gaia/capabilities",
+            "gaia/adapters",
+            "gaia/integrations/home_assistant"
+          ],
+          "existing_paths": [],
+          "missing_paths": [
+            "gaia/core",
+            "gaia/capabilities",
+            "gaia/adapters",
+            "gaia/integrations/home_assistant"
+          ],
+          "existing_path_count": 0,
+          "missing_path_count": 4
+        }
+      }
+    }
+  },
+  {
+    "benchmark_version": "1.1-tool-enabled",
+    "model_name": "gemma4-26b",
+    "model_verified": true,
+    "tests": {
+      "T01_read_agents": {
+        "success": true,
+        "tool_calls": 1,
+        "tool_names": [
+          "read_file"
+        ],
+        "response_length": 5
+      },
+      "T02_precise_retrieval": {
+        "success": true,
+        "tool_calls": 1,
+        "tool_names": [
+          "read_file"
+        ],
+        "response_length": 70
+      },
+      "T03_architecture_evidence": {
+        "success": true,
+        "tool_calls": 3,
+        "tool_names": [
+          "search",
+          "search",
+          "search"
+        ],
+        "response_length": 413,
+        "evidence": {
+          "tool_calls": 3,
+          "tool_names": [
+            "search",
+            "search",
+            "search"
+          ],
+          "paths_found_in_response": [
+            "gaia-bootstrap-poc/src/gaia/core/request_router.py",
+            "gaia-bootstrap-poc/src/gaia/home/read_opening_state_capability.py",
+            "gaia-bootstrap-poc/src/gaia/adapters/fake_home_assistant_adapter.py",
+            "adr/ADR-0004-HomeAssistant-Boundary.md",
+            "gaia-bootstrap-poc/README.md"
+          ],
+          "existing_paths": [
+            "gaia-bootstrap-poc/src/gaia/core/request_router.py",
+            "gaia-bootstrap-poc/src/gaia/home/read_opening_state_capability.py",
+            "gaia-bootstrap-poc/src/gaia/adapters/fake_home_assistant_adapter.py",
+            "adr/ADR-0004-HomeAssistant-Boundary.md",
+            "gaia-bootstrap-poc/README.md"
+          ],
+          "missing_paths": [],
+          "existing_path_count": 5,
+          "missing_path_count": 0
+        }
+      }
+    }
+  },
+  {
+    "benchmark_version": "1.1-tool-enabled",
+    "model_name": "gpt-oss-20b",
+    "model_verified": true,
+    "tests": {
+      "T01_read_agents": {
+        "success": true,
+        "tool_calls": 1,
+        "tool_names": [
+          "read_file"
+        ],
+        "response_length": 5
+      },
+      "T02_precise_retrieval": {
+        "success": true,
+        "tool_calls": 1,
+        "tool_names": [
+          "read_file"
+        ],
+        "response_length": 61
+      },
+      "T03_architecture_evidence": {
+        "success": true,
+        "tool_calls": 4,
+        "tool_names": [
+          "search",
+          "search",
+          "search",
+          "search"
+        ],
+        "response_length": 365,
+        "evidence": {
+          "tool_calls": 4,
+          "tool_names": [
+            "search",
+            "search",
+            "search",
+            "search"
+          ],
+          "paths_found_in_response": [
+            "gaia/core/__init__.py",
+            "gaia/capabilities/capability_manager.py",
+            "gaia/adapters/ha_adapter.py",
+            "gaia/integrations/home_assistant/interface.py",
+            "bootstrap/poc.py"
+          ],
+          "existing_paths": [],
+          "missing_paths": [
+            "gaia/core/__init__.py",
+            "gaia/capabilities/capability_manager.py",
+            "gaia/adapters/ha_adapter.py",
+            "gaia/integrations/home_assistant/interface.py",
+            "bootstrap/poc.py"
+          ],
+          "existing_path_count": 0,
+          "missing_path_count": 5
+        }
+      }
+    }
+  },
+  {
+    "benchmark_version": "1.1-tool-enabled",
+    "model_name": "qwen2.5-coder-14b",
+    "model_verified": true,
+    "tests": {
+      "T01_read_agents": {
+        "success": true,
+        "tool_calls": 0,
+        "tool_names": [],
+        "response_length": 5
+      },
+      "T02_precise_retrieval": {
+        "success": true,
+        "tool_calls": 0,
+        "tool_names": [],
+        "response_length": 129
+      },
+      "T03_architecture_evidence": {
+        "success": true,
+        "tool_calls": 0,
+        "tool_names": [],
+        "response_length": 123,
+        "evidence": {
+          "tool_calls": 0,
+          "tool_names": [],
+          "paths_found_in_response": [],
+          "existing_paths": [],
+          "missing_paths": [],
+          "existing_path_count": 0,
+          "missing_path_count": 0
+        }
+      }
+    }
+  },
+  {
+    "benchmark_version": "1.1-tool-enabled",
+    "model_name": "qwen3-coder-30b",
+    "model_verified": true,
+    "tests": {
+      "T01_read_agents": {
+        "success": true,
+        "tool_calls": 1,
+        "tool_names": [
+          "read_file"
+        ],
+        "response_length": 5
+      },
+      "T02_precise_retrieval": {
+        "success": true,
+        "tool_calls": 1,
+        "tool_names": [
+          "read_file"
+        ],
+        "response_length": 70
+      },
+      "T03_architecture_evidence": {
+        "success": true,
+        "tool_calls": 5,
+        "tool_names": [
+          "search",
+          "search",
+          "search",
+          "search",
+          "search"
+        ],
+        "response_length": 1598,
+        "evidence": {
+          "tool_calls": 5,
+          "tool_names": [
+            "search",
+            "search",
+            "search",
+            "search",
+            "search"
+          ],
+          "paths_found_in_response": [
+            "gaia-bootstrap-poc/src/gaia/core/__init__.py",
+            "gaia-bootstrap-poc/docs/capabilities.md",
+            "gaia-bootstrap-poc/src/gaia/adapters/ha_adapter.py",
+            "gaia-bootstrap-poc/src/gaia/integrations/home_assistant"
+          ],
+          "existing_paths": [
+            "gaia-bootstrap-poc/src/gaia/core/__init__.py"
+          ],
+          "missing_paths": [
+            "gaia-bootstrap-poc/docs/capabilities.md",
+            "gaia-bootstrap-poc/src/gaia/adapters/ha_adapter.py",
+            "gaia-bootstrap-poc/src/gaia/integrations/home_assistant"
+          ],
+          "existing_path_count": 1,
+          "missing_path_count": 3
+        }
+      }
+    }
+  }
+]
