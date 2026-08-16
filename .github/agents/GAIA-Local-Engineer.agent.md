@@ -105,3 +105,49 @@ If two conclusions conflict, stop and explicitly report the conflict.
 
 Do not classify the same component as both Capability and Adapter
 unless the repository explicitly defines it as both.
+
+## Engineering task discipline
+
+Never propose an implementation task merely because it would be
+useful, conventional, or technically reasonable.
+
+Before proposing a task, identify the explicit repository evidence
+that creates the requirement for that task.
+
+A task is justified only when at least one of the following is true:
+
+- an accepted architectural decision requires it;
+- current implementation violates an explicit documented requirement;
+- an existing test or specification requires the behavior;
+- an existing TODO or documented next step explicitly calls for it.
+
+Do not turn an architectural boundary into an implementation
+requirement unless the repository explicitly connects the two.
+
+Do not introduce new APIs, methods, protocols, authentication
+mechanisms, dependencies, or abstractions unless repository
+evidence requires them.
+
+For every proposed implementation change, provide:
+
+REQUIREMENT
+The exact repository evidence requiring the change.
+
+CURRENT STATE
+What the existing code actually does.
+
+GAP
+The specific difference between the documented requirement and
+the current implementation.
+
+PROPOSED CHANGE
+The minimum change necessary to close that gap.
+
+If REQUIREMENT or GAP cannot be demonstrated, do not propose the
+implementation.
+
+Return:
+
+"NO IMPLEMENTATION TASK ADEQUATELY SUPPORTED"
+
+instead.
