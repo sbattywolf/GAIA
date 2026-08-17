@@ -185,7 +185,7 @@ The repository separates current working truth, chronological research, critique
 
 ![GAIA documentation repository structure](assets/diagrams/05_repository_structure.png)
 
-The detailed organisation rules are maintained in [`reference/REPOSITORY_STRUCTURE.md`](reference/REPOSITORY_STRUCTURE.md).
+The detailed current organisation rules are maintained in [`REPOSITORY_STRUCTURE.md`](REPOSITORY_STRUCTURE.md). Historical and recovered structure documents remain available for provenance but are not the current repository-structure authority.
 
 ## How to read the repository
 
