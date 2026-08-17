@@ -1,54 +1,111 @@
 # Repository Structure
 
-- **Version:** 0.2
-- **Status:** Consolidated
+- **Version:** 0.3
+- **Status:** Current
 - **Audience:** Contributors, reviewers, future collaborators
 
 ## Purpose
 
-The repository preserves clarity, discoverability, architectural traceability, historical context, and long-term maintainability. Stable definitions, research, decisions, experiments, and implementation must remain visibly separate.
+This document describes the current repository structure and the responsibility
+of its major areas.
+
+Historical research, recovered documentation, validation evidence, prototypes,
+runtime implementation, and project governance must remain distinguishable.
 
 ## Structure
 
 ```text
 GAIA/
 ├── README.md
-├── REPOSITORY_STRUCTURE.md
+├── AGENTS.md
 ├── DOCUMENT_MANIFEST.md
+├── MANIFEST.txt
+├── REPOSITORY_STRUCTURE.md
+├── REPOSITORY_STRUCTURE_v0.2.md
+├── GAIA_ENGINEER_AS_IS_REVIEW.md
+├── REAL_HOME_ASSISTANT_ADAPTER_DESIGN.md
+├── SHA256SUMS.txt
+│
 ├── reference/
-├── sprint-01/
-├── sprint-02/
 ├── adr/
 ├── validation/
 ├── incubator/
 ├── diagrams/
-└── src/                  # future
+├── prompts/
+├── reports/
+├── sprint-01/
+├── sprint-02/
+├── sprint-03/
+│
+├── src/
+├── tests/
+├── gaia-bootstrap-poc/
+├── oldRepoReferences/
+├── assets/
+│
+└── .github/
 ```
 
 ## Folder responsibilities
 
-- `reference/`: stable project identity, direction, principles, vocabulary, current model, and roadmap.
-- `sprint-01/`: foundational framework research, reuse analysis, hostile critique, and decision framing.
-- `sprint-02/`: stress-test synthesis and lessons transferred to validation.
-- `adr/`: proposed and accepted Architecture Decision Records.
-- `validation/`: briefs that define uncertainty, evidence, tests, and decision linkage.
-- `incubator/`: unvalidated ideas, not commitments.
-- `diagrams/`: editable visual sources. Mermaid is preferred when practical.
-- `src/`: implementation only after sufficient validation.
+- `reference/`: current project concepts, identity, principles, models, and roadmap material.
+- `adr/`: explicit architectural decisions and their history.
+- `validation/`: validation briefs, evidence, and decision-support material.
+- `incubator/`: unapproved ideas and exploratory concepts.
+- `diagrams/`: editable and supporting visual artefacts.
+- `prompts/`: bounded prompts used to restart or guide project work.
+- `reports/`: reconstruction, audit, baseline, consolidation, and other non-normative project reports.
+- `sprint-01/`: foundational research and architectural critique.
+- `sprint-02/`: stress testing, synthesis, and lessons learned.
+- `sprint-03/`: validation-oriented engineering and project history.
+- `src/`: current implementation/runtime source.
+- `tests/`: implementation and integration tests.
+- `gaia-bootstrap-poc/`: prototype and benchmark implementation.
+- `oldRepoReferences/`: historical/reference material imported from previous projects; not current GAIA implementation.
+- `assets/`: reusable visual or project assets.
+- `.github/`: repository automation, agent definitions, skills, and workflows.
+
+## Root documentation
+
+Root documentation is intentionally limited to repository entry points,
+governance, provenance, and high-value project-level references.
+
+Documents with historical or reconstruction roles must not be treated as
+current architecture merely because they are located at repository root.
+
+## Historical structure documents
+
+`REPOSITORY_STRUCTURE_v0.2.md` is retained as historical Architecture
+Convergence material.
+
+It records the repository structure and governance model proposed during that
+period. It is not the current repository structure contract.
+
+`reference/REPOSITORY_STRUCTURE.md` is retained as recovered reference
+material. Its recovery status and source basis are documented in the file
+itself. It is not the canonical current structure document.
 
 ## Document lifecycle
 
-Idea → Research → Review → Validation → ADR → Implementation
+```text
+Research → Validation → Proposed → Accepted/Current
+                         ↓
+                    Superseded
+                         ↓
+                     Archived
+```
 
-Not every idea reaches implementation. Research is preserved even when superseded. Decisions belong in ADRs, not chat logs or commit messages.
+Historical documents are retained when they provide useful provenance or
+explain previous engineering decisions.
 
-## Rules
+Git history is the primary version history for current documents. Filename
+versioning is used only when it provides meaningful historical or convergence
+value.
 
-1. Stable and experimental content must not be mixed.
-2. Every canonical document has one responsibility.
-3. Duplicate research is merged; superseded copies are archived outside the canonical tree or deleted after verification.
-4. Unvalidated ideas remain in the incubator.
-5. The Core is protected from speculative features.
-6. Editable diagrams are canonical; raster exports are secondary.
-7. Enterprise-confidential or Restricted material must not enter this personal repository.
-8. The repository optimises for understanding, not volume.
+## Repository rule
+
+The repository should optimize for understanding, traceability, and safe
+evolution rather than document volume.
+
+Before creating a new document or directory, verify that an existing canonical
+document or directory does not already own the responsibility.
