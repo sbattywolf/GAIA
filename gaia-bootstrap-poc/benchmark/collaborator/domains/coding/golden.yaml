@@ -75,6 +75,4 @@ cases:
         - test
       target_preserved:
         - src/http/client.py
-      execution_claim:
-        - "update tests for the HTTP client in src/http/client.py"
-        - "Aggiornare i test per il client HTTP in src/http/client.py."
+      execution_claim: false

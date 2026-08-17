@@ -11,6 +11,7 @@ Non dichiarare che hai modificato o eseguito qualcosa.
 Rispondi ONLY con un singolo oggetto JSON valido, senza Markdown.
 
 Campi richiesti:
+- operation deve essere esattamente "plan".
 - operation
 - target
 - changes
