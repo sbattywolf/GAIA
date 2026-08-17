@@ -152,7 +152,7 @@ def evaluate_golden_expectations(
 
     return failures
 
-def _compare_expected(
+def _compare_legacy_expected(
     expected: dict[str, Any],
     actual: dict[str, Any],
     failures: list[str],
@@ -245,7 +245,7 @@ def verify_response(
     except ValueError as exc:
         return VerificationResult(False, 0.0, [str(exc)], None)
 
-    _compare_expected(spec.get("expected", {}), actual, failures)
+    _compare_legacy_expected(spec.get("expected", {}), actual, failures)
 
     expected_tools = spec.get("expected_tool_calls")
     if expected_tools is not None and actual_tool_calls != expected_tools:

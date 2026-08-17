@@ -20,23 +20,32 @@ def score_case(*, verifier_success: bool, weight: float = 1.0) -> Score:
 
 
 def score_golden_model(tests):
-    """Score golden evaluator results independently of legacy verdicts."""
-    passed = sum(
-        1 for test in tests
-        if test.get("golden", {}).get("passed") is True
-    )
-    total = len(tests)
-    ratio = passed / total if total else 0.0
+    """Score golden results using each test's declared weight."""
+    earned = 0.0
+    possible = 0.0
+
+    for test in tests:
+        golden = test.get("golden", {})
+        weight = float(golden.get("weight", 1.0))
+        possible += weight
+
+        if golden.get("passed") is True:
+            earned += weight
+
+    ratio = earned / possible if possible else 0.0
 
     return {
         "score": ratio,
-        "earned": float(passed),
-        "possible": float(total),
+        "earned": earned,
+        "possible": possible,
         "ratio": ratio,
-        "passed": passed,
-        "total": total,
+        "passed": sum(
+            1
+            for test in tests
+            if test.get("golden", {}).get("passed") is True
+        ),
+        "total": len(tests),
     }
-
 
 def score_suite(results: list[dict[str, Any]]) -> dict[str, Any]:
     scores = [

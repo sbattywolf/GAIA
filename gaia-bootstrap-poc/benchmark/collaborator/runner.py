@@ -117,17 +117,22 @@ def run_test(model, domain, test_name):
 
         golden_failures = []
 
-        if verification.parsed is not None:
-            golden_expectations = load_golden_expectations(
-                domain,
-                test_name,
-            )
+        golden_weight = 1.0
 
-            if golden_expectations:
-                golden_failures = evaluate_golden_expectations(
-                    golden_expectations,
-                    verification.parsed,
-                )
+        if verification.parsed is not None:
+            golden_file = DOMAINS_DIR / domain / "golden.yaml"
+            suite = load_golden_cases(str(golden_file))
+            golden_case = suite.cases.get(test_name)
+
+            if golden_case is not None:
+                golden_weight = golden_case.weight
+                golden_expectations = golden_case.expectations
+
+                if golden_expectations:
+                    golden_failures = evaluate_golden_expectations(
+                        golden_expectations,
+                        verification.parsed,
+                    )
 
         error = None
     except Exception as exc:
@@ -166,6 +171,7 @@ def run_test(model, domain, test_name):
         "golden": {
             "passed": not golden_failures,
             "failures": golden_failures,
+            "weight": golden_weight,
         },
         "response": response,
     }
