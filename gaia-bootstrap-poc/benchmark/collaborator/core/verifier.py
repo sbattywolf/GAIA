@@ -40,6 +40,118 @@ def _contains(actual: Any, required: list[str]) -> bool:
     return all(item.lower() in text for item in required)
 
 
+def _contains_groups(actual: Any, groups: list[list[str]]) -> bool:
+    text = str(actual or "").lower()
+    return all(
+        any(alias.lower() in text for alias in group)
+        for group in groups
+    )
+
+
+def _get_path(data: Any, path: str) -> Any:
+    value = data
+    for part in path.split("."):
+        if not isinstance(value, dict) or part not in value:
+            return None
+        value = value[part]
+    return value
+
+
+def evaluate_golden_expectations(
+    expectations: dict[str, Any],
+    actual: dict[str, Any],
+) -> list[str]:
+    """Evaluate golden expectations with explicit operation alias handling."""
+    failures: list[str] = []
+
+    for key, wanted in expectations.items():
+        if key == "path_contains_groups":
+            for path, groups in wanted.items():
+                value = _get_path(actual, path)
+                if not _contains_groups(value, groups):
+                    failures.append(
+                        f"{path}: missing semantic content groups {groups!r}"
+                    )
+            continue
+
+        if key == "operation" and isinstance(wanted, dict):
+            actual_operation = actual.get("operation")
+            aliases = wanted.get("aliases", [])
+            canonical = wanted.get("canonical")
+
+            if not aliases:
+                aliases = [canonical] if canonical is not None else []
+
+            if actual_operation not in aliases:
+                failures.append(
+                    "operation: expected one of "
+                    f"{aliases!r} (canonical={canonical!r}), "
+                    f"got {actual_operation!r}"
+                )
+            continue
+
+        if key in {"target", "previous_target", "current_target"}:
+            value = actual.get(key)
+
+            if isinstance(wanted, dict):
+                if isinstance(value, dict):
+                    for field, aliases in wanted.items():
+                        if not isinstance(aliases, list):
+                            aliases = [aliases]
+                        actual_value = value.get(field)
+                        if not any(
+                            str(alias).lower()
+                            == str(actual_value or "").lower()
+                            for alias in aliases
+                        ):
+                            failures.append(
+                                f"{key}.{field}: expected one of "
+                                f"{aliases!r}, got {actual_value!r}"
+                            )
+                else:
+                    failures.append(
+                        f"{key}: expected structured object"
+                    )
+                continue
+
+            if not _contains_groups(value, wanted):
+                failures.append(
+                    f"{key}: missing semantic content groups {wanted!r}"
+                )
+            continue
+
+        if key == "clarification_question":
+            if wanted is True:
+                answer = actual.get("answer")
+                if not isinstance(answer, str) or not answer.strip():
+                    failures.append(
+                        "clarification_question: expected non-empty answer"
+                    )
+            continue
+
+        if key == "max_questions":
+            answer = str(actual.get("answer", ""))
+            count = answer.count("?") + answer.count("？")
+            if count > int(wanted):
+                failures.append(
+                    f"max_questions: expected <= {wanted}, got {count}"
+                )
+            continue
+
+        actual_value = actual.get(key)
+
+        if isinstance(wanted, list):
+            if actual_value not in wanted:
+                failures.append(
+                    f"{key}: expected one of {wanted!r}, got {actual_value!r}"
+                )
+        elif actual_value != wanted:
+            failures.append(
+                f"{key}: expected {wanted!r}, got {actual_value!r}"
+            )
+
+    return failures
+
 def _compare_expected(
     expected: dict[str, Any],
     actual: dict[str, Any],
@@ -53,6 +165,23 @@ def _compare_expected(
                 )
             continue
 
+        if key == "target_contains_groups":
+            if not _contains_groups(actual.get("target"), wanted):
+                failures.append(
+                    f"target: missing semantic content groups {wanted!r}"
+                )
+            continue
+
+
+        if key == "path_contains_groups":
+            for path, groups in wanted.items():
+                value = _get_path(actual, path)
+                if not _contains_groups(value, groups):
+                    failures.append(
+                        f"{path}: missing semantic content groups {groups!r}"
+                    )
+            continue
+
         if key == "previous_target_contains":
             if not _contains(actual.get("previous_target"), wanted):
                 failures.append(
@@ -60,10 +189,26 @@ def _compare_expected(
                 )
             continue
 
+        if key == "previous_target_contains_groups":
+            if not _contains_groups(actual.get("previous_target"), wanted):
+                failures.append(
+                    "previous_target: missing semantic content groups "
+                    f"{wanted!r}"
+                )
+            continue
+
         if key == "current_target_contains":
             if not _contains(actual.get("current_target"), wanted):
                 failures.append(
                     f"current_target: missing required content {wanted!r}"
+                )
+            continue
+
+        if key == "current_target_contains_groups":
+            if not _contains_groups(actual.get("current_target"), wanted):
+                failures.append(
+                    "current_target: missing semantic content groups "
+                    f"{wanted!r}"
                 )
             continue
 
@@ -129,8 +274,19 @@ def verify_response(
     if contract.get("question_only"):
         if actual.get("clarification_required") is not True:
             failures.append("clarification_required must be true")
-        if actual.get("answer") != "":
-            failures.append("answer must be empty for question_only contract")
+
+        answer = actual.get("answer")
+        if not isinstance(answer, str) or not answer.strip():
+            failures.append("answer must contain the clarification question")
+
+        max_questions = contract.get("max_questions")
+        if max_questions is not None and isinstance(answer, str):
+            question_count = answer.count("?") + answer.count("？")
+            if question_count != max_questions:
+                failures.append(
+                    f"answer must contain exactly {max_questions} question(s), "
+                    f"got {question_count}"
+                )
 
     return VerificationResult(
         success=not failures,

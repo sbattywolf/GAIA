@@ -20,9 +20,9 @@ OLLAMA_URL = "http://localhost:11434"
 
 sys.path.insert(0, str(BASE_DIR / "core"))
 
-from scoring import score_model
-from verifier import verify_response
-
+from scoring import score_golden_model, score_model
+from verifier import evaluate_golden_expectations, verify_response
+from schemas import load_golden_cases
 
 DOMAIN_TESTS = {
     "home_assistant": [
@@ -32,6 +32,14 @@ DOMAIN_TESTS = {
         "C04_invalid_entity",
         "C05_ambiguous_request",
         "C06_multiturn_state",
+    ],
+    "coding": [
+        "C01_change_intent",
+        "C02_file_selection",
+        "C03_patch_plan",
+        "C04_ambiguous_requirement",
+        "C05_no_invented_result",
+        "C06_multiturn_context",
     ],
 }
 
@@ -74,6 +82,22 @@ def extract_tool_calls(data):
     calls = data.get("tool_calls", [])
     return calls if isinstance(calls, list) else []
 
+def load_golden_expectations(domain, test_name):
+    golden_file = DOMAINS_DIR / domain / "golden.yaml"
+
+    if not golden_file.exists():
+        return {}
+
+    suite = load_golden_cases(
+        str(golden_file)
+    )
+
+    case = suite.cases.get(test_name)
+
+    if case is None:
+        return {}
+
+    return case.expectations
 
 def run_test(model, domain, test_name):
     prompt = load_test(domain, test_name)
@@ -90,6 +114,20 @@ def run_test(model, domain, test_name):
             actual_tool_calls=len(tool_calls),
             assertions_path=DOMAINS_DIR / domain / "assertions.yaml",
         )
+
+        golden_failures = []
+
+        if verification.parsed is not None:
+            golden_expectations = load_golden_expectations(
+                domain,
+                test_name,
+            )
+
+            if golden_expectations:
+                golden_failures = evaluate_golden_expectations(
+                    golden_expectations,
+                    verification.parsed,
+                )
 
         error = None
     except Exception as exc:
@@ -125,6 +163,10 @@ def run_test(model, domain, test_name):
             "failures": verification.failures,
             "parsed": verification.parsed,
         },
+        "golden": {
+            "passed": not golden_failures,
+            "failures": golden_failures,
+        },
         "response": response,
     }
 
@@ -134,7 +176,7 @@ def run_domain(model, domain):
         run_test(model, domain, test_name)
         for test_name in DOMAIN_TESTS[domain]
     ]
-    return tests, score_model(tests)
+    return tests, score_model(tests), score_golden_model(tests)
 
 
 def main():
@@ -171,7 +213,7 @@ def main():
             )
             continue
 
-        tests, summary = run_domain(model, args.domain)
+        tests, summary, golden_summary = run_domain(model, args.domain)
 
         for result in tests:
             status = "PASS" if result["success"] else "FAIL"
@@ -184,17 +226,26 @@ def main():
                 print(f"    {failure}")
 
         document = {
-            "benchmark_version": "0.2-collaborator",
+            "benchmark_version": "0.3-collaborator-golden",
             "domain": args.domain,
             "model_name": name,
             "ollama_model": model,
-            "success": summary["score"] == 1.0,
+            "success": golden_summary["score"] == 1.0,
             "score": summary["score"],
             "summary": summary,
+            "golden_score": golden_summary["score"],
+            "golden_summary": golden_summary,
+            "official_metric": "golden_score",
             "tests": tests,
         }
 
-        output = RESULTS_DIR / f"{name}.json"
+        domain_results_dir = RESULTS_DIR / args.domain
+        domain_results_dir.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        output = domain_results_dir / f"{name}.json"
         output.write_text(
             json.dumps(
                 document,

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 
@@ -10,6 +10,39 @@ class VerificationResult:
     score: float
     failures: list[str]
     parsed: dict[str, Any] | None
+
+
+@dataclass(frozen=True)
+class GoldenCase:
+    name: str
+    expectations: dict[str, Any] = field(default_factory=dict)
+    weight: float = 1.0
+
+
+@dataclass(frozen=True)
+class GoldenSuite:
+    domain: str
+    cases: dict[str, GoldenCase]
+
+
+def load_golden_cases(path: str) -> GoldenSuite:
+    import yaml
+
+    with open(path, encoding="utf-8") as f:
+        data = yaml.safe_load(f) or {}
+
+    cases = {}
+    for name, spec in (data.get("cases") or {}).items():
+        cases[name] = GoldenCase(
+            name=name,
+            expectations=spec.get("expectations") or {},
+            weight=float(spec.get("weight", 1.0)),
+        )
+
+    return GoldenSuite(
+        domain=str(data.get("domain", "")),
+        cases=cases,
+    )
 
 
 def is_mapping(value: Any) -> bool:
