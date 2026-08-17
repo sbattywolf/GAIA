@@ -25,7 +25,6 @@ set +a
 required_vars=(
   HOME_ASSISTANT_BASE_URL
   HOME_ASSISTANT_TOKEN
-  GAIA_HA_ENTITY_ID
 )
 
 for name in "${required_vars[@]}"; do
@@ -35,9 +34,9 @@ for name in "${required_vars[@]}"; do
   fi
 done
 
-exec env \
-  GAIA_HA_URL="${HOME_ASSISTANT_BASE_URL}" \
-  GAIA_HA_TOKEN="${HOME_ASSISTANT_TOKEN}" \
-  GAIA_HA_ENTITY_ID="${GAIA_HA_ENTITY_ID}" \
-  python3 -m pytest -m integration \
-    gaia-bootstrap-poc/tests/test_real_home_assistant_integration.py
+if [[ -z "${GAIA_HA_ENTITY_IDS:-}" && -z "${GAIA_HA_ENTITY_ID:-}" ]]; then
+  echo "Missing GAIA_HA_ENTITY_IDS or GAIA_HA_ENTITY_ID" >&2
+  exit 1
+fi
+
+exec env   GAIA_HA_URL="${HOME_ASSISTANT_BASE_URL}"   GAIA_HA_TOKEN="${HOME_ASSISTANT_TOKEN}"   GAIA_HA_ENTITY_IDS="${GAIA_HA_ENTITY_IDS:-}"   GAIA_HA_ENTITY_ID="${GAIA_HA_ENTITY_ID:-}"   python3 -m pytest -m integration     gaia-bootstrap-poc/tests/test_live_home_assistant_batch.py
