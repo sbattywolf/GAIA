@@ -1,104 +1,86 @@
-# GAIA SHA256SUMS Provenance Audit
+# GAIA SHA256 Provenance Artifact Audit
 
 ## Status
 
-This audit evaluates the root `SHA256SUMS.txt` after repository consolidation.
+This document audits the provenance role of the root `SHA256SUMS.txt`.
 
-It does not regenerate the checksum file and does not authorize deleting or
-replacing it.
+No checksum file is regenerated or rewritten by this audit.
 
-## Verified role
+## Verified provenance
 
-`SHA256SUMS.txt` is a repository-level integrity/provenance artifact.
+`SHA256SUMS.txt` is a tracked root-level artifact containing SHA-256 entries
+for a finite set of repository files.
 
-It contains hashes for a snapshot of project files, including architecture
-documents, reference material, diagrams, prompts, and reports.
+The current file records hashes for examples including:
 
-It is therefore different from:
+- `README.md`;
+- ADR files;
+- selected reference documents;
+- selected reports.
 
-- `DOCUMENT_MANIFEST.md`, which is a documentation inventory;
-- `REPOSITORY_STRUCTURE.md`, which defines current repository structure;
-- Git history, which is the primary version history for current documents.
+It is therefore a checksum manifest, not a complete inventory of every
+current repository artifact.
 
-## Evidence of snapshot semantics
+## Git history
 
-The checksum file contains entries for historical/recovered material such as:
+The available Git history shows `SHA256SUMS.txt` was present in the imported
+repository state at commit `d9e8e91`:
 
-- `reference/REPOSITORY_STRUCTURE.md`
-- reconstruction reports under `reports/`
-- prior non-approved output under `reports/prior-nonapproved-output/`
+`chore: import current GAIA state from Copilot`
 
-It also contains hashes for project material that may evolve independently
-through Git.
+The file also exists in the earlier `9805a86` documentation history.
 
-The file itself therefore represents a checksum snapshot, not a continuously
-maintained filesystem authority.
+This establishes that the checksum manifest predates the repository
+consolidation work performed in the current phase.
 
-## Current authority relationship
+## Current limitation
 
-`REPOSITORY_STRUCTURE.md` explicitly defines Git history as the primary version
-history for current documents and treats historical/recovered structure
-documents separately.
+Subsequent repository changes introduced or modified many documents.
 
-`DOCUMENT_MANIFEST.md` explicitly identifies `MANIFEST.txt` as historical/
-provenance inventory and does not assign `SHA256SUMS.txt` a documentation
-authority role.
+The checksum manifest has not been demonstrated to cover all of those newer
+artifacts.
 
-No evidence was found that the current benchmark or repository tooling uses
-`SHA256SUMS.txt` as an execution input.
+Therefore the manifest must not be interpreted as:
+
+- a complete repository inventory;
+- proof that every current file has a recorded checksum;
+- proof that every recorded checksum corresponds to the current content;
+- a replacement for Git history.
 
 ## Classification
 
 `provenance/integrity artifact`
 
-Secondary classification:
+Authority:
 
-`historical snapshot`
+`historical provenance evidence`
+
+Operational role:
+
+`non-authoritative checksum manifest`
 
 ## Decision
 
 Retain `SHA256SUMS.txt` in place.
 
-Do not:
+Do not silently regenerate it as part of repository consolidation.
 
-- regenerate it automatically during repository consolidation;
-- treat it as a current manifest;
-- use it to decide which files are canonical;
-- delete it merely because its snapshot is older than the current tree.
+Do not delete it merely because it is incomplete.
 
-If GAIA later requires a reproducible integrity mechanism, that should be
-designed explicitly and documented separately.
+If GAIA later needs an authoritative integrity mechanism, define that mechanism
+explicitly and create a separate change for adoption.
 
-## Important distinction
+A future integrity mechanism may generate a new checksum manifest from a
+specified canonical file set, but that should be a deliberate reproducible
+process rather than an implicit cleanup step.
 
-A stale checksum snapshot is not necessarily an invalid artifact.
+## Conclusion
 
-Its value is provenance: it records what was hashed at the time it was
-generated.
+`SHA256SUMS.txt` has legitimate provenance value, but its scope is limited.
 
-Replacing it with freshly generated hashes would destroy that historical
-meaning unless the old snapshot were preserved separately.
+The safe interpretation is:
 
-## Consolidation consequence
+> historical checksum evidence for a defined subset of the repository.
 
-No filesystem change is justified by this audit.
-
-The repository can retain:
-
-1. `SHA256SUMS.txt` as historical integrity evidence;
-2. Git as the primary version history;
-3. `DOCUMENT_MANIFEST.md` as documentation inventory;
-4. `REPOSITORY_STRUCTURE.md` as current structure authority.
-
-## Next decision gate
-
-The repository-consolidation phase should not regenerate or reorganize
-checksum/provenance material unless a specific future requirement establishes:
-
-- what is being attested;
-- when checksums are generated;
-- which files are in scope;
-- where the authoritative checksum record lives;
-- how updates and historical snapshots are preserved.
-
-Until then, preservation is the lowest-risk and most traceable choice.
+It should remain preserved without being treated as a complete current-state
+integrity guarantee.
