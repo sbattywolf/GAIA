@@ -29,6 +29,7 @@ def _entity_ids() -> list[str]:
     return list(dict.fromkeys(entity_ids))
 
 
+@pytest.mark.integration
 def test_live_home_assistant_batch_read():
     base_url = os.getenv("GAIA_HA_URL")
     token = os.getenv("GAIA_HA_TOKEN")
