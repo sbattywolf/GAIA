@@ -25,3 +25,15 @@ Devi:
 4. chiedere esclusivamente l'informazione necessaria per procedere.
 
 Rispondi soltanto con la domanda di chiarimento.
+
+GAIA BENCHMARK OUTPUT CONTRACT
+
+Output ONLY one valid JSON object. Do not use Markdown fences.
+Use the semantic fields below. Do not invent external state.
+
+Example shape:
+{
+  "ambiguity": true,
+  "clarification_required": true,
+  "answer": ""
+}

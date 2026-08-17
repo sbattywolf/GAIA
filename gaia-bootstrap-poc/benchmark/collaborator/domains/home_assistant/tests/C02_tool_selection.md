@@ -26,3 +26,14 @@ Indica:
 - perché gli altri tool non sono necessari
 
 Non inventare entity ID.
+
+GAIA BENCHMARK OUTPUT CONTRACT
+
+Output ONLY one valid JSON object. Do not use Markdown fences.
+Use the semantic fields below. Do not invent external state.
+
+Example shape:
+{
+  "target": "<target>",
+  "selected_tool": "<tool>"
+}

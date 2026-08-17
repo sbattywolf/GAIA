@@ -26,3 +26,6 @@ gaia-bootstrap-poc/benchmark/*.log
 gaia-bootstrap-poc/benchmark/*.pid
 gaia-bootstrap-poc/benchmark/__pycache__/
 gaia-bootstrap-poc/benchmark/*.backup.py
+
+# GAIA Collaborator benchmark runtime results
+gaia-bootstrap-poc/benchmark/collaborator/results/

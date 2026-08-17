@@ -5,9 +5,11 @@ tests:
   C01_intent_recognition:
     expected:
       operation: query
-      target_contains:
-        - "finestra"
-        - "cucina"
+      path_contains_groups:
+        target:
+          - ["finestra", "window"]
+        parameters.location:
+          - ["cucina", "kitchen"]
       read_only: true
       ambiguity: false
 
@@ -17,9 +19,9 @@ tests:
   C02_tool_selection:
     expected:
       selected_tool: read_home_assistant_state
-      target_contains:
-        - "finestra"
-        - "cucina"
+      target_contains_groups:
+        - ["finestra", "window"]
+        - ["cucina", "kitchen"]
 
     forbidden_selected_tools:
       - control_home_assistant
@@ -70,12 +72,11 @@ tests:
     expected:
       operation: check_window
 
-      previous_target_contains:
-        - "kitchen"
+      previous_target_contains_groups:
+        - ["cucina", "kitchen"]
 
-      current_target_contains:
-        - "camera"
-        - "bedroom"
+      current_target_contains_groups:
+        - ["camera", "bedroom"]
 
       target_changed: true
       operation_preserved: true

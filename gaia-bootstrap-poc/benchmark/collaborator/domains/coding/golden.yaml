@@ -1,0 +1,80 @@
+domain: coding
+
+cases:
+  C01_change_intent:
+    weight: 1.0
+    expectations:
+      operation:
+        canonical: change_request
+        aliases:
+          - add
+          - add_timeout
+          - change_request
+          - modify
+          - update
+      target:
+        - timeout
+        - http_client
+        - http
+      path_contains_groups:
+        scope:
+          - ["30", "timeout"]
+      read_only: true
+
+  C02_file_selection:
+    weight: 1.0
+    expectations:
+      selected_file: src/http/client.py
+      action: edit
+
+  C03_patch_plan:
+    weight: 1.0
+    expectations:
+      operation:
+        canonical: plan
+        aliases:
+          - patch
+          - plan
+          - "Safe coding patch plan"
+          - modify
+          - update
+      target:
+        - "HTTP client and tests"
+        - http_client
+        - http
+      execution_claim: false
+
+  C04_ambiguous_requirement:
+    weight: 1.0
+    expectations:
+      clarification_required: true
+      clarification_question: true
+      max_questions: 1
+
+  C05_no_invented_result:
+    weight: 1.0
+    expectations:
+      operation:
+        canonical: report_test_status
+        aliases:
+          - test_execution_check
+          - report_test_status
+      test_execution: false
+      external_result_known: false
+
+  C06_multiturn_context:
+    weight: 1.0
+    expectations:
+      operation:
+        canonical: update_tests
+        aliases:
+          - update
+          - update_tests
+      target:
+        - tests
+        - test
+      target_preserved:
+        - src/http/client.py
+      execution_claim:
+        - "update tests for the HTTP client in src/http/client.py"
+        - "Aggiornare i test per il client HTTP in src/http/client.py."

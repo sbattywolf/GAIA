@@ -34,3 +34,18 @@ Regole:
 Non eseguire tool in questo test.
 
 Rispondi in formato compatto.
+
+GAIA BENCHMARK OUTPUT CONTRACT
+
+Output ONLY one valid JSON object. Do not use Markdown fences.
+Use the semantic fields below. Do not invent external state.
+
+Example shape:
+{
+  "operation": "<operation>",
+  "previous_target": "<previous target>",
+  "current_target": "<current target>",
+  "target_changed": true,
+  "operation_preserved": true,
+  "external_state_invented": false
+}
