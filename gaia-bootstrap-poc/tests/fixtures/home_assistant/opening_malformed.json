@@ -1,0 +1,8 @@
+{
+  "entity_id": "binary_sensor.example_opening",
+  "state": "on",
+  "last_updated": "not-a-timestamp",
+  "attributes": {
+    "device_class": "opening"
+  }
+}
