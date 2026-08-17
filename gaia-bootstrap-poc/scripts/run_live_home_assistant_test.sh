@@ -39,5 +39,5 @@ exec env \
   GAIA_HA_URL="${HOME_ASSISTANT_BASE_URL}" \
   GAIA_HA_TOKEN="${HOME_ASSISTANT_TOKEN}" \
   GAIA_HA_ENTITY_ID="${GAIA_HA_ENTITY_ID}" \
-  python -m pytest -m integration \
+  python3 -m pytest -m integration \
     gaia-bootstrap-poc/tests/test_real_home_assistant_integration.py
