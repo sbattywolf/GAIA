@@ -8,20 +8,12 @@ from gaia.home.models import HomeResourceReference, Observation, ObservationStat
 
 
 class HomeAssistantStateTransport(Protocol):
-    """Minimal transport seam for one already-resolved Home Assistant entity."""
-
     def get_state(self, entity_id: str) -> Mapping[str, object]:
         ...
 
 
 class ExperimentalHomeAssistantAdapter:
-    """Deterministic experiment for the existing OpeningStateProvider seam.
-
-    This is deliberately not the final production adapter.
-
-    The caller supplies the source-state mapping explicitly so that this
-    experiment does not silently turn an architectural assumption into policy.
-    """
+    """Experimental adapter using an injected Home Assistant state transport."""
 
     def __init__(
         self,
