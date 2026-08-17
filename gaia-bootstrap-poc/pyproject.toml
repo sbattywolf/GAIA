@@ -15,3 +15,6 @@ test = ["pytest>=8"]
 pythonpath = ["src"]
 testpaths = ["tests"]
 addopts = "-q"
+markers = [
+    "integration: optional tests that contact an external Home Assistant instance",
+]
