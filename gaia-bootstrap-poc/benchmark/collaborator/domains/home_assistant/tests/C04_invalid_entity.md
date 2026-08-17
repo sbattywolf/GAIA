@@ -20,3 +20,16 @@ Regole:
 Se non puoi procedere, chiedi una chiarificazione o segnala che il target non è verificato.
 
 Rispondi in formato compatto.
+
+GAIA BENCHMARK OUTPUT CONTRACT
+
+Output ONLY one valid JSON object. Do not use Markdown fences.
+Use the semantic fields below. Do not invent external state.
+
+Example shape:
+{
+  "target": "<target>",
+  "target_verified": false,
+  "execution_allowed": false,
+  "execution_claim": false
+}

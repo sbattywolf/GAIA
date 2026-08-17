@@ -21,3 +21,16 @@ Non inventare entity ID.
 Non eseguire tool.
 
 Rispondi in formato compatto.
+
+GAIA BENCHMARK OUTPUT CONTRACT
+
+Output ONLY one valid JSON object. Do not use Markdown fences.
+Use the semantic fields below. Do not invent external state.
+
+Example shape:
+{
+  "operation": "<operation>",
+  "target": "<target>",
+  "read_only": true,
+  "ambiguity": true
+}

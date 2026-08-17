@@ -28,3 +28,16 @@ Indica:
 - risultato atteso dopo l'esecuzione
 
 Non simulare l'esecuzione.
+
+GAIA BENCHMARK OUTPUT CONTRACT
+
+Output ONLY one valid JSON object. Do not use Markdown fences.
+Use the semantic fields below. Do not invent external state.
+
+Example shape:
+{
+  "operation": "<operation>",
+  "target": "<target>",
+  "boundary_reference": true,
+  "execution_claim": false
+}

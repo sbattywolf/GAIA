@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+from __future__ import annotations
+
+import argparse
 import json
 import sys
 import time
@@ -9,42 +12,37 @@ import requests
 import yaml
 
 BASE_DIR = Path(__file__).resolve().parent
-BENCHMARK_DIR = BASE_DIR.parent
-TESTS_DIR = BASE_DIR / "tests"
+DOMAINS_DIR = BASE_DIR / "domains"
 RESULTS_DIR = BASE_DIR / "results"
 MODELS_FILE = BASE_DIR / "models.yaml"
 
 OLLAMA_URL = "http://localhost:11434"
 
-sys.path.insert(0, str(BENCHMARK_DIR))
+sys.path.insert(0, str(BASE_DIR / "core"))
 
-from telemetry import TelemetrySession
-from collaborator.verifier import verify_response
+from scoring import score_model
+from verifier import verify_response
 
 
-TESTS = [
-    "C01_intent_recognition",
-    "C02_tool_selection",
-    "C03_home_assistant_action",
-    "C04_invalid_entity",
-    "C05_ambiguous_request",
-    "C06_multiturn_state",
-]
+DOMAIN_TESTS = {
+    "home_assistant": [
+        "C01_intent_recognition",
+        "C02_tool_selection",
+        "C03_home_assistant_action",
+        "C04_invalid_entity",
+        "C05_ambiguous_request",
+        "C06_multiturn_state",
+    ],
+}
 
 
 def load_models():
-    data = yaml.safe_load(
-        MODELS_FILE.read_text(encoding="utf-8")
-    )
+    data = yaml.safe_load(MODELS_FILE.read_text(encoding="utf-8"))
     return data.get("models", [])
 
 
-def load_test(name):
-    path = TESTS_DIR / f"{name}.md"
-
-    if not path.exists():
-        raise FileNotFoundError(path)
-
+def load_test(domain, name):
+    path = DOMAINS_DIR / domain / "tests" / f"{name}.md"
     return path.read_text(encoding="utf-8")
 
 
@@ -74,29 +72,15 @@ def ollama_generate(model, prompt):
 
 def extract_tool_calls(data):
     calls = data.get("tool_calls", [])
-
-    if isinstance(calls, list):
-        return calls
-
-    return []
+    return calls if isinstance(calls, list) else []
 
 
-def run_test(model, test_name):
-    prompt = load_test(test_name)
-
-    telemetry = TelemetrySession()
-    telemetry.start()
-
+def run_test(model, domain, test_name):
+    prompt = load_test(domain, test_name)
     start = time.monotonic()
 
     try:
         data = ollama_generate(model, prompt)
-
-        elapsed = round(
-            time.monotonic() - start,
-            3,
-        )
-
         response = data.get("response", "")
         tool_calls = extract_tool_calls(data)
 
@@ -104,120 +88,116 @@ def run_test(model, test_name):
             test_name,
             response,
             actual_tool_calls=len(tool_calls),
+            assertions_path=DOMAINS_DIR / domain / "assertions.yaml",
         )
 
+        error = None
     except Exception as exc:
-        elapsed = round(
-            time.monotonic() - start,
-            3,
-        )
-
         response = ""
         tool_calls = []
+        verification = None
+        error = f"{type(exc).__name__}: {exc}"
 
-        verification = {
+    elapsed = round(time.monotonic() - start, 3)
+
+    if error:
+        return {
+            "name": test_name,
             "success": False,
-            "failures": [
-                f"runner error: {type(exc).__name__}: {exc}"
-            ],
+            "score": 0.0,
+            "elapsed_seconds": elapsed,
+            "tool_calls": tool_calls,
+            "verification": {
+                "success": False,
+                "failures": [f"runner error: {error}"],
+            },
+            "response": response,
         }
-
-    finally:
-        telemetry.stop()
 
     return {
         "name": test_name,
-        "success": verification["success"],
+        "success": verification.success,
+        "score": verification.score,
         "elapsed_seconds": elapsed,
         "tool_calls": tool_calls,
-        "verification": verification,
-        "telemetry": telemetry.result(),
+        "verification": {
+            "success": verification.success,
+            "failures": verification.failures,
+            "parsed": verification.parsed,
+        },
         "response": response,
     }
 
 
-def main():
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+def run_domain(model, domain):
+    tests = [
+        run_test(model, domain, test_name)
+        for test_name in DOMAIN_TESTS[domain]
+    ]
+    return tests, score_model(tests)
 
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="GAIA Collaborator Benchmark v2"
+    )
+    parser.add_argument(
+        "--domain",
+        default="home_assistant",
+        choices=sorted(DOMAIN_TESTS),
+    )
+    args = parser.parse_args()
+
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     models = load_models()
 
-    print("=== GAIA Collaborator Benchmark v0.1 ===")
-    print(f"Repository: {BENCHMARK_DIR.parent}")
-
-    print()
-    print("Models:")
-
-    for item in models:
-        print(
-            f"  {item['name']} -> {item['ollama']}"
-        )
+    print("=== GAIA Collaborator Benchmark v2 ===")
+    print(f"Domain: {args.domain}")
 
     for index, item in enumerate(models, start=1):
         name = item["name"]
         model = item["ollama"]
 
         print()
-        print("=" * 72)
-        print(f"MODEL {index}/{len(models)}: {name}")
-        print(f"OLLAMA: {model}")
-        print("=" * 72)
+        print(f"MODEL {index}/{len(models)}: {name} -> {model}")
 
         try:
             metadata = ollama_show(model)
-            capabilities = metadata.get("capabilities", [])
+            print("capabilities:", metadata.get("capabilities", []))
         except Exception as exc:
             print(
-                f"  model verification failed: "
+                f"model verification failed: "
                 f"{type(exc).__name__}: {exc}"
             )
             continue
 
-        print("  capabilities:", capabilities)
+        tests, summary = run_domain(model, args.domain)
 
-        tests = []
-
-        for test_name in TESTS:
-            print(f"  TEST: {test_name}")
-
-            result = run_test(model, test_name)
-            tests.append(result)
-
-            status = (
-                "PASS"
-                if result["success"]
-                else "FAIL"
-            )
-
+        for result in tests:
+            status = "PASS" if result["success"] else "FAIL"
             print(
-                f"  {test_name}: {status} "
+                f"  {result['name']}: {status} "
                 f"({result['elapsed_seconds']:.3f}s)"
             )
 
             for failure in result["verification"]["failures"]:
-                print(f"      {failure}")
+                print(f"    {failure}")
 
-        overall_success = all(
-            test["success"]
-            for test in tests
-        )
-
-        result_document = {
-            "benchmark_version": "0.1-collaborator",
+        document = {
+            "benchmark_version": "0.2-collaborator",
+            "domain": args.domain,
             "model_name": name,
             "ollama_model": model,
-            "model_verified": True,
-            "success": overall_success,
+            "success": summary["score"] == 1.0,
+            "score": summary["score"],
+            "summary": summary,
             "tests": tests,
         }
 
-        output = (
-            RESULTS_DIR
-            / f"{name}.json"
-        )
-
+        output = RESULTS_DIR / f"{name}.json"
         output.write_text(
             json.dumps(
-                result_document,
+                document,
                 indent=2,
                 ensure_ascii=False,
             ),
@@ -225,11 +205,6 @@ def main():
         )
 
         print(f"  saved: {output}")
-
-    print()
-    print("=" * 72)
-    print("COLLABORATOR BENCHMARK COMPLETE")
-    print("=" * 72)
 
 
 if __name__ == "__main__":
