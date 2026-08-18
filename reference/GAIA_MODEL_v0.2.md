@@ -30,7 +30,7 @@ The model should remain more stable than any framework, model provider, runtime,
 
 ## 2. Model authority
 
-This document remains the canonical source for the official first-class conceptual model.
+This document is the current working conceptual baseline for GAIA's seven first-class concepts. It remains Proposed and does not constitute formal Accepted architectural authority.
 
 Supporting Foundation Documents may refine the semantics of existing concepts without adding first-class elements automatically:
 
@@ -353,7 +353,7 @@ Context consumption does not mutate world information automatically. A Collabora
 | Resource | Identify subjects of observation, reasoning, access, or action. |
 | Shared Context | Provide bounded cross-responsibility Context. |
 
-## 16. Accepted boundary rules
+## 16. Boundary rules and accepted decision constraints
 
 - Identity is not derived from implementation.
 - The Core does not absorb every cross-cutting concern.
@@ -416,8 +416,8 @@ The project has not resolved whether Memory is:
 
 The following require further evidence or ADRs:
 
-- exact Core boundary;
-- Policy evaluation and enforcement responsibility;
+- further evidence/review of the accepted Core boundary and its implementation implications;
+- future Policy semantics beyond the accepted Core boundary, where unresolved;
 - need for explicit orchestration;
 - Memory role and layers;
 - Capability governance;

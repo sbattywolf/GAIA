@@ -104,7 +104,7 @@ No new Foundation Document promotes additional concepts into this official list 
 - Model output is not an enforceable security boundary.
 - Important actions remain inspectable and governable.
 
-## 8. Accepted convergence clarifications
+## 8. Established working convergence clarifications
 
 ### 8.1 World Model is a shared semantic model
 
@@ -145,7 +145,7 @@ The same underlying information may participate in several concerns without maki
 
 | Concept | Status | Reason |
 |---|---|---|
-| World Model | Accepted semantic foundation, not first-class | Defines shared semantics without implying a component or store. |
+| World Model | Proposed semantic foundation, not first-class | Defines shared semantics without implying a component or store. |
 | Memory | Partially established | Role, ownership, layers, authority, and retention remain unresolved. |
 | Planner | Partially established | An explicit planner has not been validated. |
 | Policy | Partially established | Necessary conceptually, but location and relationship with Core and Capability remain open. |
@@ -273,7 +273,7 @@ Deferred choices include:
 1. `ARCHITECTURE_CONVERGENCE_v0.2.md` — proposed convergence register.
 2. `CONTEXT_MODEL_v0.2.md` — proposed Context semantics.
 3. `WORLD_MODEL_v0.2.md` — proposed shared semantic World Model.
-4. Reconcile `GLOSSARY.md`, `GAIA_MODEL.md`, `NEXT_STEPS.md`, and `REPOSITORY_STRUCTURE.md` conservatively.
+4. Reconcile `GLOSSARY_v0.2.md`, `GAIA_MODEL_v0.2.md`, `NEXT_STEPS_v0.2.md`, and `REPOSITORY_STRUCTURE.md` conservatively.
 5. Use accepted `ADR-0001-Core-Boundary.md` as the Core boundary baseline.
 6. Use accepted `ADR-0003-Capability-Model_Accepted.md` as the Capability Model baseline.
 7. Create `sprint-03/MEMORY_ROLE_VALIDATION.md`.
@@ -284,7 +284,7 @@ Deferred choices include:
 Significant implementation begins only when:
 
 - vocabulary is coherent;
-- Context and World Model boundaries are accepted;
+- Context and World Model boundaries are sufficiently coherent and remain explicitly Proposed working semantics;
 - Core boundary is accepted or sufficiently bounded;
 - Capability contract is accepted or sufficiently bounded;
 - ADR-0001 and ADR-0003 are already accepted; implementation readiness still depends on the bounded first scenario;
@@ -328,10 +328,10 @@ It should test one bounded intent, one Collaborator responsibility, explicit Cap
 
 Immediate reconciliation targets:
 
-- `GLOSSARY.md`: Memory/Domain, Resource, Shared Context, and provisional semantic terms.
-- `GAIA_MODEL.md`: minimal cross-references only; no promotion of World Model or Context views.
-- `NEXT_STEPS.md`: active phase, produced deliverables, reconciliation, and ADR sequence.
-- `REPOSITORY_STRUCTURE.md`: new Foundation Documents, candidate ADR label, and document lifecycle.
+- `GLOSSARY_v0.2.md`: Memory/Domain, Resource, Shared Context, and provisional semantic terms.
+- `GAIA_MODEL_v0.2.md`: minimal cross-references only; no promotion of World Model or Context views.
+- `NEXT_STEPS_v0.2.md`: active phase, produced deliverables, reconciliation, and ADR sequence.
+- `REPOSITORY_STRUCTURE_v0.2.md`: new Foundation Documents, candidate ADR label, and document lifecycle.
 
 `IDENTITY.md`, `MANIFESTO.md`, `NORTH_STAR.md`, and `DESIGN_PRINCIPLES.md` remain unchanged unless specific evidence requires revision.
 
@@ -340,7 +340,7 @@ Immediate reconciliation targets:
 Architecture Convergence may conclude when:
 
 - reference documents use consistent terminology;
-- Context and World Model semantics are accepted;
+- Context and World Model semantics are sufficiently coherent for the current working baseline and remain Proposed pending explicit lifecycle acceptance;
 - critical inconsistency is corrected or explicitly deferred;
 - Core and Capability decisions are recorded or bounded for prototype work;
 - Memory has a validation plan;

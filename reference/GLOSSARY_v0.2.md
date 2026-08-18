@@ -31,7 +31,7 @@ Only terms explicitly identified as official model concepts are first-class elem
 
 | Marker | Status | Meaning |
 |---|---|---|
-| ✅ | Established | Accepted vocabulary used consistently in the current reference model. |
+| ✅ | Established | Vocabulary used consistently in the current working reference model; this marker does not imply formal document or ADR acceptance. |
 | 🟡 | Partially Established | Useful working term whose architectural role or boundary remains incomplete. |
 | 🔵 | Proposed | Candidate vocabulary introduced for validation or future decision/decision support. |
 | ⚪ | External | Ecosystem term that does not define GAIA's native conceptual model. |
@@ -93,7 +93,7 @@ The following terms refine `Shared Context`. They are semantic scopes or views, 
 
 ## 8. World Model semantic terms
 
-**World Model is an accepted semantic foundation, not a first-class concept or runtime component.** The terms in this section define shared meaning and do not require separate implementation types.
+**World Model is the current working semantic foundation, not a first-class concept or runtime component. The v0.2 World Model document remains Proposed.** The terms in this section define shared meaning and do not require separate implementation types.
 
 | Status | Term | Definition |
 |---|---|---|
@@ -127,7 +127,7 @@ The same underlying information may participate in more than one concern without
 | 🟡 | Memory | A structured and intentional way for GAIA to retain, retrieve, correct, and forget information over time. Memory is broader than chat history and is not currently an established Domain or first-class official model element. |
 | 🟡 | Knowledge | Reusable understanding or reference material used to support interpretation, grounding, or explanation beyond one temporary Context. Its status as a first-class concept remains undecided. |
 | 🟡 | Planner | A possible coordination function that determines how intent, Collaborators, Capabilities, Resources, Policy, and Context combine to handle a task. The need for an explicit Planner is unvalidated. |
-| 🟡 | Policy | A rule or decision constraint governing what is allowed, denied, delayed, approved, logged, or escalated. Policy is not a prompt instruction. Its relationship with the Core is unresolved. |
+| 🟡 | Policy | A rule or decision constraint governing what is allowed, denied, delayed, approved, logged, or escalated. Policy is not a prompt instruction. Its detailed semantics remain provisional; the accepted Core boundary requires the Core to enforce required Policy and Approval outcomes without requiring a general Policy engine. |
 | 🟡 | Approval | An explicit authorisation decision required before a proposed action is executed. Approval is not implicit consent or absence of objection. |
 | 🟡 | Audit | Evidence of significant decisions, actions, Tool calls, Approvals, denials, failures, Memory changes, and external interactions. Audit is not generic logging or active Context. |
 | 🟡 | Boundary | A conceptual or technical separation between responsibilities, trust zones, Domains, Adapters, Memory layers, or external systems. |
@@ -179,10 +179,10 @@ The Core prevents GAIA from becoming unrelated scripts or framework-specific com
 
 Defined by accepted `ADR-0001-Core-Boundary.md`:
 
-- What minimum responsibilities preserve coherence?
-- What must remain outside the Core?
-- Does the Core evaluate Policy, enforce a Policy decision, or only require an enforceable decision contract?
-- Which Context and World Model contracts, if any, belong to the Core?
+- Further implementation/evidence review should confirm how the accepted Core boundary is realised in the first scenario.
+- What remains outside the Core must continue to respect the explicit exclusions of ADR-0001.
+- The accepted boundary assigns enforcement of required Policy and Approval outcomes to the Core without requiring a general Policy engine.
+- Detailed ownership of additional Context and World Model contracts remains subject to future evidence and ADRs where material.
 
 ### Collaborator
 
