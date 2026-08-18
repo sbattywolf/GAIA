@@ -56,7 +56,7 @@ These seven terms are the current first-class concepts of `GAIA_MODEL.md`.
 |---|---|---|
 | ✅ | GAIA | A local-first Personal AI Operating System: a personal ecosystem of specialised digital Collaborators that helps the Human Owner reduce cognitive load, coordinate Context, and act through explicit Capabilities while keeping important decisions under human control. |
 | ✅ | Identity | The durable conceptual definition of what GAIA is and what must remain true when implementation choices change. |
-| ✅ | Core | The minimal internal coordination boundary that preserves GAIA's coherence and essential contracts. Its precise responsibility, including its relationship with Policy, remains subject to `ADR-0001-Core-Boundary.md`. |
+| ✅ | Core | The minimal internal coordination boundary that preserves GAIA's coherence and essential contracts. Its responsibilities are defined by accepted `ADR-0001-Core-Boundary.md`. |
 | ✅ | Collaborator | A bounded digital role within GAIA with a specific responsibility. A Collaborator is not merely a model call and is not automatically an autonomous Agent, process, prompt, Workflow, Tool, or model instance. |
 | ✅ | Domain | A coherent area of responsibility within GAIA, such as home, research, or communication. Domains remain independently understandable. Memory is not currently an established Domain. |
 | ✅ | Capability | An explicit semantic contract describing what action, access, or operation may be requested or performed. It does not prescribe implementation. Resource scope, Policy, Approval, execution binding, and Audit remain separate responsibilities. |
@@ -142,7 +142,7 @@ The same underlying information may participate in more than one concern without
 
 ## 11. Capability responsibility separation
 
-The following distinctions prepare `ADR-0003-Capability-Model.md` without deciding it:
+The following distinctions are established by accepted `ADR-0003-Capability-Model_Accepted.md`:
 
 | Concern | Question |
 |---|---|
@@ -177,7 +177,7 @@ A Capability may declare semantic requirements but does not contain the Policy e
 
 The Core prevents GAIA from becoming unrelated scripts or framework-specific components. It is not necessarily a Workflow engine, Agent runtime, UI, Memory database, Home Assistant extension, model gateway, Policy engine, or World Model service.
 
-Open for `ADR-0001-Core-Boundary.md`:
+Defined by accepted `ADR-0001-Core-Boundary.md`:
 
 - What minimum responsibilities preserve coherence?
 - What must remain outside the Core?

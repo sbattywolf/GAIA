@@ -8,4 +8,6 @@
 - ADR-0006 Tool Trust
 - ADR-0007 Event and Run Semantics
 
-No decision is reconstructed here. These remain candidates until explicitly discussed and accepted.
+This file is a candidate/backlog register, not the authoritative ADR status index.
+
+ADR-0001 and ADR-0003 have since been accepted; their individual ADR files remain authoritative for decision status. The remaining listed topics are candidates until explicitly discussed and accepted.

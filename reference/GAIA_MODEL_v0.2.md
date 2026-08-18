@@ -123,24 +123,13 @@ The Core preserves coherence with Identity but does not replace or own it.
 
 The Core is the minimal internal coordination boundary that preserves GAIA's coherence and essential contracts.
 
-Its precise responsibilities are intentionally unresolved pending `ADR-0001-Core-Boundary.md`.
+Its responsibilities are defined by accepted `ADR-0001-Core-Boundary.md`.
 
 ### Responsibility
 
 Conceptually, the Core prevents GAIA from becoming an unstructured collection of scripts, Tools, integrations, and model calls. It provides the stable coordination boundary connecting official model concepts.
 
-### Open responsibility
-
-The previous model referred to the Core preserving policy semantics. This version does not silently interpret that phrase as ownership of a Policy engine.
-
-`ADR-0001-Core-Boundary.md` must decide whether the Core:
-
-- owns Policy evaluation;
-- enforces externally produced Policy decisions;
-- preserves only a contract requiring an enforceable Policy decision;
-- has another smaller responsibility.
-
-Until that ADR is accepted, Policy remains provisional and no Policy engine is part of the Core by assumption.
+The accepted ADR assigns enforcement of required Policy and Approval outcomes to the Core without requiring a general Policy engine.
 
 ### Boundary
 
@@ -234,7 +223,7 @@ The following concerns remain conceptually separate:
 - **Execution Binding:** how a Tool, Adapter, Workflow, or external system performs it;
 - **Audit Evidence:** what evidence is preserved.
 
-This separation prepares `ADR-0003-Capability-Model.md` but does not decide implementation.
+This separation is established by accepted `ADR-0003-Capability-Model_Accepted.md`; it does not prescribe implementation.
 
 ### Boundary
 
@@ -478,7 +467,7 @@ Major changes to this document normally require an ADR or explicit Architecture 
 2. Are the seven official concepts understandable without implementation knowledge?
 3. Is any official concept overloaded?
 4. Are semantic supporting terms mistaken for components?
-5. Does the Core remain genuinely undecided where evidence is missing?
+5. Does the Core reflect accepted ADR-0001 while remaining bounded by its explicit exclusions?
 6. Are Capability, Policy, Approval, execution, and Audit separated?
 7. Are World Model, Context, Memory, Knowledge, and Audit distinct?
 8. Does Resource have sufficient identity without introducing Entity prematurely?
