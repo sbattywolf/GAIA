@@ -3,10 +3,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from gaia.home.outcomes import RequestOutcome, Unsupported
-from gaia.home.read_current_resource_state import (
-    ApprovalStatus,
+from gaia.home.read_current_resource_state import ReadCurrentResourceStateRequest
+from gaia.home.w3_policy_gate import (
+    ApprovalGrant,
+    ApprovalRequirement,
+    PolicyApprovalDecision,
     PolicyResult,
-    ReadCurrentResourceStateRequest,
+    W3ExecutionGate,
 )
 from gaia.home.read_opening_state_capability import ReadOpeningStateCapability
 from gaia.home.w3_outcomes import ReadCurrentResourceStateOutcome
@@ -19,6 +22,7 @@ class Request:
     resource_label: str
     policy_result: str = "Allowed"
     approval: str = "Not Required"
+    approval_granted: bool = False
 
 
 class RequestRouter:
@@ -34,6 +38,7 @@ class RequestRouter:
     ) -> None:
         self._read_opening_state = read_opening_state
         self._home_collaborator = home_collaborator
+        self._w3_gate = W3ExecutionGate()
 
     def handle(
         self, request: Request
@@ -46,12 +51,25 @@ class RequestRouter:
         if request.operation == self.READ_CURRENT_RESOURCE_STATE:
             if self._home_collaborator is None:
                 return Unsupported(operation=request.operation)
+            decision = PolicyApprovalDecision(
+                policy=PolicyResult(request.policy_result),
+                approval=(
+                    ApprovalRequirement.REQUIRED
+                    if request.approval == "Required"
+                    else ApprovalRequirement.NOT_REQUIRED
+                ),
+                grant=(
+                    ApprovalGrant.GRANTED
+                    if request.approval_granted
+                    else ApprovalGrant.NOT_GRANTED
+                ),
+            )
+            blocked = self._w3_gate.decide(decision)
+            if blocked is not None:
+                return blocked
+
             return self._home_collaborator.read_current_state(
-                ReadCurrentResourceStateRequest(
-                    label=request.resource_label,
-                    policy_result=PolicyResult(request.policy_result),
-                    approval=ApprovalStatus(request.approval),
-                )
+                ReadCurrentResourceStateRequest(label=request.resource_label)
             )
 
         return Unsupported(operation=request.operation)

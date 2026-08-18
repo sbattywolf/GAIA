@@ -32,23 +32,11 @@ from .w3_outcomes import (
 )
 
 
-class PolicyResult(str, Enum):
-    ALLOWED = "Allowed"
-    DENIED = "Denied"
-    INDETERMINATE = "Indeterminate"
-
-
-class ApprovalStatus(str, Enum):
-    NOT_REQUIRED = "Not Required"
-    REQUIRED = "Required"
-    GRANTED = "Granted"
-
-
 @dataclass(frozen=True)
 class ReadCurrentResourceStateRequest:
+    """Already-authorized semantic input for the W3 read Capability."""
+
     label: str
-    policy_result: PolicyResult = PolicyResult.ALLOWED
-    approval: ApprovalStatus = ApprovalStatus.NOT_REQUIRED
 
 
 class ReadCurrentResourceStateCapability:
@@ -67,16 +55,6 @@ class ReadCurrentResourceStateCapability:
     def execute(
         self, request: ReadCurrentResourceStateRequest
     ) -> ReadCurrentResourceStateOutcome:
-        if request.policy_result is PolicyResult.DENIED:
-            return Denied()
-        if request.policy_result is PolicyResult.INDETERMINATE:
-            return Indeterminate()
-        if (
-            request.approval is ApprovalStatus.REQUIRED
-            and request.approval is not ApprovalStatus.GRANTED
-        ):
-            return ApprovalRequired()
-
         resolution = self._resolver.resolve(request.label)
         if isinstance(resolution, UnknownResource):
             return ResourceNotFound(label=request.label)

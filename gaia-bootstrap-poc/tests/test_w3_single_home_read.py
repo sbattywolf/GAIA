@@ -8,11 +8,10 @@ from gaia.home.collaborator import HomeCollaborator
 from gaia.home.light_models import LightObservation, LightObservationState
 from gaia.home.models import HomeResourceReference, ResourceId
 from gaia.home.read_current_resource_state import (
-    ApprovalStatus,
-    PolicyResult,
     ReadCurrentResourceStateCapability,
     ReadCurrentResourceStateRequest,
 )
+from gaia.home.w3_policy_gate import ApprovalRequirement, PolicyResult
 from gaia.home.resource_resolver import HomeResourceResolver, ResolvedResource
 from gaia.home.w3_outcomes import (
     ApprovalRequired,
@@ -48,6 +47,16 @@ class CountingLightProvider:
         return self.result
 
 
+class CountingCapability:
+    def __init__(self, capability):
+        self.calls = 0
+        self._capability = capability
+
+    def execute(self, request):
+        self.calls += 1
+        return self._capability.execute(request)
+
+
 class FakeTransport:
     def __init__(self, payload=None, error=None):
         self.calls = 0
@@ -61,9 +70,9 @@ class FakeTransport:
         return self.payload
 
 
-def build_router(provider):
+def build_router(provider, capability=None):
     resolver = HomeResourceResolver({"living-room light": (LIGHT,)})
-    capability = ReadCurrentResourceStateCapability(resolver, provider)
+    capability = capability or ReadCurrentResourceStateCapability(resolver, provider)
     collaborator = HomeCollaborator(capability)
     return RequestRouter(home_collaborator=collaborator)
 
@@ -80,7 +89,12 @@ def test_t01_valid_light_read():
         transport,
         LIGHT.resource_id,
     )
-    router = build_router(provider)
+    capability = CountingCapability(
+        ReadCurrentResourceStateCapability(
+            HomeResourceResolver({"living-room light": (LIGHT,)}), provider
+        )
+    )
+    router = build_router(provider, capability)
 
     outcome = router.handle(
         Request(RequestRouter.READ_CURRENT_RESOURCE_STATE, "living-room light")
@@ -88,6 +102,7 @@ def test_t01_valid_light_read():
 
     assert isinstance(outcome, CurrentStateSuccess)
     assert outcome.observation.state is LightObservationState.ON
+    assert capability.calls == 1
     assert transport.calls == 1
 
 
@@ -215,7 +230,12 @@ def test_t09_policy_denied_and_indeterminate_never_execute():
         (PolicyResult.INDETERMINATE, Indeterminate),
     ):
         provider = CountingLightProvider()
-        router = build_router(provider)
+        capability = CountingCapability(
+            ReadCurrentResourceStateCapability(
+                HomeResourceResolver({"living-room light": (LIGHT,)}), provider
+            )
+        )
+        router = build_router(provider, capability)
 
         outcome = router.handle(
             Request(
@@ -226,22 +246,30 @@ def test_t09_policy_denied_and_indeterminate_never_execute():
         )
 
         assert isinstance(outcome, expected_type)
+        assert capability.calls == 0
         assert provider.calls == 0
 
 
 def test_t10_approval_required_blocks_without_grant_but_grant_executes():
     blocked_provider = CountingLightProvider()
-    blocked_router = build_router(blocked_provider)
+    blocked_capability = CountingCapability(
+        ReadCurrentResourceStateCapability(
+            HomeResourceResolver({"living-room light": (LIGHT,)}), blocked_provider
+        )
+    )
+    blocked_router = build_router(blocked_provider, blocked_capability)
 
     blocked = blocked_router.handle(
         Request(
             RequestRouter.READ_CURRENT_RESOURCE_STATE,
             "living-room light",
-            approval=ApprovalStatus.REQUIRED.value,
+            approval=ApprovalRequirement.REQUIRED.value,
+            approval_granted=False,
         )
     )
 
     assert isinstance(blocked, ApprovalRequired)
+    assert blocked_capability.calls == 0
     assert blocked_provider.calls == 0
 
     granted_observation = LightObservation(
@@ -251,15 +279,22 @@ def test_t10_approval_required_blocks_without_grant_but_grant_executes():
         observed_at=OBSERVED_AT,
     )
     granted_provider = CountingLightProvider(result=granted_observation)
-    granted_router = build_router(granted_provider)
+    granted_capability = CountingCapability(
+        ReadCurrentResourceStateCapability(
+            HomeResourceResolver({"living-room light": (LIGHT,)}), granted_provider
+        )
+    )
+    granted_router = build_router(granted_provider, granted_capability)
 
     granted = granted_router.handle(
         Request(
             RequestRouter.READ_CURRENT_RESOURCE_STATE,
             "living-room light",
-            approval=ApprovalStatus.GRANTED.value,
+            approval=ApprovalRequirement.REQUIRED.value,
+            approval_granted=True,
         )
     )
 
     assert isinstance(granted, CurrentStateSuccess)
+    assert granted_capability.calls == 1
     assert granted_provider.calls == 1
