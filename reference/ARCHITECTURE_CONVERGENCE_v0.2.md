@@ -28,6 +28,8 @@ The repository is the Source of Truth. The order of authority is:
 
 Research and diagrams may challenge the current model but do not change it automatically.
 
+This document remains Proposed as a Foundation Document. References below to accepted rules refer to underlying accepted ADRs or established semantic decisions, not to acceptance of this document itself.
+
 ## 3. Convergence principles
 
 All convergence work follows these constraints:
@@ -56,7 +58,7 @@ The objectives are:
 3. preserve research history without making it normative accidentally;
 4. establish a coherent conceptual model;
 5. define Context and World Model semantics;
-6. identify and sequence foundational ADRs;
+6. sequence remaining foundational ADRs;
 7. prepare a small evidence-oriented start to development.
 
 ## 5. Established identity
@@ -222,12 +224,12 @@ A Domain View describes what is represented about the world for a Domain. Domain
 
 Temporary is a semantic lifetime, not an in-memory guarantee. Context may be persisted operationally for continuity without becoming long-term Memory.
 
-## 12. Candidate ADR sequence
+## 12. ADR sequence
 
 | Priority | ADR | Decision | Dependency |
 |---|---|---|---|
-| 1 | ADR-0001 Core Boundary | Minimum stable Core responsibilities and explicit exclusions. | Context and World Model semantics. |
-| 2 | ADR-0003 Capability Model | Separation of Capability, Resource scope, Policy, Approval, execution, and Audit. | Core boundary and Resource semantics. |
+| Accepted | ADR-0001 Core Boundary | Accepted baseline: minimum stable Core responsibilities and explicit exclusions. | Context and World Model semantics. |
+| Accepted | ADR-0003 Capability Model | Accepted baseline: separation of Capability, Resource scope, Policy, Approval, execution, and Audit. | Core boundary and Resource semantics. |
 | 3 | ADR-0002 Memory Semantics | Role and ownership of persistent continuity. | Memory validation and World Model boundary. |
 | 4 | ADR-0004 Home Assistant Boundary | Responsibility and authority split. | Core and Capability decisions. |
 | 5 | ADR-0005 Communication State | Channel-neutral interaction-state ownership. | Context Model and first Domain. |
@@ -272,8 +274,8 @@ Deferred choices include:
 2. `CONTEXT_MODEL_v0.2.md` — proposed Context semantics.
 3. `WORLD_MODEL_v0.2.md` — proposed shared semantic World Model.
 4. Reconcile `GLOSSARY.md`, `GAIA_MODEL.md`, `NEXT_STEPS.md`, and `REPOSITORY_STRUCTURE.md` conservatively.
-5. Prepare `ADR-0001-Core-Boundary.md`.
-6. Prepare `ADR-0003-Capability-Model.md`.
+5. Use accepted `ADR-0001-Core-Boundary.md` as the Core boundary baseline.
+6. Use accepted `ADR-0003-Capability-Model_Accepted.md` as the Capability Model baseline.
 7. Create `sprint-03/MEMORY_ROLE_VALIDATION.md`.
 8. Use evidence before remaining first-Domain ADRs.
 
@@ -285,6 +287,7 @@ Significant implementation begins only when:
 - Context and World Model boundaries are accepted;
 - Core boundary is accepted or sufficiently bounded;
 - Capability contract is accepted or sufficiently bounded;
+- ADR-0001 and ADR-0003 are already accepted; implementation readiness still depends on the bounded first scenario;
 - the first validation scenario and assumptions are explicit;
 - excluded functionality is documented;
 - the prototype can be discarded without losing architectural knowledge.

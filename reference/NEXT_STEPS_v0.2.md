@@ -54,7 +54,7 @@ The next documentation work is:
 1. reconcile `NEXT_STEPS.md` and `REPOSITORY_STRUCTURE.md`;
 2. review the complete v0.2 reference set;
 3. accept or revise the proposed documents;
-4. prepare only the ADRs needed to start a minimal prototype;
+4. use the accepted ADR baseline and reconcile dependent documentation;
 5. validate architecture through a narrow domestic scenario.
 
 No framework, language, database, event bus, graph platform, general Planner, Registry, or Plugin system is committed.
@@ -139,12 +139,12 @@ Create a coherent, implementation-neutral foundation sufficient to begin a small
 - `NEXT_STEPS_v0.2.md` — produced by this reconciliation;
 - `REPOSITORY_STRUCTURE_v0.2.md` — paired reconciliation deliverable.
 
-#### Minimum ADR set before prototype
+#### Minimum accepted ADR baseline before prototype
 
-Only these ADRs are required before meaningful prototype implementation:
+The current minimum accepted ADR baseline is:
 
-1. `ADR-0001-Core-Boundary.md`
-2. `ADR-0003-Capability-Model.md`
+1. `ADR-0001-Core-Boundary.md` — Accepted
+2. `ADR-0003-Capability-Model_Accepted.md` — Accepted
 
 Other ADRs remain candidates until the prototype produces evidence.
 
@@ -352,8 +352,8 @@ The project is healthy when old decisions can be replaced without losing history
 
 | Priority | ADR | Current treatment |
 |---|---|---|
-| 1 | ADR-0001 Core Boundary | Required before prototype structure stabilises. |
-| 2 | ADR-0003 Capability Model | Required before Capability implementation stabilises. |
+| Accepted | ADR-0001 Core Boundary | Accepted baseline for prototype structure. |
+| Accepted | ADR-0003 Capability Model | Accepted baseline for Capability implementation. |
 | 3 | ADR-0002 Memory Semantics | Defer until Memory validation produces evidence. |
 | 4 | ADR-0004 Home Assistant Boundary | Draft after first prototype evidence if the boundary remains unclear. |
 | 5 | ADR-0005 Communication State | Draft when restart, channel replacement, or multi-turn continuity creates pressure. |
@@ -415,8 +415,8 @@ Pause and review architecture when:
 ## 18. Next concrete steps
 
 1. Review and accept or revise the complete v0.2 reference set.
-2. Create `ADR-0001-Core-Boundary.md` with a minimal domestic-project bias.
-3. Create `ADR-0003-Capability-Model.md` limited to the first scenario.
+2. Use accepted `ADR-0001-Core-Boundary.md` as the Core baseline.
+3. Use accepted `ADR-0003-Capability-Model_Accepted.md` as the Capability baseline.
 4. Write a short first-scenario validation brief.
 5. Begin the minimal read-only prototype.
 6. Defer all non-blocking sophistication.

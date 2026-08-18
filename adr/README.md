@@ -1,6 +1,12 @@
 # ADR Index
 
-All seven ADR topics remain individual Proposed documents. No accepted decision is reconstructed.
+ADR status is authoritative in each individual ADR file.
+
+Current accepted decisions:
+- ADR-0001 — Accepted
+- ADR-0003 — Accepted; authoritative file is `ADR-0003-Capability-Model_Accepted.md`
+
+The remaining ADR topics are Proposed. This index is a navigation/status summary and does not override individual ADR status.
 
 - [ADR-0001-Core-Boundary.md](ADR-0001-Core-Boundary.md)
 - [ADR-0002-Memory-Semantics.md](ADR-0002-Memory-Semantics.md)
