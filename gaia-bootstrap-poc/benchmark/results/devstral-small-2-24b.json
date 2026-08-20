@@ -16,7 +16,7 @@
     {
       "name": "T01_read_agents",
       "success": true,
-      "elapsed_seconds": 42.083,
+      "elapsed_seconds": 11.639,
       "tool_calls": [
         {
           "name": "read_file",
@@ -38,88 +38,99 @@
       "telemetry": {
         "samples": [
           {
-            "timestamp_utc": "2026-08-16T22:16:35.867377+00:00",
+            "timestamp_utc": "2026-08-18T21:38:08.569587+00:00",
             "gpu": {
               "available": true,
-              "timestamp": "2026/08/17 00:16:35.883",
+              "timestamp": "2026/08/18 23:38:08.584",
               "gpu_utilization_percent": 0.0,
-              "memory_used_mib": 942.0,
+              "memory_used_mib": 1221.0,
               "memory_total_mib": 24576.0,
-              "temperature_c": 67.0,
-              "power_draw_w": 283.37
+              "temperature_c": 66.0,
+              "power_draw_w": 274.96
             },
             "cpu_ram": {
               "available": true,
               "load_average": {
-                "1m": 2.45361328125,
-                "5m": 2.474609375,
-                "15m": 2.30419921875
+                "1m": 1.2080078125,
+                "5m": 0.9248046875,
+                "15m": 0.81494140625
               },
-              "ram_total_mib": 62152.77,
-              "ram_available_mib": 57577.03,
-              "ram_used_mib": 4575.73
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 51881.62,
+              "ram_used_mib": 10271.14
             }
           },
           {
-            "timestamp_utc": "2026-08-16T22:17:17.897295+00:00",
+            "timestamp_utc": "2026-08-18T21:38:20.154662+00:00",
             "gpu": {
               "available": true,
-              "timestamp": "2026/08/17 00:17:17.918",
-              "gpu_utilization_percent": 89.0,
-              "memory_used_mib": 20826.0,
+              "timestamp": "2026/08/18 23:38:20.175",
+              "gpu_utilization_percent": 99.0,
+              "memory_used_mib": 21169.0,
               "memory_total_mib": 24576.0,
-              "temperature_c": 64.0,
-              "power_draw_w": 303.78
+              "temperature_c": 70.0,
+              "power_draw_w": 319.8
             },
             "cpu_ram": {
               "available": true,
               "load_average": {
-                "1m": 2.69677734375,
-                "5m": 2.5380859375,
-                "15m": 2.33349609375
+                "1m": 1.4638671875,
+                "5m": 0.99462890625,
+                "15m": 0.83984375
               },
-              "ram_total_mib": 62152.77,
-              "ram_available_mib": 57712.99,
-              "ram_used_mib": 4439.77
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 51378.21,
+              "ram_used_mib": 10774.55
             }
           },
           {
-            "timestamp_utc": "2026-08-16T22:17:17.928113+00:00",
+            "timestamp_utc": "2026-08-18T21:38:20.185900+00:00",
             "gpu": {
               "available": true,
-              "timestamp": "2026/08/17 00:17:17.942",
-              "gpu_utilization_percent": 89.0,
-              "memory_used_mib": 20826.0,
+              "timestamp": "2026/08/18 23:38:20.200",
+              "gpu_utilization_percent": 99.0,
+              "memory_used_mib": 21169.0,
               "memory_total_mib": 24576.0,
-              "temperature_c": 64.0,
-              "power_draw_w": 303.78
+              "temperature_c": 70.0,
+              "power_draw_w": 319.8
             },
             "cpu_ram": {
               "available": true,
               "load_average": {
-                "1m": 2.69677734375,
-                "5m": 2.5380859375,
-                "15m": 2.33349609375
+                "1m": 1.4638671875,
+                "5m": 0.99462890625,
+                "15m": 0.83984375
               },
-              "ram_total_mib": 62152.77,
-              "ram_available_mib": 57695.86,
-              "ram_used_mib": 4456.9
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 51369.09,
+              "ram_used_mib": 10783.66
             }
           }
         ],
         "summary": {
           "sample_count": 3,
           "gpu": {
-            "utilization_avg_percent": 59.333333333333336,
-            "utilization_peak_percent": 89.0,
-            "memory_peak_mib": 20826.0,
-            "temperature_peak_c": 67.0,
-            "power_peak_w": 303.78
+            "utilization_avg_percent": 66.0,
+            "utilization_peak_percent": 99.0,
+            "memory_peak_mib": 21169.0,
+            "temperature_peak_c": 70.0,
+            "power_peak_w": 319.8
           },
           "cpu_ram": {
-            "ram_peak_mib": 4575.73
+            "ram_peak_mib": 10783.66
           }
         }
+      },
+      "model_metrics": {
+        "request_count": 2,
+        "prompt_tokens": 2710,
+        "output_tokens": 17,
+        "prompt_eval_duration_ns": 1263643000,
+        "eval_duration_ns": 315927000,
+        "load_duration_ns": 9954399199,
+        "total_duration_ns": 11547915708,
+        "prompt_tokens_per_second": 2144.5930535760494,
+        "output_tokens_per_second": 53.809899122265584
       },
       "response": "LETTO",
       "error": null
@@ -127,7 +138,7 @@
     {
       "name": "T02_precise_retrieval",
       "success": true,
-      "elapsed_seconds": 1.602,
+      "elapsed_seconds": 1.682,
       "tool_calls": [
         {
           "name": "read_file",
@@ -149,88 +160,99 @@
       "telemetry": {
         "samples": [
           {
-            "timestamp_utc": "2026-08-16T22:17:17.950982+00:00",
+            "timestamp_utc": "2026-08-18T21:38:20.208952+00:00",
             "gpu": {
               "available": true,
-              "timestamp": "2026/08/17 00:17:17.965",
-              "gpu_utilization_percent": 89.0,
-              "memory_used_mib": 20826.0,
+              "timestamp": "2026/08/18 23:38:20.223",
+              "gpu_utilization_percent": 43.0,
+              "memory_used_mib": 21169.0,
               "memory_total_mib": 24576.0,
-              "temperature_c": 64.0,
-              "power_draw_w": 303.78
+              "temperature_c": 70.0,
+              "power_draw_w": 318.07
             },
             "cpu_ram": {
               "available": true,
               "load_average": {
-                "1m": 2.69677734375,
-                "5m": 2.5380859375,
-                "15m": 2.33349609375
+                "1m": 1.4638671875,
+                "5m": 0.99462890625,
+                "15m": 0.83984375
               },
-              "ram_total_mib": 62152.77,
-              "ram_available_mib": 57691.22,
-              "ram_used_mib": 4461.55
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 51363.64,
+              "ram_used_mib": 10789.12
             }
           },
           {
-            "timestamp_utc": "2026-08-16T22:17:19.507661+00:00",
+            "timestamp_utc": "2026-08-18T21:38:21.844217+00:00",
             "gpu": {
               "available": true,
-              "timestamp": "2026/08/17 00:17:19.522",
-              "gpu_utilization_percent": 97.0,
-              "memory_used_mib": 20826.0,
+              "timestamp": "2026/08/18 23:38:21.859",
+              "gpu_utilization_percent": 98.0,
+              "memory_used_mib": 21141.0,
               "memory_total_mib": 24576.0,
-              "temperature_c": 63.0,
-              "power_draw_w": 314.21
+              "temperature_c": 68.0,
+              "power_draw_w": 321.55
             },
             "cpu_ram": {
               "available": true,
               "load_average": {
-                "1m": 2.80126953125,
-                "5m": 2.5625,
-                "15m": 2.3427734375
+                "1m": 1.4638671875,
+                "5m": 0.99462890625,
+                "15m": 0.83984375
               },
-              "ram_total_mib": 62152.77,
-              "ram_available_mib": 57444.09,
-              "ram_used_mib": 4708.68
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 50998.93,
+              "ram_used_mib": 11153.82
             }
           },
           {
-            "timestamp_utc": "2026-08-16T22:17:19.530719+00:00",
+            "timestamp_utc": "2026-08-18T21:38:21.867970+00:00",
             "gpu": {
               "available": true,
-              "timestamp": "2026/08/17 00:17:19.544",
-              "gpu_utilization_percent": 97.0,
-              "memory_used_mib": 20826.0,
+              "timestamp": "2026/08/18 23:38:21.882",
+              "gpu_utilization_percent": 98.0,
+              "memory_used_mib": 21141.0,
               "memory_total_mib": 24576.0,
-              "temperature_c": 63.0,
-              "power_draw_w": 314.21
+              "temperature_c": 68.0,
+              "power_draw_w": 321.55
             },
             "cpu_ram": {
               "available": true,
               "load_average": {
-                "1m": 2.80126953125,
-                "5m": 2.5625,
-                "15m": 2.3427734375
+                "1m": 1.4638671875,
+                "5m": 0.99462890625,
+                "15m": 0.83984375
               },
-              "ram_total_mib": 62152.77,
-              "ram_available_mib": 57451.65,
-              "ram_used_mib": 4701.12
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 50998.45,
+              "ram_used_mib": 11154.31
             }
           }
         ],
         "summary": {
           "sample_count": 3,
           "gpu": {
-            "utilization_avg_percent": 94.33333333333333,
-            "utilization_peak_percent": 97.0,
-            "memory_peak_mib": 20826.0,
-            "temperature_peak_c": 64.0,
-            "power_peak_w": 314.21
+            "utilization_avg_percent": 79.66666666666667,
+            "utilization_peak_percent": 98.0,
+            "memory_peak_mib": 21169.0,
+            "temperature_peak_c": 70.0,
+            "power_peak_w": 321.55
           },
           "cpu_ram": {
-            "ram_peak_mib": 4708.68
+            "ram_peak_mib": 11154.31
           }
         }
+      },
+      "model_metrics": {
+        "request_count": 2,
+        "prompt_tokens": 1911,
+        "output_tokens": 35,
+        "prompt_eval_duration_ns": 354715000,
+        "eval_duration_ns": 706761000,
+        "load_duration_ns": 393266888,
+        "total_duration_ns": 1601303595,
+        "prompt_tokens_per_second": 5387.423706355807,
+        "output_tokens_per_second": 49.52169120820193
       },
       "response": "1. Next Steps\n2. Maturity phases\n3. Immediate architectural validation",
       "error": null
@@ -238,7 +260,7 @@
     {
       "name": "T03_architecture_evidence",
       "success": true,
-      "elapsed_seconds": 25.186,
+      "elapsed_seconds": 31.446,
       "tool_calls": [
         {
           "name": "search",
@@ -261,7 +283,7 @@
         {
           "name": "search",
           "arguments": {
-            "pattern": "Home Assistant"
+            "pattern": "Home Assistant boundary"
           }
         },
         {
@@ -284,96 +306,107 @@
       "telemetry": {
         "samples": [
           {
-            "timestamp_utc": "2026-08-16T22:17:19.552971+00:00",
+            "timestamp_utc": "2026-08-18T21:38:21.890754+00:00",
             "gpu": {
               "available": true,
-              "timestamp": "2026/08/17 00:17:19.567",
-              "gpu_utilization_percent": 97.0,
-              "memory_used_mib": 20826.0,
+              "timestamp": "2026/08/18 23:38:21.906",
+              "gpu_utilization_percent": 98.0,
+              "memory_used_mib": 21141.0,
               "memory_total_mib": 24576.0,
-              "temperature_c": 63.0,
-              "power_draw_w": 314.21
+              "temperature_c": 68.0,
+              "power_draw_w": 309.77
             },
             "cpu_ram": {
               "available": true,
               "load_average": {
-                "1m": 2.80126953125,
-                "5m": 2.5625,
-                "15m": 2.3427734375
+                "1m": 1.4638671875,
+                "5m": 0.99462890625,
+                "15m": 0.83984375
               },
-              "ram_total_mib": 62152.77,
-              "ram_available_mib": 57460.38,
-              "ram_used_mib": 4692.38
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 50993.63,
+              "ram_used_mib": 11159.12
             }
           },
           {
-            "timestamp_utc": "2026-08-16T22:17:44.693392+00:00",
+            "timestamp_utc": "2026-08-18T21:38:53.291433+00:00",
             "gpu": {
               "available": true,
-              "timestamp": "2026/08/17 00:17:44.708",
-              "gpu_utilization_percent": 55.0,
-              "memory_used_mib": 20826.0,
+              "timestamp": "2026/08/18 23:38:53.305",
+              "gpu_utilization_percent": 82.0,
+              "memory_used_mib": 21128.0,
               "memory_total_mib": 24576.0,
-              "temperature_c": 67.0,
-              "power_draw_w": 342.23
+              "temperature_c": 70.0,
+              "power_draw_w": 347.47
             },
             "cpu_ram": {
               "available": true,
               "load_average": {
-                "1m": 2.59423828125,
-                "5m": 2.533203125,
-                "15m": 2.33935546875
+                "1m": 1.708984375,
+                "5m": 1.10595703125,
+                "15m": 0.88330078125
               },
-              "ram_total_mib": 62152.77,
-              "ram_available_mib": 57162.98,
-              "ram_used_mib": 4989.78
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 50975.27,
+              "ram_used_mib": 11177.49
             }
           },
           {
-            "timestamp_utc": "2026-08-16T22:17:44.716387+00:00",
+            "timestamp_utc": "2026-08-18T21:38:53.314699+00:00",
             "gpu": {
               "available": true,
-              "timestamp": "2026/08/17 00:17:44.731",
-              "gpu_utilization_percent": 55.0,
-              "memory_used_mib": 20826.0,
+              "timestamp": "2026/08/18 23:38:53.329",
+              "gpu_utilization_percent": 82.0,
+              "memory_used_mib": 21128.0,
               "memory_total_mib": 24576.0,
-              "temperature_c": 67.0,
-              "power_draw_w": 342.23
+              "temperature_c": 68.0,
+              "power_draw_w": 347.47
             },
             "cpu_ram": {
               "available": true,
               "load_average": {
-                "1m": 2.59423828125,
-                "5m": 2.533203125,
-                "15m": 2.33935546875
+                "1m": 1.708984375,
+                "5m": 1.10595703125,
+                "15m": 0.88330078125
               },
-              "ram_total_mib": 62152.77,
-              "ram_available_mib": 57176.85,
-              "ram_used_mib": 4975.92
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 50976.91,
+              "ram_used_mib": 11175.85
             }
           }
         ],
         "summary": {
           "sample_count": 3,
           "gpu": {
-            "utilization_avg_percent": 69.0,
-            "utilization_peak_percent": 97.0,
-            "memory_peak_mib": 20826.0,
-            "temperature_peak_c": 67.0,
-            "power_peak_w": 342.23
+            "utilization_avg_percent": 87.33333333333333,
+            "utilization_peak_percent": 98.0,
+            "memory_peak_mib": 21141.0,
+            "temperature_peak_c": 70.0,
+            "power_peak_w": 347.47
           },
           "cpu_ram": {
-            "ram_peak_mib": 4989.78
+            "ram_peak_mib": 11177.49
           }
         }
       },
-      "response": "Based on the provided context, here is the classification of the requested concepts:\n\n### **Core**\n- **Classification:** IMPLEMENTATO\n- **Evidence:** File: `gaia-bootstrap-poc/src/gaia/core/request_router.py`\n\n### **Capability**\n- **Classification:** IMPLEMENTATO\n- **Evidence:** File: `gaia-bootstrap-poc/src/gaia/home/read_opening_state_capability.py`\n\n### **Adapter**\n- **Classification:** IMPLEMENTATO\n- **Evidence:** File: `gaia-bootstrap-poc/src/gaia/adapters/fake_home_assistant_adapter.py`\n\n### **Home Assistant boundary**\n- **Classification:** IMPLEMENTATO\n- **Evidence:** File: `adr/ADR-0004-HomeAssistant-Boundary.md`\n\n### **Bootstrap POC**\n- **Classification:** IMPLEMENTATO\n- **Evidence:** File: `gaia-bootstrap-poc/README.md`\n\nThis classification is based on the evidence found in the repository and adheres to the instructions provided.",
+      "model_metrics": {
+        "request_count": 2,
+        "prompt_tokens": 29741,
+        "output_tokens": 402,
+        "prompt_eval_duration_ns": 19923044000,
+        "eval_duration_ns": 10141476000,
+        "load_duration_ns": 383426678,
+        "total_duration_ns": 30793420567,
+        "prompt_tokens_per_second": 1492.7939726479547,
+        "output_tokens_per_second": 39.63920044774547
+      },
+      "response": "The Bootstrap POC in the GAIA project is a prototype that validates the architecture for reading home entry states through a replaceable adapter while maintaining independence from real external systems. Here are the key points about the Bootstrap POC:\n\n1. **Core**: The Core of the GAIA system is defined in `gaia-bootstrap-poc/src/gaia/core/request_router.py`. It handles deterministic routing of requests and coordination between capabilities. The Core is independent of external systems like Home Assistant, demonstrating separation of concerns.\n\n2. **Capability**: The `ReadOpeningStateCapability` is a concrete example of a capability used in the Bootstrap POC. Capabilities are implemented to remain independent of their execution binding, and they validate provider responses before producing success.\n\n3. **Adapter**: The `FakeHomeAssistantAdapter` is a deterministic simulation of Home Assistant interactions during the bootstrap phase. Adapters implement a specific protocol (`OpeningStateProvider`) to provide external state observations without making decisions about source state.\n\n4. **Home Assistant Boundary**: The Home Assistant boundary is defined in ADR-0004 and separates GAIA from Home Assistant. It is an external adapter, not part of the Core. The boundary is still under discussion and not finalized, as indicated by the ADR.\n\n5. **Bootstrap POC**: The Bootstrap POC is a small working project that implements Core, Capability, and Adapter, demonstrating the existence of a bootstrap Proof-of-Concept.\n\nThe evidence shows that the capability model is validated through the Bootstrap POC, which demonstrates the separation between Core, Home Domain, Capability, and Adapter. The tests confirm that capabilities remain independent of their execution binding and that the adapter contract ensures bounded failure behavior.",
       "error": null
     },
     {
       "name": "T04_evidence_verification",
       "success": true,
-      "elapsed_seconds": 10.514,
+      "elapsed_seconds": 14.268,
       "tool_calls": [
         {
           "name": "search",
@@ -396,7 +429,7 @@
         {
           "name": "search",
           "arguments": {
-            "pattern": "Home Assistant"
+            "pattern": "Home Assistant boundary"
           }
         },
         {
@@ -419,90 +452,267 @@
       "telemetry": {
         "samples": [
           {
-            "timestamp_utc": "2026-08-16T22:17:44.739245+00:00",
+            "timestamp_utc": "2026-08-18T21:38:53.336978+00:00",
             "gpu": {
               "available": true,
-              "timestamp": "2026/08/17 00:17:44.753",
-              "gpu_utilization_percent": 55.0,
-              "memory_used_mib": 20826.0,
+              "timestamp": "2026/08/18 23:38:53.352",
+              "gpu_utilization_percent": 82.0,
+              "memory_used_mib": 21136.0,
               "memory_total_mib": 24576.0,
-              "temperature_c": 67.0,
-              "power_draw_w": 342.23
+              "temperature_c": 68.0,
+              "power_draw_w": 347.47
             },
             "cpu_ram": {
               "available": true,
               "load_average": {
-                "1m": 2.59423828125,
-                "5m": 2.533203125,
-                "15m": 2.33935546875
+                "1m": 1.708984375,
+                "5m": 1.10595703125,
+                "15m": 0.88330078125
               },
-              "ram_total_mib": 62152.77,
-              "ram_available_mib": 57182.09,
-              "ram_used_mib": 4970.67
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 50973.53,
+              "ram_used_mib": 11179.23
             }
           },
           {
-            "timestamp_utc": "2026-08-16T22:17:55.204407+00:00",
+            "timestamp_utc": "2026-08-18T21:39:07.559040+00:00",
             "gpu": {
               "available": true,
-              "timestamp": "2026/08/17 00:17:55.220",
-              "gpu_utilization_percent": 97.0,
-              "memory_used_mib": 20851.0,
+              "timestamp": "2026/08/18 23:39:07.573",
+              "gpu_utilization_percent": 98.0,
+              "memory_used_mib": 21112.0,
               "memory_total_mib": 24576.0,
-              "temperature_c": 69.0,
-              "power_draw_w": 348.56
+              "temperature_c": 70.0,
+              "power_draw_w": 349.73
             },
             "cpu_ram": {
               "available": true,
               "load_average": {
-                "1m": 2.89111328125,
-                "5m": 2.5986328125,
-                "15m": 2.36328125
+                "1m": 1.77978515625,
+                "5m": 1.150390625,
+                "15m": 0.90234375
               },
-              "ram_total_mib": 62152.77,
-              "ram_available_mib": 56816.08,
-              "ram_used_mib": 5336.68
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 51140.75,
+              "ram_used_mib": 11012.0
             }
           },
           {
-            "timestamp_utc": "2026-08-16T22:17:55.230426+00:00",
+            "timestamp_utc": "2026-08-18T21:39:07.582032+00:00",
             "gpu": {
               "available": true,
-              "timestamp": "2026/08/17 00:17:55.244",
-              "gpu_utilization_percent": 97.0,
-              "memory_used_mib": 20851.0,
+              "timestamp": "2026/08/18 23:39:07.596",
+              "gpu_utilization_percent": 98.0,
+              "memory_used_mib": 21112.0,
               "memory_total_mib": 24576.0,
-              "temperature_c": 69.0,
-              "power_draw_w": 348.56
+              "temperature_c": 70.0,
+              "power_draw_w": 342.79
             },
             "cpu_ram": {
               "available": true,
               "load_average": {
-                "1m": 2.89111328125,
-                "5m": 2.5986328125,
-                "15m": 2.36328125
+                "1m": 1.77978515625,
+                "5m": 1.150390625,
+                "15m": 0.90234375
               },
-              "ram_total_mib": 62152.77,
-              "ram_available_mib": 56816.23,
-              "ram_used_mib": 5336.54
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 51136.81,
+              "ram_used_mib": 11015.95
             }
           }
         ],
         "summary": {
           "sample_count": 3,
           "gpu": {
-            "utilization_avg_percent": 83.0,
-            "utilization_peak_percent": 97.0,
-            "memory_peak_mib": 20851.0,
-            "temperature_peak_c": 69.0,
-            "power_peak_w": 348.56
+            "utilization_avg_percent": 92.66666666666667,
+            "utilization_peak_percent": 98.0,
+            "memory_peak_mib": 21136.0,
+            "temperature_peak_c": 70.0,
+            "power_peak_w": 349.73
           },
           "cpu_ram": {
-            "ram_peak_mib": 5336.68
+            "ram_peak_mib": 11179.23
           }
         }
       },
-      "response": "Based on the analysis of the GAIA repository, here is the classification of the requested concepts:\n\n### Core\n- **Classification:** IMPLEMENTATO\n- **Evidence:** File: `gaia-bootstrap-poc/src/gaia/core/request_router.py`\n\n### Capability\n- **Classification:** IMPLEMENTATO\n- **Evidence:** File: `gaia-bootstrap-poc/src/gaia/home/read_opening_state_capability.py`\n\n### Adapter\n- **Classification:** IMPLEMENTATO\n- **Evidence:** File: `gaia-bootstrap-poc/src/gaia/adapters/fake_home_assistant_adapter.py`\n\n### Home Assistant boundary\n- **Classification:** IMPLEMENTATO\n- **Evidence:** File: `adr/ADR-0004-HomeAssistant-Boundary.md`\n\n### Bootstrap POC\n- **Classification:** IMPLEMENTATO\n- **Evidence:** File: `gaia-bootstrap-poc/README.md`\n\nThis analysis strictly adheres to the information available in the repository and avoids using external knowledge.",
+      "model_metrics": {
+        "request_count": 2,
+        "prompt_tokens": 29860,
+        "output_tokens": 436,
+        "prompt_eval_duration_ns": 170824000,
+        "eval_duration_ns": 10516779000,
+        "load_duration_ns": 398161702,
+        "total_duration_ns": 13890731456,
+        "prompt_tokens_per_second": 174799.7939399616,
+        "output_tokens_per_second": 41.4575603423824
+      },
+      "response": "The Bootstrap POC in the GAIA project is a prototype that validates the architecture for reading home entry states through a replaceable adapter while maintaining independence from real external systems. It includes deterministic tests to verify adapter behavior and ensure it contains only external-state access. The Bootstrap POC proves that real adapters can replace the fake one without changing core logic.\n\nHere are the key components and their implementations:\n\n1. **Core**: The Core of the GAIA system is defined in `gaia-bootstrap-poc/src/gaia/core/request_router.py`. It handles deterministic routing of requests and coordination between capabilities. The Core is independent of external systems like Home Assistant, demonstrating separation of concerns.\n\n2. **Capability**: The `ReadOpeningStateCapability` is a concrete example of a capability used in the Bootstrap POC. Capabilities are implemented to remain independent of their execution binding, and they validate provider responses before producing success.\n\n3. **Adapter**: The `FakeHomeAssistantAdapter` is a deterministic simulation of Home Assistant interactions during the bootstrap phase. Adapters implement a specific protocol (`OpeningStateProvider`) to provide external state observations without making decisions about source state.\n\n4. **Home Assistant Boundary**: The Home Assistant boundary is defined in ADR-0004 and separates GAIA from Home Assistant. It is an external adapter, not part of the Core. The boundary is still under discussion and not finalized, as indicated by the ADR.\n\n5. **Bootstrap POC**: The Bootstrap POC is a small working project that implements Core, Capability, and Adapter, demonstrating the existence of a bootstrap Proof-of-Concept.\n\nThe evidence shows that the capability model is validated through the Bootstrap POC, which demonstrates the separation between Core, Home Domain, Capability, and Adapter. The tests confirm that capabilities remain independent of their execution binding and that the adapter contract ensures bounded failure behavior.",
+      "error": null
+    },
+    {
+      "name": "T05_adr_status_and_gate",
+      "success": true,
+      "elapsed_seconds": 35.891,
+      "tool_calls": [
+        {
+          "name": "read_file",
+          "arguments": {
+            "filePath": "gaia-bootstrap-poc/architecture/ADR_VALIDATION_MATRIX.yaml"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "ADR-0001"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "ADR-0002"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "ADR-0003"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "ADR-0004"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "ADR-0005"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "ADR-0006"
+          }
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "pattern": "ADR-0007"
+          }
+        }
+      ],
+      "tool_verification": {
+        "required_tools": [
+          "read_file",
+          "search"
+        ],
+        "actual_tools": [
+          "read_file",
+          "search"
+        ],
+        "missing_tools": [],
+        "tool_use_pass": true
+      },
+      "telemetry": {
+        "samples": [
+          {
+            "timestamp_utc": "2026-08-18T21:39:07.605217+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/18 23:39:07.621",
+              "gpu_utilization_percent": 55.0,
+              "memory_used_mib": 21120.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 70.0,
+              "power_draw_w": 342.79
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 1.77978515625,
+                "5m": 1.150390625,
+                "15m": 0.90234375
+              },
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 51129.65,
+              "ram_used_mib": 11023.11
+            }
+          },
+          {
+            "timestamp_utc": "2026-08-18T21:39:43.450748+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/18 23:39:43.465",
+              "gpu_utilization_percent": 98.0,
+              "memory_used_mib": 21112.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 71.0,
+              "power_draw_w": 348.86
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 1.685546875,
+                "5m": 1.1962890625,
+                "15m": 0.92822265625
+              },
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 46308.03,
+              "ram_used_mib": 15844.73
+            }
+          },
+          {
+            "timestamp_utc": "2026-08-18T21:39:43.474835+00:00",
+            "gpu": {
+              "available": true,
+              "timestamp": "2026/08/18 23:39:43.488",
+              "gpu_utilization_percent": 98.0,
+              "memory_used_mib": 21112.0,
+              "memory_total_mib": 24576.0,
+              "temperature_c": 71.0,
+              "power_draw_w": 342.48
+            },
+            "cpu_ram": {
+              "available": true,
+              "load_average": {
+                "1m": 1.685546875,
+                "5m": 1.1962890625,
+                "15m": 0.92822265625
+              },
+              "ram_total_mib": 62152.76,
+              "ram_available_mib": 46303.7,
+              "ram_used_mib": 15849.06
+            }
+          }
+        ],
+        "summary": {
+          "sample_count": 3,
+          "gpu": {
+            "utilization_avg_percent": 83.66666666666667,
+            "utilization_peak_percent": 98.0,
+            "memory_peak_mib": 21120.0,
+            "temperature_peak_c": 71.0,
+            "power_peak_w": 348.86
+          },
+          "cpu_ram": {
+            "ram_peak_mib": 15849.06
+          }
+        }
+      },
+      "model_metrics": {
+        "request_count": 3,
+        "prompt_tokens": 28939,
+        "output_tokens": 596,
+        "prompt_eval_duration_ns": 18341221000,
+        "eval_duration_ns": 14209031999,
+        "load_duration_ns": 575500504,
+        "total_duration_ns": 35436669318,
+        "prompt_tokens_per_second": 1577.812076960416,
+        "output_tokens_per_second": 41.945151509402265
+      },
+      "response": "Here is the summary of the ADR status and gate information from the provided context:\n\n### ADR-0001: Core Boundary\n- **Status**: ACCEPTED\n- **Authoritative File**: `adr/ADR-0001-Core-Boundary.md`\n- **Gate**: NO\n- **Conflict**: None\n\n### ADR-0002: Memory Semantics\n- **Status**: PROPOSED\n- **Authoritative File**: `adr/ADR-0002-Memory-Semantics.md`\n- **Gate**: NO\n- **Conflict**: None\n\n### ADR-0003: Capability Model\n- **Status**: ACCEPTED\n- **Authoritative File**: `adr/ADR-0003-Capability-Model_Accepted.md`\n- **Gate**: NO\n- **Conflict**: There is also `adr/ADR-0003-Capability-Model.md`, but it is PROPOSED; the accepted file is authoritative.\n\n### ADR-0004: Home Assistant Boundary\n- **Status**: PROPOSED\n- **Authoritative File**: `adr/ADR-0004-HomeAssistant-Boundary.md`\n- **Gate**: YES\n- **Conflict**: None\n\n### ADR-0005: Communication State\n- **Status**: PROPOSED\n- **Authoritative File**: `adr/ADR-0005-Communication-State.md`\n- **Gate**: NO\n- **Conflict**: None\n\n### ADR-0006: Tool Trust\n- **Status**: PROPOSED\n- **Authoritative File**: `adr/ADR-0006-Tool-Trust.md`\n- **Gate**: YES\n- **Conflict**: None\n\n### ADR-0007: Event Semantics\n- **Status**: PROPOSED\n- **Authoritative File**: `adr/ADR-0007-Event-Semantics.md`\n- **Gate**: NO\n- **Conflict**: None\n\nThis summary is based on the information provided in the context and reflects the current status of each ADR.",
       "error": null
     }
   ]
