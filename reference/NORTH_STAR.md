@@ -22,7 +22,16 @@ GAIA should help its owner think, decide, remember, coordinate and act with less
 - capabilities that are safe because authority is bounded and auditable;
 - replaceable models, runtimes, adapters and interfaces;
 - graceful degradation when the 3090, NAS, cloud or network is unavailable;
-- sustainable operation by one human plus AI collaborators.
+- sustainable operation by one human plus AI collaborators;
+- reuse of mature external technology where it solves a bounded problem without taking ownership of GAIA's semantics or authority.
+
+## Technology posture
+
+GAIA should neither rebuild everything nor outsource its identity.
+
+When an existing tool, library, runtime or service can satisfy a bounded need, evaluate it before creating new GAIA-specific infrastructure. Selection must remain evidence-based, bounded, replaceable where practical and subordinate to GAIA's contracts.
+
+External coordination tools may support the human control plane in the future, but they do not become GAIA runtime architecture merely because they are used for project communication, approvals, tracking or reporting.
 
 ## Not the goal
 
