@@ -184,9 +184,39 @@ if command -v nvidia-smi &> /dev/null; then
     fi
 fi
 
-# Output model inventory for evidence generation
-echo "MODEL_INVENTORY_COUNT: 0"
-echo "ACTUAL_MODEL_INVENTORY: []"
+# Extract actual model inventory from Ollama API for evidence generation
+if command -v curl &> /dev/null && command -v jq &> /dev/null; then
+    MODEL_INVENTORY_JSON=$(curl -s http://localhost:11434/api/tags 2>/dev/null)
+    if [ ! -z "$MODEL_INVENTORY_JSON" ]; then
+        # Validate that we got valid JSON from the API
+        if echo "$MODEL_INVENTORY_JSON" | jq empty >/dev/null 2>&1; then
+            # Extract model names and count properly 
+            MODEL_COUNT=$(echo "$MODEL_INVENTORY_JSON" | jq -r '.models[].name' 2>/dev/null | wc -l)
+            MODEL_NAMES=$(echo "$MODEL_INVENTORY_JSON" | jq -r '.models[].name' 2>/dev/null | jq -R . | jq -s .)
+            
+            if [ "$MODEL_COUNT" -gt 0 ] && [ ! -z "$MODEL_NAMES" ]; then
+                echo "MODEL_INVENTORY_COUNT: $MODEL_COUNT"
+                echo "ACTUAL_MODEL_INVENTORY: $MODEL_NAMES"
+            else
+                # Fallback to empty array if we can't extract models properly
+                echo "MODEL_INVENTORY_COUNT: 0"
+                echo "ACTUAL_MODEL_INVENTORY: []"
+            fi
+        else
+            # If JSON is invalid, fallback to empty inventory
+            echo "MODEL_INVENTORY_COUNT: 0"
+            echo "ACTUAL_MODEL_INVENTORY: []"
+        fi
+    else
+        # If we can't get API response, fallback to empty inventory
+        echo "MODEL_INVENTORY_COUNT: 0"
+        echo "ACTUAL_MODEL_INVENTORY: []"
+    fi
+else
+    # If curl or jq are not available, fallback to empty inventory
+    echo "MODEL_INVENTORY_COUNT: 0"
+    echo "ACTUAL_MODEL_INVENTORY: []"
+fi
 
 # Helper function to count models properly
 count_models() {

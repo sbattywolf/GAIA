@@ -18,6 +18,9 @@ venv/
 .vscode/
 .DS_Store
 
+# Ollama runtime data (should not be committed)
+gaia_1070_model_runtime/ollama-data/
+
 # Logs
 *.log
 
