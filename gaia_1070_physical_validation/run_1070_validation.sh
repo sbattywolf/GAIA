@@ -115,10 +115,20 @@ if [ -f "validate.sh" ]; then
     sed -i 's/127.0.0.1:11435/localhost:11434/g' validate_temp.sh
     
     chmod +x validate_temp.sh
-    ./validate_temp.sh
     
-    # Remove the temporary file
+    # Capture output from validate.sh execution directly, not running twice
+    VALIDATE_OUTPUT=$(./validate_temp.sh 2>&1)
+    
+    # Remove the temporary file immediately after capture
     rm validate_temp.sh
+    
+    # Check if validation was blocked due to target mismatch (exit code 2)
+    if [ $? -eq 2 ]; then
+        log "Validation BLOCKED due to target mismatch"
+        echo ""
+        echo "Final Result: BLOCKED"
+        exit 2
+    fi
 else
     fail_fast "Validation script not found in package"
 fi
@@ -126,6 +136,40 @@ fi
 # Step 6: Generate final evidence
 log "Step 6: Generating final validation evidence"
 echo ""
+
+# Extract data from captured output
+OBSERVED_HARDWARE=$(echo "$VALIDATE_OUTPUT" | grep "OBSERVED_HARDWARE:" | cut -d' ' -f2-)
+MODEL_INVENTORY_COUNT=$(echo "$VALIDATE_OUTPUT" | grep "MODEL_INVENTORY_COUNT:" | cut -d' ' -f2-)
+
+# If we couldn't capture the data from validate.sh, use fallback values
+if [ -z "$OBSERVED_HARDWARE" ]; then
+    OBSERVED_HARDWARE="GPU=Unknown, VRAM=Unknown MB"
+fi
+
+if [ -z "$MODEL_INVENTORY_COUNT" ]; then
+    MODEL_INVENTORY_COUNT=0
+fi
+
+# Extract GPU and VRAM from the OBSERVED_HARDWARE string
+GPU_INFO=$(echo "$OBSERVED_HARDWARE" | cut -d'=' -f2 | cut -d',' -f1)
+VRAM_INFO=$(echo "$OBSERVED_HARDWARE" | cut -d'=' -f3 | cut -d' ' -f1)
+
+# Also capture the actual model inventory for evidence
+ACTUAL_MODEL_INVENTORY=$(echo "$VALIDATE_OUTPUT" | grep "ACTUAL_MODEL_INVENTORY:" | cut -d' ' -f2-)
+if [ -z "$ACTUAL_MODEL_INVENTORY" ]; then
+    # Try to parse from the full output if it's a JSON array or object
+    ACTUAL_MODEL_INVENTORY="[]"
+fi
+
+# Validate that we have actual model inventory data
+if [ "$ACTUAL_MODEL_INVENTORY" = "[]" ] || [ -z "$ACTUAL_MODEL_INVENTORY" ]; then
+    # Try to get the model inventory directly from Ollama API as a fallback
+    FALLBACK_MODEL_INVENTORY=$(curl -s http://localhost:11434/api/tags | jq -r '.models[].name' 2>/dev/null | tr '\n' ',' | sed 's/,$//')
+    if [ ! -z "$FALLBACK_MODEL_INVENTORY" ]; then
+        # Create a proper JSON array from the fallback data
+        ACTUAL_MODEL_INVENTORY="[\"$FALLBACK_MODEL_INVENTORY\"]"
+    fi
+fi
 
 # Create sanitized evidence file with clear distinction between observed and inferred data
 cat > "$EVIDENCE_FILE" << EOF
@@ -136,12 +180,16 @@ cat > "$EVIDENCE_FILE" << EOF
   "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
   "observed": {
     "hardware": {
-      "gpu": "NVIDIA GeForce RTX 3090",
-      "memory": "24576 MB"
+      "gpu": "$GPU_INFO",
+      "memory": "$VRAM_INFO MB"
     },
     "system": {
       "docker_version": "$(docker --version 2>/dev/null || echo 'unknown')",
       "ollama_version": "$(curl -s http://localhost:11434/api/version 2>/dev/null | jq -r .version || echo 'unknown')"
+    },
+    "model_inventory": {
+      "count": "$MODEL_INVENTORY_COUNT",
+      "models": $ACTUAL_MODEL_INVENTORY
     }
   },
   "historical": {
