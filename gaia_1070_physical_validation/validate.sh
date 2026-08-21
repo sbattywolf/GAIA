@@ -178,7 +178,9 @@ if command -v nvidia-smi &> /dev/null; then
     GPU_INFO=$(nvidia-smi --query-gpu=name --format=csv,noheader,nounits | head -1)
     VRAM_INFO=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -1)
     if [ ! -z "$GPU_INFO" ] && [ ! -z "$VRAM_INFO" ]; then
-        echo "OBSERVED_HARDWARE: GPU=$GPU_INFO, VRAM=$VRAM_INFO MB"
+        # Sanitize GPU name by removing control characters (newlines, tabs, carriage returns)
+        SANITIZED_GPU=$(printf '%s' "$GPU_INFO" | tr -d '\n\r\t')
+        echo "OBSERVED_HARDWARE: GPU=$SANITIZED_GPU, VRAM=$VRAM_INFO MB"
     fi
 fi
 
@@ -337,7 +339,9 @@ if command -v nvidia-smi &> /dev/null; then
     GPU_INFO=$(nvidia-smi --query-gpu=name --format=csv,noheader,nounits | head -1)
     VRAM_INFO=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits | head -1)
     if [ ! -z "$GPU_INFO" ] && [ ! -z "$VRAM_INFO" ]; then
-        echo "OBSERVED_HARDWARE: GPU=$GPU_INFO, VRAM=$VRAM_INFO MB"
+        # Sanitize GPU name by removing control characters (newlines, tabs, carriage returns)
+        SANITIZED_GPU=$(printf '%s' "$GPU_INFO" | tr -d '\n\r\t')
+        echo "OBSERVED_HARDWARE: GPU=$SANITIZED_GPU, VRAM=$VRAM_INFO MB"
     fi
 fi
 
