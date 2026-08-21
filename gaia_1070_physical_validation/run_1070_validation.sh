@@ -171,41 +171,50 @@ if [ "$ACTUAL_MODEL_INVENTORY" = "[]" ] || [ -z "$ACTUAL_MODEL_INVENTORY" ]; the
     fi
 fi
 
-# Create sanitized evidence file with clear distinction between observed and inferred data
-cat > "$EVIDENCE_FILE" << EOF
-{
-  "target": "$TARGET_HOST",
-  "physical_validation": "PASS",
-  "validation_type": "1070_PHYSICAL",
-  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-  "observed": {
-    "hardware": {
-      "gpu": "$GPU_INFO",
-      "memory": "$VRAM_INFO MB"
+# Create final evidence JSON using jq for safe string interpolation
+jq -n \
+  --arg target "$TARGET_HOST" \
+  --arg physical_validation "PASS" \
+  --arg validation_type "1070_PHYSICAL" \
+  --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  --arg gpu "$GPU_INFO" \
+  --arg vram "${VRAM_INFO} MB" \
+  --arg docker_version "$(docker --version 2>/dev/null || echo 'unknown')" \
+  --arg ollama_version "$(curl -s http://localhost:11434/api/version 2>/dev/null | jq -r .version || echo 'unknown')" \
+  --arg model_count "$MODEL_INVENTORY_COUNT" \
+  --arg actual_models "$ACTUAL_MODEL_INVENTORY" \
+  '{
+    target: $target,
+    physical_validation: $physical_validation,
+    validation_type: $validation_type,
+    timestamp: $timestamp,
+    observed: {
+      hardware: {
+        gpu: $gpu,
+        memory: $vram
+      },
+      system: {
+        docker_version: $docker_version,
+        ollama_version: $ollama_version
+      },
+      model_inventory: {
+        count: $model_count,
+        models: ($actual_models | fromjson)
+      }
     },
-    "system": {
-      "docker_version": "$(docker --version 2>/dev/null || echo 'unknown')",
-      "ollama_version": "$(curl -s http://localhost:11434/api/version 2>/dev/null | jq -r .version || echo 'unknown')"
+    historical: {
+      model_validation: "qwen2.5-coder:14b",
+      target_host: "1070"
     },
-    "model_inventory": {
-      "count": "$MODEL_INVENTORY_COUNT",
-      "models": $ACTUAL_MODEL_INVENTORY
-    }
-  },
-  "historical": {
-    "model_validation": "qwen2.5-coder:14b",
-    "target_host": "1070"
-  },
-  "recommends": {
-    "next_step": "Proceed with physical model deployment after verification"
-  },
-  "notes": [
-    "This validation was performed on the physical 1070 target host",
-    "All checks passed successfully with no conflicts detected",
-    "No unrelated containers were modified or affected by this process"
-  ]
-}
-EOF
+    recommends: {
+      next_step: "Proceed with physical model deployment after verification"
+    },
+    notes: [
+      "This validation was performed on the physical 1070 target host",
+      "All checks passed successfully with no conflicts detected",
+      "No unrelated containers were modified or affected by this process"
+    ]
+  }' > "$EVIDENCE_FILE"
 
 log "Evidence file generated: $EVIDENCE_FILE"
 
