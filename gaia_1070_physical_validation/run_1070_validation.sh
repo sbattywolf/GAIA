@@ -157,8 +157,37 @@ VRAM_INFO=$(echo "$OBSERVED_HARDWARE" | cut -d'=' -f3 | cut -d' ' -f1)
 # Also capture the actual model inventory for evidence
 ACTUAL_MODEL_INVENTORY=$(echo "$VALIDATE_OUTPUT" | grep "ACTUAL_MODEL_INVENTORY:" | cut -d' ' -f2-)
 if [ -z "$ACTUAL_MODEL_INVENTORY" ]; then
-    # Try to parse from the full output if it's a JSON array or object
-    ACTUAL_MODEL_INVENTORY="[]"
+    # Try to get the model inventory directly from Ollama API as a fallback
+    FALLBACK_MODEL_INVENTORY=$(curl -s http://localhost:11434/api/tags 2>/dev/null | jq -r '.models[].name' 2>/dev/null)
+    if [ ! -z "$FALLBACK_MODEL_INVENTORY" ]; then
+        # Convert the model names to a proper JSON array format
+        MODEL_ARRAY="["
+        FIRST=true
+        echo "$FALLBACK_MODEL_INVENTORY" | while IFS= read -r model; do
+            if [ ! -z "$model" ]; then
+                if [ "$FIRST" = true ]; then
+                    MODEL_ARRAY="$MODEL_ARRAY\"$model\""
+                    FIRST=false
+                else
+                    MODEL_ARRAY="$MODEL_ARRAY,\"$model\""
+                fi
+            fi
+        done
+        MODEL_ARRAY="$MODEL_ARRAY]"
+        ACTUAL_MODEL_INVENTORY="$MODEL_ARRAY"
+    else
+        # If we can't get inventory from API, default to empty array but fail explicitly if this is a real issue
+        ACTUAL_MODEL_INVENTORY="[]"
+    fi
+fi
+
+# Validate that the model inventory is valid JSON before proceeding
+if [ ! -z "$ACTUAL_MODEL_INVENTORY" ]; then
+    # Check if it's valid JSON
+    if ! echo "$ACTUAL_MODEL_INVENTORY" | jq empty >/dev/null 2>&1; then
+        echo "ERROR: Invalid JSON in ACTUAL_MODEL_INVENTORY: $ACTUAL_MODEL_INVENTORY"
+        exit 1
+    fi
 fi
 
 # Create final evidence JSON using jq for safe string interpolation
@@ -172,7 +201,7 @@ jq -n \
   --arg docker_version "$(docker --version 2>/dev/null || echo 'unknown')" \
   --arg ollama_version "$(curl -s http://localhost:11434/api/version 2>/dev/null | jq -r .version || echo 'unknown')" \
   --arg model_count "$MODEL_INVENTORY_COUNT" \
-  --arg actual_models "$ACTUAL_MODEL_INVENTORY" \
+  --argjson actual_models "$ACTUAL_MODEL_INVENTORY" \
   '{
     target: $target,
     physical_validation: $physical_validation,
@@ -189,7 +218,7 @@ jq -n \
       },
       model_inventory: {
         count: $model_count,
-        models: ($actual_models | fromjson)
+        models: $actual_models
       }
     },
     historical: {
