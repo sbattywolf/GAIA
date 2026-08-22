@@ -32,7 +32,7 @@ This audit does not authorize deletion, movement, renaming, or archival.
 | `AGENTS.md` | retain-root | repository-level agent/development instructions |
 | `DOCUMENT_MANIFEST.md` | retain-root | retain pending documentation reconciliation |
 | `MANIFEST.txt` | retain-root | retain pending provenance/manifest reconciliation |
-| `REPOSITORY_STRUCTURE.md` | duplicate-candidate | reconcile lineage before changing |
+| `REPOSITORY_STRUCTURE_v0.3.md` | duplicate-candidate | reconcile lineage before changing |
 | `REPOSITORY_STRUCTURE_v0.2.md` | historical/reference candidate | compare with current structure documents |
 | `GAIA_ENGINEER_AS_IS_REVIEW.md` | report/review | retain until lineage and relevance are verified |
 | `REAL_HOME_ASSISTANT_ADAPTER_DESIGN.md` | design/reference candidate | retain; assess final ownership later |

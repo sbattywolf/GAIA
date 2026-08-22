@@ -306,7 +306,7 @@ The repository structure lists specific ADR filenames even though the decisions 
 
 **Resolution:** label them explicitly as a provisional candidate ADR set.
 
-**Required document update:** `REPOSITORY_STRUCTURE.md`  
+**Required document update:** `REPOSITORY_STRUCTURE_v0.3.md`  
 **ADR required:** No.
 
 ### 11.4 Project Phase Out of Date
@@ -588,7 +588,7 @@ The prototype should demonstrate only enough behaviour to test:
   - clarify the provisional relationship between Memory and Domain;
   - align term status with the current official model.
 
-- `REPOSITORY_STRUCTURE.md`
+- `REPOSITORY_STRUCTURE_v0.3.md`
   - mark listed ADR filenames as provisional candidates;
   - include this convergence document if it becomes part of the maintained structure.
 

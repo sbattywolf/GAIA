@@ -434,7 +434,7 @@ The following require further evidence or ADRs:
 | Document | Role |
 |---|---|
 | `README.md` | Project and repository entry point. |
-| `REPOSITORY_STRUCTURE.md` | Repository organisation and lifecycle. |
+| `REPOSITORY_STRUCTURE_v0.3.md` | Repository organisation and lifecycle. |
 | `DESIGN_PRINCIPLES.md` | Durable decision constraints. |
 | `IDENTITY.md` | What GAIA is and is not. |
 | `NORTH_STAR.md` | Long-term direction. |

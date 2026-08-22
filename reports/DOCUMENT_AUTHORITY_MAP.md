@@ -23,9 +23,9 @@ status take precedence over naming convention.
 
 | Document | Provisional status | Reason | Action |
 |---|---|---|---|
-| `REPOSITORY_STRUCTURE.md` | current-candidate | root-level current structure document | verify against actual repository |
+| `REPOSITORY_STRUCTURE_v0.3.md` | current-candidate | root-level current structure document | verify against actual repository |
 | `REPOSITORY_STRUCTURE_v0.2.md` | historical/convergence | explicitly versioned convergence-era snapshot | retain as historical evidence |
-| `reference/REPOSITORY_STRUCTURE.md` | current/reference-candidate | reference-area structure documentation | compare before deciding authority |
+| `reference/REPOSITORY_STRUCTURE_v0.1.md` | current/reference-candidate | reference-area structure documentation | compare before deciding authority |
 
 Decision:
 

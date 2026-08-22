@@ -11,15 +11,15 @@ mergeable.
 
 The repository now explicitly establishes:
 
-1. `REPOSITORY_STRUCTURE.md` — current repository-structure authority;
+1. `REPOSITORY_STRUCTURE_v0.3.md` — current repository-structure authority;
 2. `DOCUMENT_MANIFEST.md` — current documentation inventory;
 3. `MANIFEST.txt` — historical/provenance inventory;
 4. `REPOSITORY_STRUCTURE_v0.2.md` — historical convergence record;
-5. `reference/REPOSITORY_STRUCTURE.md` — recovered reference material.
+5. `reference/REPOSITORY_STRUCTURE_v0.1.md` — recovered reference material.
 
 The current `README.md` still predates that authority decision in two places:
 
-- it links readers to `reference/REPOSITORY_STRUCTURE.md`;
+- it links readers to `reference/REPOSITORY_STRUCTURE_v0.1.md`;
 - its embedded repository tree reflects the earlier repository organisation.
 
 The README also documents Sprint 1 and Sprint 2 but does not currently provide
@@ -33,11 +33,11 @@ The next README edit should be intentionally minimal.
 
 Change the repository-structure navigation target from:
 
-`reference/REPOSITORY_STRUCTURE.md`
+`reference/REPOSITORY_STRUCTURE_v0.1.md`
 
 to:
 
-`REPOSITORY_STRUCTURE.md`
+`REPOSITORY_STRUCTURE_v0.3.md`
 
 ### Required change 2
 
@@ -45,7 +45,7 @@ Do not present the old embedded repository tree as the current authoritative
 filesystem description.
 
 Replace it with a concise statement directing readers to the canonical
-root-level `REPOSITORY_STRUCTURE.md`.
+root-level `REPOSITORY_STRUCTURE_v0.3.md`.
 
 The README should remain a project entry point rather than becoming a second
 repository manifest.
@@ -72,7 +72,7 @@ The README correction must not:
 - change the conceptual model;
 - change architecture;
 - rewrite Sprint 1 or Sprint 2 history;
-- delete `reference/REPOSITORY_STRUCTURE.md`;
+- delete `reference/REPOSITORY_STRUCTURE_v0.1.md`;
 - delete `REPOSITORY_STRUCTURE_v0.2.md`;
 - change Collaborator benchmark contracts;
 - alter runtime code.

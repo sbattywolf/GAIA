@@ -71,9 +71,9 @@ These must be classified by role and lineage before any deletion or rename.
 
 The repository contains multiple structure descriptions, including:
 
-- `REPOSITORY_STRUCTURE.md`
+- `REPOSITORY_STRUCTURE_v0.3.md`
 - `REPOSITORY_STRUCTURE_v0.2.md`
-- `reference/REPOSITORY_STRUCTURE.md`
+- `reference/REPOSITORY_STRUCTURE_v0.1.md`
 
 They must not be treated as duplicates solely from their names.
 
