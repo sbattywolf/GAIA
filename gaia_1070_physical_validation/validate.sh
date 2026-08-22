@@ -59,6 +59,24 @@ fi
 
 # Check if container exists and is running
 CONTAINER_EXISTS=false
+CONTAINER_CHECK_RESULT=0
+
+# First check if we can run docker ps without permission issues
+if ! docker ps -f name=gaia-ollama-1070 --format "{{.Names}}" >/dev/null 2>&1; then
+    # Check if this is a permission error vs other error
+    DOCKER_EXIT_CODE=$?
+    if [ $DOCKER_EXIT_CODE -eq 126 ] || [ $DOCKER_EXIT_CODE -eq 127 ]; then
+        # Permission denied or command not found - classify as access blocked
+        echo "BLOCKED: Docker access unavailable"
+        exit 2  # Use exit code 2 for BLOCKED status
+    else
+        # Some other docker error - treat as daemon issue or similar
+        echo "BLOCKED: Docker daemon unavailable or other error ($DOCKER_EXIT_CODE)"
+        exit 2  # Use exit code 2 for BLOCKED status
+    fi
+fi
+
+# If we get here, docker command works, so check for container existence
 if docker ps -f name=gaia-ollama-1070 --format "{{.Names}}" | grep -q "gaia-ollama-1070"; then
     CONTAINER_EXISTS=true
 fi
