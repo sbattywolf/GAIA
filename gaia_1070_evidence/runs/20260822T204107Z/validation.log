@@ -1,0 +1,55 @@
+GAIA 1070 Physical Validation
+=============================
+
+[2026-08-22T20:41:07Z] Step 1: Running Target Host Preflight
+
+
+============================================================
+GAIA TARGET HOST PREFLIGHT SUMMARY
+============================================================
+Timestamp: 2026-08-22T22:41:07.879309
+Overall Result: PASS
+
+HOST:
+  ✓ info: {'hostname': 'sbatta-1070-aiaiai', 'os': 'Linux-7.0.0-30-generic-x86_64-with-glibc2.43', 'kernel': '7.0.0-30-generic', 'architecture': 'x86_64'}
+
+USER:
+  ✓ access: {'user': 'sbatta', 'has_docker_access': False}
+
+DOCKER:
+  ✓ availability: {'docker_available': True, 'compose_available': False, 'daemon_reachable': True}
+
+NVIDIA:
+  ✓ gpu_info: {'nvidia_smi_available': True, 'gpu_info': {'name': 'NVIDIA GeForce GTX 1070 with Max-Q Design', 'vram': '8192 MB'}}
+
+OLLAMA:
+  ✓ host_installation: {'ollama_available': False, 'endpoint': None, 'version': None}
+
+FILESYSTEM:
+  ✓ workspace: {'workspace_exists': True, 'free_space_gb': 921.9, 'sufficient_space': True}
+
+NETWORK:
+  ✓ ports: {'port_status': {11434: 'listening', 11435: 'available'}}
+
+[2026-08-22T20:41:07Z] Step 2: Checking prerequisites
+
+[2026-08-22T20:41:07Z] Step 3: Checking Ollama availability
+
+[2026-08-22T20:41:07Z] Step 4: Checking model availability and suitability
+
+[2026-08-22T20:41:07Z] Available models on target:
+qwen3:8b
+llama3.1:8b
+nomic-embed-text:latest
+qwen2.5-coder:7b
+qwen-domotica:latest
+mistral:7b
+gemma2:9b
+llava:7b
+qwen2.5:7b
+qwen2.5:3b
+[2026-08-22T20:41:08Z] Found 117 qwen models, will proceed with validation
+[2026-08-22T20:41:08Z] Step 5: Running Ollama runtime validation
+
+[2026-08-22T20:41:08Z] Running existing validation checks...
+[2026-08-22T20:41:08Z] Cleaning up...
