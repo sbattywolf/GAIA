@@ -208,15 +208,17 @@ if command -v curl &> /dev/null && command -v jq &> /dev/null; then
     if [ ! -z "$MODEL_INVENTORY_JSON" ]; then
         # Validate that we got valid JSON from the API
         if echo "$MODEL_INVENTORY_JSON" | jq empty >/dev/null 2>&1; then
-            # Extract model names and count properly 
+            # Extract model names and count properly using a cleaner approach to avoid malformed JSON
             MODEL_COUNT=$(echo "$MODEL_INVENTORY_JSON" | jq -r '.models[].name' 2>/dev/null | wc -l)
-            MODEL_NAMES=$(echo "$MODEL_INVENTORY_JSON" | jq -r '.models[].name' 2>/dev/null | jq -R . | jq -s .)
             
-            if [ "$MODEL_COUNT" -gt 0 ] && [ ! -z "$MODEL_NAMES" ]; then
+            # Use a clean method to extract all model names into proper JSON array
+            if [ "$MODEL_COUNT" -gt 0 ]; then
+                # Extract models using jq directly to build valid JSON array
+                MODEL_NAMES=$(echo "$MODEL_INVENTORY_JSON" | jq -r '.models[].name' 2>/dev/null | jq -R . | jq -s .)
                 echo "MODEL_INVENTORY_COUNT: $MODEL_COUNT"
                 echo "ACTUAL_MODEL_INVENTORY: $MODEL_NAMES"
             else
-                # Fallback to empty array if we can't extract models properly
+                # No models found, return empty array
                 echo "MODEL_INVENTORY_COUNT: 0"
                 echo "ACTUAL_MODEL_INVENTORY: []"
             fi
