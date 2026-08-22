@@ -122,6 +122,44 @@ Key changes:
 3. **Documentation Completeness**: Add forensic bundle and complete physical evidence
 4. **Performance Optimization**: Evaluate if JSON parsing can be optimized for faster execution
 
+## ARCHITECTURAL DIRECTIONS TO REVIEW
+
+**A. 3090 = engineering/development/benchmark platform**  
+**B. 1070 = constrained physical target / verification platform**  
+**C. incremental Domotics Agent capability on 1070**  
+**D. model-specific and agent-specific benchmarks**  
+**E. modular benchmark enable/disable mechanism**  
+**F. micro-skill progression for Domotics capability**  
+**G. controlled tool/token capability progression**  
+**H. local-first Git / remote-sanitized GitHub model**  
+**I. offline-capable engineering workflow**  
+**J. future runbook/playbook/routine/pipeline layer**  
+**K. dependency-aware P1→P10 execution**  
+**L. reusable evidence/gate/checkpoint model**  
+**M. future QNAP/network/Raspberry Pi integration**  
+**N. token/credential sanitization and classification**
+
+These are QUESTIONS FOR AI ARCHITECT - NOT authorized implementation tasks.
+
+## ARCHITECTURAL QUESTIONS
+
+- Should local Git become the operational engineering source of truth?
+- Should GitHub remain a sanitized mirror/collaboration layer?
+- What must never leave the local environment?
+- Should secret scanning occur before commit, before push, or both?
+- Should workflow definitions become declarative?
+- Should runbook/playbook/pipeline/routine be separate concepts?
+- What is the minimum useful workflow abstraction?
+- Which workloads belong on 3090?
+- Which capabilities must be physically verified on 1070?
+- How should Domotics Agent improvement be measured?
+- What is the minimum Domotics benchmark?
+- How should token classes be represented?
+- What should be tested with read-only credentials first?
+- When is 1070 verification mandatory?
+- When is 3090 benchmark evidence sufficient?
+- How should QNAP enter the architecture later?
+
 ---
 
 ## REFERENCE MAP
@@ -133,6 +171,6 @@ Key changes:
 [R5] .gitignore - Repository configuration showing ignored runtime directories  
 [R6] commit 7fae098 - Previous fix for physical validation model inventory producer chain  
 [R7] commit a955d7c - Intermediate commit showing evolution of the fix  
-[R8] current HEAD (0091ae3) - Current checkpoint with documentation and dependency analysis
+[R8] current HEAD (3802ed2) - Current checkpoint with documentation and dependency analysis
 
 The Architect should inspect these references to understand the complete state of the 1070 validation implementation, from the root cause through the fix and into the new dependency-aware approach.
