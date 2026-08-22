@@ -13,15 +13,15 @@ This patch does not modify `README.md`.
 
 `README.md` currently points readers to:
 
-`reference/REPOSITORY_STRUCTURE.md`
+`reference/REPOSITORY_STRUCTURE_v0.1.md`
 
 The repository authority decision now establishes the root-level:
 
-`REPOSITORY_STRUCTURE.md`
+`REPOSITORY_STRUCTURE_v0.3.md`
 
 as the canonical current repository-structure document.
 
-The file under `reference/REPOSITORY_STRUCTURE.md` is explicitly retained as
+The file under `reference/REPOSITORY_STRUCTURE_v0.1.md` is explicitly retained as
 recovered/reference material and is not the current authority.
 
 ### Repository tree
@@ -34,7 +34,7 @@ The current repository also contains areas such as:
 - `AGENTS.md`
 - `DOCUMENT_MANIFEST.md`
 - `MANIFEST.txt`
-- `REPOSITORY_STRUCTURE.md`
+- `REPOSITORY_STRUCTURE_v0.3.md`
 - `REPOSITORY_STRUCTURE_v0.2.md`
 - `GAIA_ENGINEER_AS_IS_REVIEW.md`
 - `REAL_HOME_ASSISTANT_ADAPTER_DESIGN.md`
@@ -72,7 +72,7 @@ Classification:
 The README should be updated in a subsequent patch to:
 
 1. point repository-structure guidance to the canonical root-level
-   `REPOSITORY_STRUCTURE.md`;
+   `REPOSITORY_STRUCTURE_v0.3.md`;
 2. avoid presenting the older embedded repository tree as the authoritative
    current structure;
 3. acknowledge `sprint-03/` as part of the repository's engineering/validation
@@ -83,7 +83,7 @@ The README should be updated in a subsequent patch to:
 
 This audit does not authorize:
 
-- deletion of `reference/REPOSITORY_STRUCTURE.md`;
+- deletion of `reference/REPOSITORY_STRUCTURE_v0.1.md`;
 - deletion or renaming of historical Sprint documents;
 - rewriting Sprint history;
 - changes to architecture or implementation;

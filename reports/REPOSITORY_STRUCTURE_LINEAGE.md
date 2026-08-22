@@ -9,9 +9,9 @@ It does not rename, move, delete, or rewrite any structure document.
 
 ## Documents under review
 
-- `REPOSITORY_STRUCTURE.md`
+- `REPOSITORY_STRUCTURE_v0.3.md`
 - `REPOSITORY_STRUCTURE_v0.2.md`
-- `reference/REPOSITORY_STRUCTURE.md`
+- `reference/REPOSITORY_STRUCTURE_v0.1.md`
 
 ## Comparison criteria
 

@@ -7,7 +7,7 @@ This file is a high-level inventory of important GAIA project documentation.
 It is not a complete filesystem manifest and does not define repository
 structure authority.
 
-The current repository structure is defined by `REPOSITORY_STRUCTURE.md`.
+The current repository structure is defined by `REPOSITORY_STRUCTURE_v0.3.md`.
 
 ## Current project documentation
 
@@ -15,7 +15,7 @@ The current repository structure is defined by `REPOSITORY_STRUCTURE.md`.
 
 - `README.md`
 - `AGENTS.md`
-- `REPOSITORY_STRUCTURE.md`
+- `REPOSITORY_STRUCTURE_v0.3.md`
 - `GAIA_ENGINEER_AS_IS_REVIEW.md`
 - `REAL_HOME_ASSISTANT_ADAPTER_DESIGN.md`
 
@@ -53,14 +53,14 @@ confused with the current canonical project documentation.
 Examples include:
 
 - `REPOSITORY_STRUCTURE_v0.2.md`
-- `reference/REPOSITORY_STRUCTURE.md`
+- `reference/REPOSITORY_STRUCTURE_v0.1.md`
 - `MANIFEST.txt`
 - `oldRepoReferences/`
 - reconstruction and audit reports under `reports/`
 
 ## Authority
 
-`REPOSITORY_STRUCTURE.md` is the canonical description of the current
+`REPOSITORY_STRUCTURE_v0.3.md` is the canonical description of the current
 repository structure.
 
 `DOCUMENT_MANIFEST.md` is an inventory/navigation aid.

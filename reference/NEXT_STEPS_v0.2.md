@@ -51,7 +51,7 @@ Research Foundation is substantially complete. The following proposed v0.2 docum
 
 The next documentation work is:
 
-1. reconcile `NEXT_STEPS.md` and `REPOSITORY_STRUCTURE.md`;
+1. reconcile `NEXT_STEPS.md` and `REPOSITORY_STRUCTURE_v0.3.md`;
 2. review the complete v0.2 reference set;
 3. accept or revise the proposed documents;
 4. use the accepted ADR baseline and reconcile dependent documentation;

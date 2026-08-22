@@ -140,7 +140,7 @@ The normative model is maintained in [`reference/GAIA_MODEL.md`](reference/GAIA_
 
 The repository separates current working truth, chronological research, critique, future decisions and unapproved ideas.
 
-The detailed current organisation rules are maintained in [`REPOSITORY_STRUCTURE.md`](REPOSITORY_STRUCTURE.md). Historical and recovered structure documents remain available for provenance but are not the current repository-structure authority.
+The detailed current organisation rules are maintained in [`REPOSITORY_STRUCTURE_v0.3.md`](REPOSITORY_STRUCTURE_v0.3.md). Historical and recovered structure documents remain available for provenance but are not the current repository-structure authority.
 
 ## How to read the repository
 

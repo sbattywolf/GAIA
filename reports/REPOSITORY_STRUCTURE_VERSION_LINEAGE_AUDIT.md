@@ -3,7 +3,7 @@
 ## Status
 
 This audit records the relationship between the current root
-`REPOSITORY_STRUCTURE.md` and the older `REPOSITORY_STRUCTURE_v0.2.md`.
+`REPOSITORY_STRUCTURE_v0.3.md` and the older `REPOSITORY_STRUCTURE_v0.2.md`.
 
 It does not rename, delete, move, or rewrite either document.
 
@@ -40,7 +40,7 @@ convergence process rather than by two intended current authorities.
 
 The current repository-consolidation decision establishes:
 
-- `REPOSITORY_STRUCTURE.md` — current structure authority;
+- `REPOSITORY_STRUCTURE_v0.3.md` — current structure authority;
 - `REPOSITORY_STRUCTURE_v0.2.md` — historical/recovered convergence reference.
 
 The older document should not be silently rewritten to describe the current

@@ -48,7 +48,7 @@ trap cleanup EXIT
 # Step 1: Run Target Host Preflight (automatic guard)
 log "Step 1: Running Target Host Preflight"
 echo ""
-python3 gaia_preflight.py || fail_fast "Target host preflight failed"
+python3 gaia_1070_physical_validation/gaia_preflight.py || fail_fast "Target host preflight failed"
 
 # Step 2: Check prerequisites
 log "Step 2: Checking prerequisites"
@@ -106,11 +106,10 @@ echo ""
 export VALIDATION_TARGET="1070"
 
 # Run the existing validation script (with modification to avoid conflicts)
-if [ -f "validate.sh" ]; then
-    log "Running existing validation checks..."
-    # Make a copy of validate.sh and modify it to use target-specific settings
-    cp validate.sh validate_temp.sh
-    
+    if [ -f "gaia_1070_physical_validation/validate.sh" ]; then
+        log "Running existing validation checks..."
+        # Make a copy of validate.sh and modify it to use target-specific settings
+        cp gaia_1070_physical_validation/validate.sh validate_temp.sh
     # Update the validation to use local host instead of container port mapping
     sed -i 's/127.0.0.1:11435/localhost:11434/g' validate_temp.sh
     

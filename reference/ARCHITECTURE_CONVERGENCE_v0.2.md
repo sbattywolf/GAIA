@@ -273,7 +273,7 @@ Deferred choices include:
 1. `ARCHITECTURE_CONVERGENCE_v0.2.md` — proposed convergence register.
 2. `CONTEXT_MODEL_v0.2.md` — proposed Context semantics.
 3. `WORLD_MODEL_v0.2.md` — proposed shared semantic World Model.
-4. Reconcile `GLOSSARY_v0.2.md`, `GAIA_MODEL_v0.2.md`, `NEXT_STEPS_v0.2.md`, and `REPOSITORY_STRUCTURE.md` conservatively.
+4. Reconcile `GLOSSARY_v0.2.md`, `GAIA_MODEL_v0.2.md`, `NEXT_STEPS_v0.2.md`, and `REPOSITORY_STRUCTURE_v0.3.md` conservatively.
 5. Use accepted `ADR-0001-Core-Boundary.md` as the Core boundary baseline.
 6. Use accepted `ADR-0003-Capability-Model_Accepted.md` as the Capability Model baseline.
 7. Create `sprint-03/MEMORY_ROLE_VALIDATION.md`.

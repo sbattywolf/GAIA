@@ -40,7 +40,7 @@ The following statuses are used:
 
 | Document group | Current assessment | Action |
 |---|---|---|
-| `REPOSITORY_STRUCTURE.md` / `REPOSITORY_STRUCTURE_v0.2.md` / `reference/REPOSITORY_STRUCTURE.md` | overlapping structure documentation; authority requires verification | compare before any move/rename |
+| `REPOSITORY_STRUCTURE_v0.3.md` / `REPOSITORY_STRUCTURE_v0.2.md` / `reference/REPOSITORY_STRUCTURE_v0.1.md` | overlapping structure documentation; authority requires verification | compare before any move/rename |
 | `GAIA_MODEL.md` / `GAIA_MODEL_v0.2.md` / `reference/GAIA_MODEL.md` | overlapping model documentation; authority requires verification | compare before any move/rename |
 | `GLOSSARY.md` / `GLOSSARY_v0.2.md` / `reference/GLOSSARY.md` | overlapping vocabulary documentation; authority requires verification | compare before any move/rename |
 | `NEXT_STEPS.md` / `NEXT_STEPS_v0.2.md` / `reference/NEXT_STEPS.md` | overlapping roadmap documentation; authority requires verification | compare before any move/rename |

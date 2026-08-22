@@ -11,7 +11,7 @@ documentation reconciliation.
 
 ### Current canonical document
 
-`REPOSITORY_STRUCTURE.md`
+`REPOSITORY_STRUCTURE_v0.3.md`
 
 Reason:
 
@@ -95,11 +95,11 @@ without destroying provenance.
 
 The repository now has an explicit authority hierarchy:
 
-1. `REPOSITORY_STRUCTURE.md` — current repository structure
+1. `REPOSITORY_STRUCTURE_v0.3.md` — current repository structure
 2. `DOCUMENT_MANIFEST.md` — current documentation inventory
 3. `MANIFEST.txt` — historical/provenance inventory
 4. `REPOSITORY_STRUCTURE_v0.2.md` — historical convergence record
-5. `reference/REPOSITORY_STRUCTURE.md` — recovered reference material
+5. `reference/REPOSITORY_STRUCTURE_v0.1.md` — recovered reference material
 
 This hierarchy prevents historical recovery material and convergence snapshots
 from competing with the current repository contract.
