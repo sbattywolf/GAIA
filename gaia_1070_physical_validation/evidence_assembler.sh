@@ -7,8 +7,6 @@
 set -e  # Exit on any error
 
 # Initialize variables
-EVIDENCE_FILE="validation_evidence.json"
-TARGET_HOST="1070"
 OVERALL_STATUS="UNKNOWN"
 BLOCKING=false
 
@@ -43,9 +41,11 @@ check_module_status() {
     local json_file=$1
     local module_status
     local module_blocking
+    local module_target
     
     module_status=$(jq -r '.status' "$json_file")
     module_blocking=$(jq -r '.blocking' "$json_file")
+    module_target=$(jq -r '.target' "$json_file")
     
     # Validate status values
     if [[ ! "$module_status" =~ ^(PASS|FAIL|BLOCKED|NOT_RUN)$ ]]; then
@@ -79,42 +79,30 @@ check_module_status() {
 # Function to create final evidence structure
 create_evidence() {
     local module_files=("$@")
+    local timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
     
-    # Initialize the overall result
-    cat << EOF
-{
-  "target": "$TARGET_HOST",
-  "physical_validation": "$OVERALL_STATUS",
-  "validation_type": "1070_PHYSICAL",
-  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-  "observed": {
-    "hardware": {
-      "gpu": "OBSERVED_3090",
-      "memory": "OBSERVED_3090"
-    },
-    "system": {
-      "docker_version": "OBSERVED_3090",
-      "ollama_version": "OBSERVED_3090"
-    },
-    "model_inventory": {
-      "count": 0,
-      "models": []
-    }
-  },
-  "historical": {
-    "model_validation": "qwen2.5-coder:14b",
-    "target_host": "$TARGET_HOST"
-  },
-  "recommends": {
-    "next_step": "Proceed with physical model deployment after verification"
-  },
-  "notes": [
-    "This validation was performed on the physical 1070 target host",
-    "All checks passed successfully with no conflicts detected",
-    "No unrelated containers were modified or affected by this process"
-  ]
-}
-EOF
+    # Initialize the overall result with actual module data
+    echo "{"
+    echo '  "target": "1070",'
+    echo '  "validation_type": "1070_PHYSICAL",'
+    echo '  "timestamp": "'$timestamp'",'
+    echo '  "modules": ['
+
+    # Add each module result
+    for i in "${!module_files[@]}"; do
+        if [ "$i" -gt 0 ]; then
+            echo "    ,"
+        fi
+        cat "$module_files[$i]"
+    done
+    
+    echo "  ],"
+    echo '  "overall_status": "'$OVERALL_STATUS'",'
+    echo '  "provenance": {'
+    echo '    "generated_by": "evidence_assembler",'
+    echo '    "runtime_observation": true'
+    echo '  }'
+    echo '}'
 }
 
 # Main execution logic
@@ -125,7 +113,20 @@ if [ $# -eq 0 ]; then
     log "No module results provided, creating empty validation result"
     OVERALL_STATUS="NOT_RUN"
     BLOCKING=false
-    create_evidence
+    local timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+    
+    # Create minimal valid output
+    echo "{"
+    echo '  "target": "1070",'
+    echo '  "validation_type": "1070_PHYSICAL",'
+    echo '  "timestamp": "'$timestamp'",'
+    echo '  "modules": [],'
+    echo '  "overall_status": "NOT_RUN",'
+    echo '  "provenance": {'
+    echo '    "generated_by": "evidence_assembler",'
+    echo '    "runtime_observation": true'
+    echo '  }'
+    echo '}'
     exit 0
 fi
 
@@ -135,5 +136,5 @@ for module_file in "$@"; do
     check_module_status "$module_file"
 done
 
-# Create the final evidence file
+# Create the final evidence file with actual module data
 create_evidence "$@"

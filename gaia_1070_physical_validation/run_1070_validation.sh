@@ -122,11 +122,20 @@ export VALIDATION_TARGET="1070"
     rm validate_temp.sh
     
     # Check if validation was blocked due to target mismatch (exit code 2)
-    if [ $? -eq 2 ]; then
-        log "Validation BLOCKED due to target mismatch"
-        echo ""
-        echo "Final Result: BLOCKED"
-        exit 2
+    # We need to distinguish between different BLOCKED conditions
+    EXIT_CODE=$?
+    if [ $EXIT_CODE -eq 2 ]; then
+        # Determine if this is a container existence issue or target mismatch
+        if echo "$VALIDATE_OUTPUT" | grep -q "Container does not exist"; then
+            log "Validation BLOCKED due to missing container"
+            # Even in BLOCKED state, we should still generate evidence
+            # Continue to Step 6 for evidence generation
+        else
+            log "Validation BLOCKED due to target mismatch"
+            echo ""
+            echo "Final Result: BLOCKED"
+            exit 2
+        fi
     fi
 else
     fail_fast "Validation script not found in package"
