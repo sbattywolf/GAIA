@@ -37,7 +37,7 @@ cleanup() {
     if command -v docker >/dev/null 2>&1; then
         # Stop and remove the container if it exists
         if docker ps -a --format '{{.Names}}' | grep -q "gaia-ollama-1070"; then
-            docker compose down -v || true
+            (cd gaia_1070_model_runtime && docker compose down -v) || true
         fi
     fi
 }
