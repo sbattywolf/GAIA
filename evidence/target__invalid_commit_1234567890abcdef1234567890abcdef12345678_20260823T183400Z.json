@@ -1,0 +1,9 @@
+{
+  "event": "TARGET_RESULT",
+  "layer": "target",
+  "result": "",
+  "requested_commit": "invalid_commit_1234567890abcdef1234567890abcdef12345678",
+  "target": "gaia-1070",
+  "timestamp": "20260823T183400Z",
+  "exit_code": 0
+}

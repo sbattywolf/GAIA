@@ -1,0 +1,13 @@
+{
+  "transport": {
+    "type": "ssh",
+    "timeout_seconds": 30,
+    "max_retries": 3,
+    "retry_delay_seconds": 5,
+    "connection_attempts": 3
+  },
+  "target_defaults": {
+    "port": 22,
+    "username": "sbatta"
+  }
+}
