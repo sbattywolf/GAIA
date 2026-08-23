@@ -40,6 +40,8 @@ cleanup() {
             (cd gaia_1070_model_runtime && docker compose down -v) || true
         fi
     fi
+    # Ensure cleanup doesn't interfere with the validation exit code
+    return 0
 }
 
 # Set up cleanup trap
@@ -130,6 +132,8 @@ export VALIDATION_TARGET="1070"
             log "Validation BLOCKED due to missing container"
             # Even in BLOCKED state, we should still generate evidence
             # Continue to Step 6 for evidence generation
+            # Preserve the exit code 2 for proper classification
+            VALIDATION_RESULT="BLOCKED"
         else
             log "Validation BLOCKED due to target mismatch"
             echo ""
