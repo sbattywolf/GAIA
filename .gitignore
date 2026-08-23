@@ -32,3 +32,6 @@ gaia-bootstrap-poc/benchmark/*.backup.py
 
 # GAIA Collaborator benchmark runtime results
 gaia-bootstrap-poc/benchmark/collaborator/results/
+
+# GAIA Engineering Loop runtime state
+ gaia_engineering_loop/states/
