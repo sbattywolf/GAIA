@@ -203,6 +203,10 @@ if command -v nvidia-smi &> /dev/null; then
 fi
 
 # Extract actual model inventory from Ollama API for evidence generation
+# Initialize defaults once to avoid duplicated fallback logic
+MODEL_INVENTORY_COUNT=0
+ACTUAL_MODEL_INVENTORY='[]'
+
 if command -v curl &> /dev/null && command -v jq &> /dev/null; then
     MODEL_INVENTORY_JSON=$(curl -s http://localhost:11434/api/tags 2>/dev/null)
     if [ ! -z "$MODEL_INVENTORY_JSON" ]; then
@@ -213,30 +217,21 @@ if command -v curl &> /dev/null && command -v jq &> /dev/null; then
             
             # Use a clean method to extract all model names into proper JSON array
             if [ "$MODEL_COUNT" -gt 0 ]; then
-                # Extract models using jq directly to build valid JSON array
-                MODEL_NAMES=$(echo "$MODEL_INVENTORY_JSON" | jq -r '.models[].name' 2>/dev/null | jq -R . | jq -s .)
-                echo "MODEL_INVENTORY_COUNT: $MODEL_COUNT"
-                echo "ACTUAL_MODEL_INVENTORY: $MODEL_NAMES"
-            else
-                # No models found, return empty array
-                echo "MODEL_INVENTORY_COUNT: 0"
-                echo "ACTUAL_MODEL_INVENTORY: []"
+                # Extract models using direct jq array construction to build valid JSON array
+                MODEL_NAMES=$(echo "$MODEL_INVENTORY_JSON" | jq -c '[.models[]?.name]')
+                MODEL_INVENTORY_COUNT=$MODEL_COUNT
+                ACTUAL_MODEL_INVENTORY=$MODEL_NAMES
             fi
-        else
-            # If JSON is invalid, fallback to empty inventory
-            echo "MODEL_INVENTORY_COUNT: 0"
-            echo "ACTUAL_MODEL_INVENTORY: []"
         fi
-    else
-        # If we can't get API response, fallback to empty inventory
-        echo "MODEL_INVENTORY_COUNT: 0"
-        echo "ACTUAL_MODEL_INVENTORY: []"
     fi
 else
-    # If curl or jq are not available, fallback to empty inventory
-    echo "MODEL_INVENTORY_COUNT: 0"
-    echo "ACTUAL_MODEL_INVENTORY: []"
+    # If curl or jq are not available, fallback to defaults (which are already set)
+    :
 fi
+
+# Emit the final normalized values once - with explicit formatting to prevent double wrapping
+echo "MODEL_INVENTORY_COUNT: $MODEL_INVENTORY_COUNT"
+printf 'ACTUAL_MODEL_INVENTORY: %s\n' "$ACTUAL_MODEL_INVENTORY"
 
 # Helper function to count models properly
 count_models() {
@@ -397,6 +392,10 @@ fi
 
 # Output model inventory for evidence generation
 # Use the same logic as above to ensure consistent JSON formatting
+# Initialize defaults once to avoid duplicated fallback logic
+MODEL_INVENTORY_COUNT=0
+ACTUAL_MODEL_INVENTORY='[]'
+
 if command -v curl &> /dev/null && command -v jq &> /dev/null; then
     MODEL_INVENTORY_JSON=$(curl -s http://localhost:11434/api/tags 2>/dev/null)
     if [ ! -z "$MODEL_INVENTORY_JSON" ]; then
@@ -404,30 +403,21 @@ if command -v curl &> /dev/null && command -v jq &> /dev/null; then
         if echo "$MODEL_INVENTORY_JSON" | jq empty >/dev/null 2>&1; then
             # Extract model names and count properly 
             MODEL_COUNT=$(echo "$MODEL_INVENTORY_JSON" | jq -r '.models[].name' 2>/dev/null | wc -l)
-            MODEL_NAMES=$(echo "$MODEL_INVENTORY_JSON" | jq -r '.models[].name' 2>/dev/null | jq -R . | jq -s .)
+            MODEL_NAMES=$(echo "$MODEL_INVENTORY_JSON" | jq -c '[.models[]?.name]')
             
             if [ "$MODEL_COUNT" -gt 0 ] && [ ! -z "$MODEL_NAMES" ]; then
-                echo "MODEL_INVENTORY_COUNT: $MODEL_COUNT"
-                echo "ACTUAL_MODEL_INVENTORY: $MODEL_NAMES"
-            else
-                # Fallback to empty array if we can't extract models properly
-                echo "MODEL_INVENTORY_COUNT: 0"
-                echo "ACTUAL_MODEL_INVENTORY: []"
+                MODEL_INVENTORY_COUNT=$MODEL_COUNT
+                ACTUAL_MODEL_INVENTORY=$MODEL_NAMES
             fi
-        else
-            # If JSON is invalid, fallback to empty inventory
-            echo "MODEL_INVENTORY_COUNT: 0"
-            echo "ACTUAL_MODEL_INVENTORY: []"
         fi
-    else
-        # If we can't get API response, fallback to empty inventory
-        echo "MODEL_INVENTORY_COUNT: 0"
-        echo "ACTUAL_MODEL_INVENTORY: []"
     fi
 else
-    # If curl or jq are not available, fallback to empty inventory
-    echo "MODEL_INVENTORY_COUNT: 0"
-    echo "ACTUAL_MODEL_INVENTORY: []"
+    # If curl or jq are not available, fallback to defaults (which are already set)
+    :
 fi
+
+# Emit the final normalized values once
+echo "MODEL_INVENTORY_COUNT: $MODEL_INVENTORY_COUNT"
+echo "ACTUAL_MODEL_INVENTORY: $ACTUAL_MODEL_INVENTORY"
 
 exit 0
