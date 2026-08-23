@@ -20,14 +20,14 @@ GAIA E2 bounded implementation.
 ## CURRENT AUTHORITATIVE STATE
 
 E2:
-AUTHORIZED FOR BOUNDED IMPLEMENTATION
+OPEN
 
 PM-002:
 BLOCKED — UNCHANGED.
 Do not work on PM-002.
 
 Toolkit V0.1:
-CLOSED — ACCEPTED WITH QUALIFICATIONS — FROZEN.
+ACCEPTED — FROZEN — CANONICAL — CURRENTLY UNCHANGED.
 Do not modify Toolkit V0.1.
 
 Architecture:
@@ -280,7 +280,12 @@ Record only the following current facts:
 
 - E2
   - OPEN
-  - needs current completion evidence
+  - authorization not verified
+  - implementation verified
+  - validation verified
+  - Human Owner acceptance not verified
+  - Architect review not verified
+  - completion not verified
 
 - ING_3090 retrospective
   - provenance verified
