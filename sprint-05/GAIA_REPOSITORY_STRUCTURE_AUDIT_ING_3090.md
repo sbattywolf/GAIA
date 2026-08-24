@@ -147,12 +147,12 @@ The repository contains 5,872 files across 873 directories with the following ke
 
 ### Environments Identified:
 1. **.venv** - Main Python environment (CANONICAL)
-   - Python version: 3.14
+   - Python version: Not available (no python executable found in bin)
    - Dependencies: Various GAIA packages
    - Used by: E2 implementation, bootstrap poc
 
 2. **gaia-bootstrap-poc/.venv** - Bootstrap POC environment (DERIVED)
-   - Python version: 3.14  
+   - Python version: 3.14.4  
    - Dependencies: Bootstrap POC packages
    - Used by: Bootstrap POC tests
 
@@ -160,6 +160,23 @@ The repository contains 5,872 files across 873 directories with the following ke
 - **CANONICAL**: Yes (main .venv)
 - **DUPLICATE**: Yes (bootstrap .venv)
 - **TEMPORARY**: No
+
+## Python Environments Analysis
+
+| PATH | PYTHON VERSION | CREATION SOURCE | USED BY | DEPENDENCIES | GIT TRACKED? | CANONICAL? | TEMPORARY? | DUPLICATE? |
+|------|----------------|-----------------|---------|--------------|--------------|------------|------------|------------|
+| .venv | Not available | Developer | GAIA_E2_IMPLEMENTATION_PACKAGE | Python 3.14 (from lib) | Yes | CANONICAL | No | No |
+| gaia-bootstrap-poc/.venv | Python 3.14.4 | Developer | GAIA_E2_IMPLEMENTATION_PACKAGE | Python 3.14.4 | Yes | DERIVED | No | Yes |
+
+### Analysis
+
+The repository contains two Python virtual environments:
+
+1. **Main .venv** - A canonical environment used by the E2 implementation package. It is tracked in Git and used for development purposes. While there's no python executable directly in the bin directory, it contains a Python 3.14 installation via its lib directory.
+
+2. **gaia-bootstrap-poc/.venv** - A derived environment created during bootstrap POC, also tracked in Git but containing Python 3.14.4. This appears to be a duplicate that was created during the bootstrap process.
+
+Both environments are currently being used for E2 development and testing, with the main .venv being the canonical one.
 
 ## Historical Material
 
