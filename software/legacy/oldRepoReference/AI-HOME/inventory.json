@@ -1,0 +1,72 @@
+{
+  "framework_name": "Local AI Automation Framework",
+  "version": "1.2.0",
+  "last_updated": "2026-07-26",
+  "architecture": {
+    "root_dir": "/home/sbatta/local-ai/Scripts",
+    "shared_library": {
+      "path": "core_lib",
+      "purpose": "Centralizzazione delle credenziali, dei segreti, dei motori API e del flusso Git",
+      "modules": {
+        "secrets.py": "Caveau protetto per API key Linear, token Home Assistant (HA_TOKEN), token GitHub (GITHUB_TOKEN), parametri di rete Samba e variabili globali",
+        "linear_api.py": "Interfaccia universale GraphQL per la comunicazione sicura con i server di Linear",
+        "git_flow_manager.py": "Libreria Core - Gestisce in modo non interattivo l'allineamento di main, la creazione di branch locali e l'apertura automatica di Pull Request via GitHub CLI"
+      }
+    },
+    "target_machines": {
+      "msi_1070": {
+        "host_name": "sbatta-1070-aiaiai",
+        "hardware": {
+          "gpu": "NVIDIA GeForce GTX 1070 (8GB VRAM)",
+          "ram": "32GB DDR4 (Aggiornata)"
+        },
+        "role": "Centrale di monitoraggio hardware, manutenzione config, gestione CI/CD e portineria asincrona eventi Telegram/Audio tramite Ollama (Qwen2.5-Coder:7b)",
+        "docker_stack": {
+          "ollama": "Motore inferenza locale per modelli 7B (Porta 11434)",
+          "open-webui": "Interfaccia e Workspace per Agenti e connessioni (Porta 3000)",
+          "wyoming-whisper": "Trascrizione vocale STT locale in modalità nativa host (Porta 10300)",
+          "wyoming-piper": "Sintesi vocale TTS locale (Voce Riccardo Low) in modalità nativa host (Porta 10200)",
+          "glances": "Monitoraggio risorse hardware integrato nativamente su Home Assistant (Porta 61208)"
+        },
+        "scripts": {
+          "bulk_agile_check.py": "Fase 1 - Scansione sequenziale dei backup YAML del Raspberry (via Samba in sola lettura) e generazione report Markdown nella coda",
+          "linear_create_issue.py": "Fase 2 - Svuotamento multi-coda (code/domotics), controllo preventivo anti-duplicato (Idempotenza) e caricamento ticket su Linear",
+          "linear_update_status.py": "Utility CLI - Sposta lo stato di un ticket su Linear (es. in DONE) cercando l'UUID interno tramite query globale",
+          "linear_get_status.py": "Utility CLI - Interroga Linear e stampa a schermo lo stato attuale e il titolo di un determinato ticket (es. SBA-7)",
+          "domotics_agent.py": "Agente Live HA - Demone di sistema (systemd) in ascolto costante sulle WebSocket del Raspberry; genera report di sicurezza in caso di anomalie alle 23:30",
+          "telegram_agent.py": "Agente Live Zeus - Bot asincrono (ha-telegram-agent.service) con logica LLM cognitiva sequenziale per gestione chat amichevole, validazione Linear e instradamento Git Flow"
+        },
+        "automation_timers": {
+          "engine": "Linux Cronjob (crontab) per lo Sprint Mensile",
+          "services": "Systemd Services permanenti per l'ascolto live 24/7 di Domotica e Bot Telegram"
+        }
+      },
+      "rtx_3090": {
+        "host_name": "Pianificato - Da configurare",
+        "hardware": {
+          "gpu": "NVIDIA GeForce RTX 3090 (24GB VRAM)",
+          "ram": "Da definire"
+        },
+        "role": "Calcolo pesante, esecuzione di LLM avanzati ad alta precisione (es. qwen2.5-coder:32b / llama3.1:70b) per il refactoring massivo, implementazione Scrum Points cognitivi con assegnazione automatica e gestione PR complesse",
+        "scripts": []
+      },
+      "qnap_nas": {
+        "host_name": "Pianificato - Target Migrazione Futuro",
+        "role": "Destinazione finale a lungo termine per i database persistenti (MariaDB/PostgreSQL), demoni leggeri di notifica e File Sharing SMB/NFS per alleggerire l'MSI 1070",
+        "scripts": []
+      }
+    },
+    "data_pipelines": {
+      "queues": {
+        "code_agent_queue": "/home/sbatta/local-ai/generated_files/.backlog_queue/code_agent",
+        "domotics_agent_queue": "/home/sbatta/local-ai/generated_files/.backlog_queue/domotics_agent"
+      },
+      "archives": {
+        "code_agent_archive": "/home/sbatta/local-ai/generated_files/.archive/code_agent",
+        "domotics_agent_archive": "/home/sbatta/local-ai/generated_files/.archive/domotics_agent"
+      },
+      "retention_policy": "Rimozione automatica dei file archiviati più vecchi di 30 giorni"
+    }
+  }
+}
+

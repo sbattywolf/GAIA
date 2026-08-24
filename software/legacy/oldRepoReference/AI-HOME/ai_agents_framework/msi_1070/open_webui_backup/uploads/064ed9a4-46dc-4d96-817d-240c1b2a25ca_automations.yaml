@@ -1,0 +1,2243 @@
+- id: '1636494715140'
+  alias: ' HA Backup'
+  description: ''
+  trigger:
+  - platform: time
+    at: 03:00
+  condition:
+  - condition: time
+    weekday:
+    - sat
+  action:
+  - service: hassio.addon_stdin
+    data:
+      addon: 15d21743_samba_backup
+      input: trigger
+  mode: single
+- id: '1636495047071'
+  alias: Samba Backup sensor restore
+  description: Everytime Home assistant restart this automation will restore the sensore
+    attributes
+  trigger:
+  - platform: homeassistant
+    event: start
+  condition: []
+  action:
+  - service: hassio.addon_stdin
+    data:
+      addon: 15d21743_samba_backup
+      input: restore-sensor
+  mode: single
+- id: '1636578784463'
+  alias: Move Detection Camera da Letto Night
+  description: ''
+  triggers:
+  - type: occupied
+    device_id: 7dd107de814b90f09bc69099365f5eb6
+    entity_id: 9fbce405a3af200ad70d931f5c207cd1
+    domain: binary_sensor
+    id: Start presence back
+    trigger: device
+    enabled: false
+  - type: occupied
+    device_id: 7dd107de814b90f09bc69099365f5eb6
+    entity_id: 61d88f25096ada213bdc3c523d40be42
+    domain: binary_sensor
+    id: Start presence bed
+    trigger: device
+    enabled: false
+  - type: not_occupied
+    device_id: 7dd107de814b90f09bc69099365f5eb6
+    entity_id: 9fbce405a3af200ad70d931f5c207cd1
+    domain: binary_sensor
+    id: Stop presence bed
+    trigger: device
+    enabled: false
+  - type: not_occupied
+    device_id: 7dd107de814b90f09bc69099365f5eb6
+    entity_id: 9fbce405a3af200ad70d931f5c207cd1
+    domain: binary_sensor
+    id: Stop presence bed 5m
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    trigger: device
+    enabled: false
+  - type: not_occupied
+    device_id: 7dd107de814b90f09bc69099365f5eb6
+    entity_id: 44bb0340de2e69060b906af1e74003ab
+    domain: binary_sensor
+    id: Stop presence all
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+    trigger: device
+    enabled: false
+  - type: turned_off
+    device_id: fa8161621e69c000853fdf68dc0d5bf4
+    entity_id: 7c5ed6a3bea3e339c6eaedeb870eb671
+    domain: light
+    id: Switch off bed light
+    trigger: device
+  - type: turned_on
+    device_id: fa8161621e69c000853fdf68dc0d5bf4
+    entity_id: 7c5ed6a3bea3e339c6eaedeb870eb671
+    domain: light
+    trigger: device
+    id: Switch on bed light
+  - trigger: time
+    at: 08:00:00
+    id: Sunrise
+  conditions:
+  - condition: time
+    after: '23:00:00'
+    before: '10:30:00'
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Start presence bed
+      sequence:
+      - action: counter.increment
+        metadata: {}
+        data: {}
+        target:
+          entity_id: counter.paxbed
+      - type: turn_off
+        device_id: ac6618018658b36ec93b4d81a86257eb
+        entity_id: 53fc921b50463852285f469ade8bb491
+        domain: switch
+      - data:
+          transition: 10
+          brightness_step_pct: 70
+          kelvin: 3206
+        target:
+          entity_id:
+          - light.luce_yeelink_bedside_lamp_light
+        action: light.turn_on
+      - data:
+          rgb_color:
+          - 0
+          - 128
+          - 0
+          transition: 10
+          brightness_pct: 45
+        target:
+          entity_id:
+          - light.nanoleaf_light_strip
+        action: light.turn_on
+    - conditions:
+      - condition: trigger
+        id:
+        - Start presence back
+      - condition: or
+        conditions:
+        - condition: numeric_state
+          entity_id: counter.paxbed
+          below: 1
+        - condition: state
+          entity_id: binary_sensor.presence_sensor_camera_bed_presence
+          state: 'off'
+          for:
+            hours: 0
+            minutes: 5
+            seconds: 0
+          enabled: true
+      sequence:
+      - action: counter.decrement
+        target:
+          entity_id: counter.paxbed
+        data: {}
+      - type: turn_on
+        device_id: ac6618018658b36ec93b4d81a86257eb
+        entity_id: 53fc921b50463852285f469ade8bb491
+        domain: switch
+    - conditions:
+      - condition: trigger
+        id:
+        - Start presence back
+      - condition: state
+        entity_id: binary_sensor.presence_sensor_camera_bed_presence
+        state: 'off'
+        for:
+          hours: 0
+          minutes: 0
+          seconds: 0
+        enabled: true
+      sequence:
+      - action: counter.decrement
+        target:
+          entity_id:
+          - counter.paxbed
+        data: {}
+      - if:
+        - condition: state
+          entity_id: light.nanoleaf_light_strip
+          state: unavailable
+        then: []
+        else:
+        - data:
+            rgb_color:
+            - 0
+            - 128
+            - 0
+            transition: 10
+            brightness_pct: 10
+          target:
+            entity_id:
+            - light.nanoleaf_light_strip
+          action: light.turn_on
+      - data:
+          transition: 10
+          brightness_pct: 2
+          brightness_step_pct: 25
+        target:
+          entity_id:
+          - light.luce_yeelink_bedside_lamp_light
+        action: light.turn_on
+      - delay:
+          hours: 0
+          minutes: 2
+          seconds: 0
+          milliseconds: 0
+      - repeat:
+          count: 3
+          sequence:
+          - if:
+            - condition: state
+              entity_id: binary_sensor.sensore_movimento_letto_occupancy
+              state: 'off'
+              for:
+                hours: 0
+                minutes: 0
+                seconds: 30
+            - condition: state
+              entity_id: input_boolean.keep_on_light_bed
+              state: 'off'
+            then:
+            - data: {}
+              target:
+                entity_id:
+                - light.nanoleaf_light_strip
+                - light.luce_yeelink_bedside_lamp_light
+              action: light.turn_off
+          - if:
+            - condition: state
+              entity_id: light.nanoleaf_light_strip
+              state: 'on'
+            then:
+            - delay:
+                hours: 0
+                minutes: 2
+                seconds: 0
+                milliseconds: 0
+      - if:
+        - condition: state
+          entity_id: input_boolean.keep_on_light_bed
+          state: 'off'
+        - condition: or
+          conditions:
+          - condition: state
+            entity_id: light.nanoleaf_light_strip
+            state: 'on'
+          - condition: state
+            entity_id: light.luce_yeelink_bedside_lamp_light
+            state: 'on'
+        then:
+        - data: {}
+          target:
+            entity_id:
+            - light.nanoleaf_light_strip
+            - light.luce_yeelink_bedside_lamp_light
+          action: light.turn_off
+    - conditions:
+      - condition: trigger
+        id:
+        - Stop presence all
+      sequence:
+      - type: turn_off
+        device_id: ac6618018658b36ec93b4d81a86257eb
+        entity_id: 53fc921b50463852285f469ade8bb491
+        domain: switch
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          device_id: fa8161621e69c000853fdf68dc0d5bf4
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          device_id:
+          - fa8161621e69c000853fdf68dc0d5bf4
+          - 1de01d10689df0229a947b42bb003fc1
+    - conditions:
+      - condition: trigger
+        id:
+        - Switch off bed light
+      sequence:
+      - action: switch.turn_off
+        metadata: {}
+        data: {}
+        target:
+          device_id: ac6618018658b36ec93b4d81a86257eb
+      - type: turn_off
+        device_id: 1de01d10689df0229a947b42bb003fc1
+        entity_id: bd08f5b01c57af269faebb2c9f89c5a6
+        domain: light
+    - conditions:
+      - condition: trigger
+        id:
+        - Switch on bed light
+      sequence:
+      - type: turn_on
+        device_id: 184b6a6ebc2040cc5ec4917607ad2fe2
+        entity_id: 29a9635c014ea45589b2136df1c3b36e
+        domain: switch
+      - action: switch.turn_off
+        metadata: {}
+        data: {}
+        target:
+          device_id: ac6618018658b36ec93b4d81a86257eb
+      - type: turn_on
+        device_id: 1de01d10689df0229a947b42bb003fc1
+        entity_id: bd08f5b01c57af269faebb2c9f89c5a6
+        domain: light
+      - type: turn_off
+        device_id: f03abd08af7fdd093d08eb454041e468
+        entity_id: dc50fef83aa9d9183e53c3d78b8491e4
+        domain: light
+    - conditions:
+      - condition: trigger
+        id:
+        - Sunrise
+      sequence:
+      - type: turn_off
+        device_id: 184b6a6ebc2040cc5ec4917607ad2fe2
+        entity_id: 29a9635c014ea45589b2136df1c3b36e
+        domain: switch
+  mode: single
+- id: '1636648832506'
+  alias: Zone Notification Carlo
+  description: ''
+  use_blueprint:
+    path: homeassistant/notify_leaving_zone.yaml
+    input:
+      person_entity: person.carlo
+      zone_entity: zone.home
+      notify_device: b15278c572df9b5a4b173c10b64aed99
+- id: '1637950961874'
+  alias: NOTIFY Window open
+  description: ''
+  triggers:
+  - type: opened
+    device_id: e3764bb8787574b55fdef5a4ee185c96
+    entity_id: ea9262f69ee2fce8e8dd7a6171ed12f7
+    domain: binary_sensor
+    id: notify_bed_small_window_open
+    for:
+      hours: 2
+      minutes: 0
+      seconds: 0
+    trigger: device
+  - type: opened
+    device_id: 87fcc2fdb8bf815625962ab835476ce6
+    entity_id: ca4995f33c0ae1d25759bced2912e194
+    domain: binary_sensor
+    id: notify_bed_dx_window_open
+    for:
+      hours: 2
+      minutes: 0
+      seconds: 0
+    trigger: device
+  - type: opened
+    device_id: 2b3e330058572632452be33ea79bda22
+    entity_id: 0b90c994a3e37869ca25570ea0593378
+    domain: binary_sensor
+    id: notify_soggiorno_sx_window_open
+    for:
+      hours: 2
+      minutes: 0
+      seconds: 0
+    trigger: device
+  - type: opened
+    device_id: 69af405cef7e103b6f1df5e8c7722307
+    entity_id: 78cde34f5bcbd5399c240b88db959b90
+    domain: binary_sensor
+    id: notify_ufficio_window_open
+    for:
+      hours: 2
+      minutes: 0
+      seconds: 0
+    trigger: device
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - notify_bed_small_window_open
+      sequence:
+      - data:
+          message: Small Window Bed open for two hours
+          title: Small Window Bed open for two hours
+        action: notify.notify
+    - conditions:
+      - condition: trigger
+        id:
+        - notify_bed_dx_window_open
+      sequence:
+      - data:
+          message: Dx Window Camera  open for 2 hours
+          title: Dx Window Camera open for 2 hours
+        action: notify.notify
+    - conditions:
+      - condition: trigger
+        id:
+        - notify_soggiorno_dx_window_open
+      sequence:
+      - data:
+          message: Dx Window open for 2 hours
+          title: Dx Window open for 2 hours
+        action: notify.notify
+    - conditions:
+      - condition: trigger
+        id:
+        - notify_soggiorno_sx_window_open
+      sequence:
+      - data:
+          message: Sx Window open for 2 hours
+          title: Sx Window open for 2 hours
+        action: notify.notify
+    - conditions:
+      - condition: trigger
+        id:
+        - notify_ufficio_window_open
+      sequence:
+      - data:
+          message: Window Ufficio open for 2 hours
+          title: Window Ufficio open for 2 hours
+        action: notify.notify
+  mode: single
+- id: '1638308320252'
+  alias: Switch on/off Bagno Lock
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - switch.wall_switch_bagno_lock_switch
+    from: 'off'
+    to: 'on'
+    id: switch_bagno_lock_on
+  - platform: state
+    entity_id:
+    - switch.wall_switch_bagno_lock_switch
+    from: 'on'
+    to: 'off'
+    id: switch_bagno_lock_off
+  - platform: state
+    entity_id:
+    - switch.wall_switch_bagno_switch
+    from: 'on'
+    to: 'off'
+    id: switch_bagno_off
+  - platform: state
+    entity_id:
+    - input_boolean.keep_on_light_bath
+    from: 'off'
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    id: keep_on_light_on
+  - platform: state
+    entity_id:
+    - input_boolean.keep_on_light_bath
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    id: keep_on_light_off
+    from: 'on'
+  - platform: numeric_state
+    entity_id: sensor.sensore_meteo_bagno_humidity
+    above: 79.8
+    id: humidity_up
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  - platform: numeric_state
+    entity_id:
+    - sensor.sensore_meteo_bagno_humidity
+    id: humidity_down
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+    below: '70'
+  - platform: numeric_state
+    entity_id:
+    - sensor.variazione_umidita_bagno
+    id: humidity_perc_down
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    below: -150
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - switch_bagno_lock_on
+      sequence:
+      - if:
+        - condition: device
+          type: is_off
+          device_id: 8e1c17930fc905b37432f27fa610b7fb
+          entity_id: 9fd1cae2c2c94979acfdaeac370bb4a6
+          domain: switch
+        then:
+        - data: {}
+          target:
+            entity_id: switch.wall_switch_bagno_switch
+          action: switch.turn_on
+      - target:
+          entity_id: input_boolean.keep_on_light_bath
+        data: {}
+        action: input_boolean.turn_on
+    - conditions:
+      - condition: trigger
+        id:
+        - switch_bagno_lock_off
+      sequence:
+      - if:
+        - condition: device
+          type: is_on
+          device_id: 8e1c17930fc905b37432f27fa610b7fb
+          entity_id: 9fd1cae2c2c94979acfdaeac370bb4a6
+          domain: switch
+        then:
+        - data: {}
+          target:
+            entity_id: switch.wall_switch_bagno_switch
+          action: switch.turn_off
+      - target:
+          entity_id: input_boolean.keep_on_light_bath
+        data: {}
+        enabled: true
+        action: input_boolean.turn_off
+    - conditions:
+      - condition: trigger
+        id:
+        - switch_bagno_off
+      sequence:
+      - target:
+          entity_id: input_boolean.keep_on_light_bath
+        data: {}
+        enabled: true
+        action: input_boolean.turn_off
+      - if:
+        - condition: device
+          type: is_on
+          device_id: 8e1c17930fc905b37432f27fa610b7fb
+          entity_id: 774f003c79b3ebfd577ad7bc23bfba9e
+          domain: switch
+        then:
+        - data: {}
+          target:
+            entity_id: switch.wall_switch_bagno_lock_switch
+          action: switch.turn_off
+    - conditions:
+      - condition: trigger
+        id:
+        - keep_on_light_off
+      sequence:
+      - data: {}
+        target:
+          entity_id:
+          - switch.wall_switch_bagno_switch
+          - switch.wall_switch_bagno_lock_switch
+        action: switch.turn_off
+    - conditions:
+      - condition: trigger
+        id:
+        - keep_on_light_on
+      sequence:
+      - if:
+        - condition: device
+          type: is_off
+          device_id: 8e1c17930fc905b37432f27fa610b7fb
+          entity_id: 9fd1cae2c2c94979acfdaeac370bb4a6
+          domain: switch
+        then:
+        - data: {}
+          target:
+            entity_id: switch.wall_switch_bagno_switch
+          action: switch.turn_on
+      - if:
+        - condition: device
+          type: is_off
+          device_id: 8e1c17930fc905b37432f27fa610b7fb
+          entity_id: 774f003c79b3ebfd577ad7bc23bfba9e
+          domain: switch
+        then:
+        - data: {}
+          target:
+            entity_id:
+            - switch.wall_switch_bagno_lock_switch
+          action: switch.turn_on
+    - conditions:
+      - condition: trigger
+        id:
+        - humidity_up
+      sequence:
+      - choose:
+        - conditions:
+          - condition: device
+            type: is_off
+            device_id: 8e1c17930fc905b37432f27fa610b7fb
+            entity_id: 774f003c79b3ebfd577ad7bc23bfba9e
+            domain: switch
+          sequence:
+          - data: {}
+            target:
+              entity_id: switch.wall_switch_bagno_lock_switch
+            action: switch.turn_on
+    - conditions:
+      - condition: trigger
+        id:
+        - humidity_down
+        - humidity_perc_down
+      sequence:
+      - if:
+        - condition: state
+          entity_id: binary_sensor.sensore_movimento_bagno_occupancy
+          state: 'off'
+          for:
+            hours: 0
+            minutes: 2
+            seconds: 0
+        then:
+        - data: {}
+          target:
+            entity_id:
+            - switch.wall_switch_bagno_switch
+          action: switch.turn_off
+  mode: single
+- id: '1638803256538'
+  alias: NOTIFY Door Open
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 2ed4cbb8d403aa9278882a758bd010a0
+    entity_id: ec98e92640c3a3021c281ddd5e47d58b
+    domain: binary_sensor
+    id: notify_main_door_open
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  - type: opened
+    platform: device
+    device_id: 48db96380d12d76e32251aab3ae6f57a
+    entity_id: f69f8cfd137fe411fe583d153b477fa2
+    domain: binary_sensor
+    id: notify_ripostiglio_door_open
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  - type: opened
+    platform: device
+    device_id: b5d83f9632cdacc3153e18a91a4705c3
+    entity_id: 0e081e81c6c1da22e8abb0adbff30891
+    domain: binary_sensor
+    id: notify_wc_door_open
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - notify_main_door_open
+      sequence:
+      - service: notify.notify
+        data:
+          message: Main Door open since last 10 min
+          title: Main Door open since last 10 min
+    - conditions:
+      - condition: trigger
+        id:
+        - notify_ripostiglio_door_open
+      sequence:
+      - service: notify.notify
+        data:
+          message: Ripostiglio open since last 10 min
+          title: Ripostiglio open since last 10 min
+    - conditions:
+      - condition: trigger
+        id:
+        - notify_wc_door_open
+      sequence:
+      - service: notify.notify
+        data:
+          message: Switch WC on open for  Switch WC on 10 min
+          title: Switch WC on open for  Switch WC on 10 min
+  mode: single
+- id: '1639156143349'
+  alias: Switch Sensore Porta ripostiglio
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 297ce8dbbbeb1b8a10ba2979cfff2a98
+    entity_id: 15c6601adda979c8c2f514f1378112cf
+    domain: binary_sensor
+    id: porta_ripostiglio_open
+  - type: not_opened
+    platform: device
+    device_id: 297ce8dbbbeb1b8a10ba2979cfff2a98
+    entity_id: 15c6601adda979c8c2f514f1378112cf
+    domain: binary_sensor
+    id: porta_ripostiglio_closed
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - porta_ripostiglio_open
+      sequence:
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id: switch.wall_switch_ripostiglio_switch
+    - conditions:
+      - condition: trigger
+        id:
+        - porta_ripostiglio_closed
+      sequence:
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id: switch.wall_switch_ripostiglio_switch
+  mode: single
+- id: '1639157238252'
+  alias: NOTIFY Switch on
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_on
+    device_id: 6c8b80100c81c528740f8ea651c9d8d8
+    entity_id: 9fa6e7795441de79a08a2ea333f8446c
+    domain: switch
+    id: notify_wc_switch_on
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  - type: value
+    platform: device
+    device_id: 8a85bc6a1aa8a253f8ad95baa3bc24be
+    entity_id: eebe075ee401839c060b7deb9a35eb26
+    domain: sensor
+    id: notify_corridoio_switch_on
+    below: 1
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  - type: value
+    platform: device
+    device_id: b9e3cae1734680f9b2e4083069e6d949
+    entity_id: 036fe4c8f2ebf5a581d98287f295d497
+    domain: sensor
+    id: notify_ingresso_switch_on
+    below: 1
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - notify_wc_switch_on
+      sequence:
+      - service: notify.notify
+        data:
+          message: Switch WC on open for  Switch WC on 10 min
+          title: Switch WC on open for  Switch WC on 10 min
+    - conditions:
+      - condition: trigger
+        id:
+        - notify_corridoio_switch_on
+      sequence:
+      - service: notify.persistent_notification
+        data:
+          message: Switch corridoio spento
+          title: Switch corridoio spento
+    - conditions:
+      - condition: trigger
+        id:
+        - notify_ingresso_switch_on
+      sequence:
+      - service: notify.persistent_notification
+        data:
+          message: Switch Ingresso spento
+          title: Switch Ingresso Spento
+  mode: single
+- id: '1644871712321'
+  alias: Switch Light on/off lock toggle
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.keep_on_light_soggiorno
+    from: 'off'
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    id: keep_luci_soggiorno_on
+  - platform: state
+    entity_id:
+    - input_boolean.keep_on_light_soggiorno
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    id: keep_luci_soggiorno_off
+  - platform: state
+    entity_id: input_boolean.keep_on_light_corridoio
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    id: keep_luci_corridoio_off
+  - platform: state
+    entity_id:
+    - input_boolean.keep_on_light_ingresso
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    id: keep_luci_ingresso_off
+  - platform: state
+    entity_id: input_boolean.keep_on_light_ufficio
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    id: keep_luci_ufficio_off
+  - platform: state
+    entity_id: input_boolean.keep_on_light_cucina
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    id: keep_luci_cucina_off
+  - platform: state
+    entity_id: input_boolean.keep_on_light_bed
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    id: keep_luci_bed_off
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - keep_luci_soggiorno_on
+      sequence:
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id:
+          - switch.wall_switch_spot_1_switch
+          - switch.wall_switch_spot_2_switch
+        enabled: true
+    - conditions:
+      - condition: trigger
+        id:
+        - keep_luci_soggiorno_off
+      sequence:
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id:
+          - switch.wall_switch_spot_1_switch
+          - switch.wall_switch_spot_2_switch
+    - conditions:
+      - condition: trigger
+        id:
+        - keep_luci_corridoio_off
+      sequence:
+      - service: light.turn_off
+        data:
+          transition: 5
+        target:
+          entity_id:
+          - light.luce_tetto_corridoio_light
+    - conditions:
+      - condition: trigger
+        id:
+        - keep_luci_ingresso_off
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id: light.luce_tetto_ingresso_light
+    - conditions:
+      - condition: trigger
+        id:
+        - keep_luci_ufficio_off
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id: light.lights_ufficio_group
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id: switch.wall_switch_ufficio_switch
+        enabled: false
+    - conditions:
+      - condition: trigger
+        id:
+        - keep_luci_cucina_off
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id: switch.switch_cucina_light_switch
+    - conditions:
+      - condition: trigger
+        id:
+        - keep_luci_bed_off
+      sequence:
+      - service: light.turn_off
+        data: {}
+        target:
+          entity_id: light.nanoleaf_light_strip
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id: switch.wall_switch_camera_letto_switch
+  mode: restart
+- id: '1645906714959'
+  alias: Sensor motion corridoi on/off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.motion_corridoi
+    from: 'off'
+    to: 'on'
+    id: enable_motion_detection_corridoi
+  - platform: state
+    entity_id: input_boolean.motion_corridoi
+    from: 'on'
+    to: 'off'
+    id: disable_motion_detection_corridoi
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - enable_motion_detection_corridoi
+      sequence:
+      - service: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id:
+          - input_boolean.keep_on_light_ingresso
+          - input_boolean.keep_on_light_corridoio
+    - conditions:
+      - condition: trigger
+        id:
+        - disable_motion_detection_corridoi
+      sequence:
+      - service: input_boolean.turn_off
+        data: {}
+        target:
+          entity_id:
+          - input_boolean.keep_on_light_ingresso
+          - input_boolean.keep_on_light_corridoio
+  mode: single
+- id: '1680420241770'
+  alias: 'Switch on/off tv backlight '
+  description: ''
+  triggers:
+  - type: turned_on
+    device_id: a1e7d3601393a6be747a474892a2cb15
+    entity_id: ab0edb3fba5d269e18d2429fac0c9884
+    domain: remote
+    id: sony_tv_on
+    trigger: device
+  - type: turned_on
+    device_id: 2833ccd3f082859a295ddb8a031faf4b
+    entity_id: 6e58807eeec188d63f8ef71abb9c92ef
+    domain: remote
+    trigger: device
+    id: sony_tv_on
+  - type: turned_off
+    device_id: a1e7d3601393a6be747a474892a2cb15
+    entity_id: ab0edb3fba5d269e18d2429fac0c9884
+    domain: remote
+    id: sony_tv_off
+    trigger: device
+  - type: turned_off
+    device_id: 2833ccd3f082859a295ddb8a031faf4b
+    entity_id: 6e58807eeec188d63f8ef71abb9c92ef
+    domain: remote
+    trigger: device
+    id: sony_tv_off
+  - device_id: a1e7d3601393a6be747a474892a2cb15
+    domain: media_player
+    entity_id: 51e757ce8b4826c1cf90368579e04839
+    type: playing
+    id: sony_tv_playing
+    trigger: device
+  - device_id: a1e7d3601393a6be747a474892a2cb15
+    domain: media_player
+    entity_id: 51e757ce8b4826c1cf90368579e04839
+    type: paused
+    id: sony_tv_pause
+    trigger: device
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - sony_tv_on
+      - condition: or
+        conditions:
+        - condition: numeric_state
+          entity_id: sensor.sensore_movimento_ingresso_illuminance
+          below: 20
+        - condition: sun
+          after: sunset
+          before: sunrise
+      sequence:
+      - data: {}
+        action: light.turn_on
+        target:
+          entity_id: light.tv_backlight
+          device_id: f03abd08af7fdd093d08eb454041e468
+    - conditions:
+      - condition: trigger
+        id:
+        - sony_tv_off
+      sequence:
+      - data: {}
+        target:
+          device_id: f03abd08af7fdd093d08eb454041e468
+          entity_id: light.tv_backlight
+        action: light.turn_off
+    - conditions:
+      - condition: trigger
+        id:
+        - sony_tv_playing
+      sequence:
+      - target:
+          entity_id: scene.soggiorno_off
+        metadata: {}
+        action: scene.turn_on
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - sony_tv_pause
+      - condition: or
+        conditions:
+        - condition: numeric_state
+          entity_id: sensor.sensore_movimento_ingresso_illuminance
+          below: 20
+        - condition: sun
+          after: sunset
+          before: sunrise
+      sequence:
+      - target:
+          entity_id: scene.spots_on
+        metadata: {}
+        action: scene.turn_on
+        data: {}
+  mode: single
+- id: '1692439213673'
+  alias: Switch on wc when door WC open
+  description: ''
+  triggers:
+  - type: opened
+    device_id: b5d83f9632cdacc3153e18a91a4705c3
+    entity_id: 0e081e81c6c1da22e8abb0adbff30891
+    domain: binary_sensor
+    id: porta_wc_open
+    trigger: device
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  - type: occupied
+    device_id: 88125d6989119d898ca7dfe6df946303
+    entity_id: 01abae852b5b351945ca175b62011b5d
+    domain: binary_sensor
+    trigger: device
+    id: motion_wc_start
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  - type: not_occupied
+    device_id: 88125d6989119d898ca7dfe6df946303
+    entity_id: 01abae852b5b351945ca175b62011b5d
+    domain: binary_sensor
+    trigger: device
+    id: motion_wc_stop
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - porta_wc_open
+        - motion_wc_start
+      sequence:
+      - data: {}
+        target:
+          entity_id:
+          - switch.wall_switch_wc_switch
+        action: switch.turn_on
+    - conditions:
+      - condition: trigger
+        id:
+        - motion_wc_stop
+      sequence:
+      - data: {}
+        target:
+          entity_id: switch.wall_switch_wc_switch
+        action: switch.turn_off
+  mode: single
+- id: '1694462189456'
+  alias: Move Detection Corridoio
+  description: ''
+  use_blueprint:
+    path: freakshock88/motion_illuminance_activated_entity.yaml
+    input:
+      target_entity: light.luce_tetto_corridoio_light
+      illuminance_sensor: sensor.sensore_movimento_corridoio_illuminance
+      turn_off_blocker_entity: input_boolean.keep_on_light_corridoio
+      no_motion_wait: input_number.delay_corridoio
+      illuminance_cutoff: input_number.cut_off_luminance_corridoio
+      blocker_entity: input_boolean.keep_on_light_corridoio
+      motion_sensor: binary_sensor.sensore_movimento_corridoio_occupancy
+- id: '1694463286176'
+  alias: Move Detection Ingresso
+  description: ''
+  use_blueprint:
+    path: freakshock88/motion_illuminance_activated_entity.yaml
+    input:
+      target_entity: light.luce_tetto_ingresso
+      illuminance_sensor: sensor.sensore_movimento_ingresso_illuminance
+      turn_off_blocker_entity: input_boolean.keep_on_light_ingresso
+      no_motion_wait: input_number.delay_ingresso
+      illuminance_cutoff: input_number.cut_off_luminance_ingresso
+      blocker_entity: input_boolean.keep_on_light_ingresso
+      motion_sensor: binary_sensor.sensore_movimento_ingresso_occupancy
+      time_limit_before: input_datetime.no_one_after_time
+      time_limit_after: input_datetime.light_after_time
+- id: '1694706870118'
+  alias: Check Switch or Light off
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_off
+    device_id: fa3ded79be3f33480bc23b9ff024fe4a
+    entity_id: a2f0f153f678eaac1fa0055bac24abf4
+    domain: switch
+    id: check_ufficio_switch_off
+  - platform: device
+    type: turned_off
+    device_id: bdded2ca7c7f91be629f7793f9777926
+    entity_id: f4dc7fab56a72d2238642d8e8ed0c782
+    domain: switch
+    id: check_ingresso_switch_off
+  - type: value
+    platform: device
+    device_id: b9e3cae1734680f9b2e4083069e6d949
+    entity_id: 036fe4c8f2ebf5a581d98287f295d497
+    domain: sensor
+    id: check_ingresso_light_off
+    below: 1
+    enabled: false
+  - platform: device
+    type: turned_on
+    device_id: 6c8b80100c81c528740f8ea651c9d8d8
+    entity_id: 9fa6e7795441de79a08a2ea333f8446c
+    domain: switch
+    id: check_wc_switch_on
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - check_ufficio_switch_off
+        - check_ufficio_light_off
+      sequence:
+      - data: {}
+        target:
+          entity_id: switch.wall_switch_ufficio_switch
+        action: switch.turn_on
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 5
+          milliseconds: 0
+      - data: {}
+        target:
+          entity_id: light.luce_tetto_ufficio_light
+        action: light.turn_off
+    - conditions:
+      - condition: and
+        conditions:
+        - condition: trigger
+          id:
+          - check_ingresso_switch_off
+          - check_ingresso_light_off
+        - condition: state
+          entity_id: input_boolean.keep_on_light_ingresso
+          state: 'off'
+          enabled: false
+      sequence:
+      - data: {}
+        target:
+          entity_id: switch.wall_switch_ingresso_switch
+        action: switch.turn_on
+    - conditions:
+      - condition: trigger
+        id:
+        - check_wc_switch_on
+      - condition: state
+        entity_id: binary_sensor.sensore_movimento_wc_occupancy
+        state: 'off'
+        for:
+          hours: 0
+          minutes: 5
+          seconds: 0
+      sequence:
+      - data: {}
+        target:
+          entity_id: switch.wall_switch_wc_switch
+        action: switch.turn_off
+  mode: single
+- id: '1695254033209'
+  alias: Switch on/off ingresso light
+  description: ''
+  triggers:
+  - type: opened
+    device_id: 2ed4cbb8d403aa9278882a758bd010a0
+    entity_id: ec98e92640c3a3021c281ddd5e47d58b
+    domain: binary_sensor
+    id: porta_ingresso_open
+    trigger: device
+  - type: not_opened
+    device_id: 2ed4cbb8d403aa9278882a758bd010a0
+    entity_id: ec98e92640c3a3021c281ddd5e47d58b
+    domain: binary_sensor
+    id: porta_ingresso_closed
+    trigger: device
+  conditions:
+  - condition: numeric_state
+    entity_id: sensor.sensore_movimento_ingresso_illuminance
+    below: input_number.cut_off_luminance_ingresso
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - porta_ingresso_open
+      sequence:
+      - data:
+          color_temp: 456
+        target:
+          entity_id: light.luce_tetto_ingresso
+        action: light.turn_on
+    - conditions:
+      - condition: trigger
+        id:
+        - porta_ingresso_closed
+      - condition: state
+        entity_id: input_boolean.keep_on_light_ingresso
+        state: 'off'
+      sequence:
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 20
+          milliseconds: 0
+      - data: {}
+        target:
+          entity_id: light.luce_tetto_ingresso
+        action: light.turn_off
+  mode: single
+- id: '1696074445671'
+  alias: Check Device Connected laptop beast PC
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - device_tracker.sbattygate_laptopbeast_sbattywolf_office
+    from:
+    to: home
+    id: Laptop Beast Online
+  - platform: state
+    entity_id:
+    - device_tracker.sbattygate_laptopbeast_sbattywolf_office
+    from: not_home
+    to: home
+    id: Laptop Beast Offline
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Laptop Beast Online
+      sequence:
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id: switch.plug_laptop_beast_switch
+    - conditions:
+      - condition: trigger
+        id:
+        - Laptop Beast Offline
+      sequence:
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id: switch.plug_laptop_beast_switch
+  mode: single
+- id: '1697546833083'
+  alias: Switch on/off plug laptop beast PC
+  description: ''
+  trigger:
+  - type: value
+    platform: device
+    device_id: c2e0d58b8d7972a6f0551d91062fa837
+    entity_id: 12f0e2b0b3570381f1bf7b3b3fec26ae
+    domain: sensor
+    below: 30
+    id: laptop battery low
+  - type: value
+    platform: device
+    device_id: c2e0d58b8d7972a6f0551d91062fa837
+    entity_id: 12f0e2b0b3570381f1bf7b3b3fec26ae
+    domain: sensor
+    id: laptop battery charged
+    above: 85
+  - platform: device
+    device_id: c2e0d58b8d7972a6f0551d91062fa837
+    domain: button
+    entity_id: 26b664a08bb37d125a14bf6d1b2e7272
+    type: pressed
+    id: laptop beast switch off
+  - platform: state
+    entity_id:
+    - sensor.laptopbeasthassmqtt_sessionstate
+    to: Unlocked
+    id: Unlocked
+  condition: []
+  action:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - laptop battery low
+        - Unlocked
+      sequence:
+      - service: switch.turn_on
+        data: {}
+        target:
+          entity_id: switch.plug_laptop_beast_switch
+    - conditions:
+      - condition: trigger
+        id:
+        - laptop battery charged
+        - laptop beast switch off
+      sequence:
+      - service: switch.turn_off
+        data: {}
+        target:
+          entity_id: switch.plug_laptop_beast_switch
+  mode: single
+- id: '1698190465382'
+  alias: Sensore Presence Ufficio
+  description: ''
+  triggers:
+  - entity_id:
+    - binary_sensor.presence_sensor_ufficio_all_presence
+    to: 'on'
+    id: detected_presence_ufficio
+    trigger: state
+  - entity_id:
+    - binary_sensor.presence_sensor_ufficio_all_presence
+    to: 'off'
+    id: clear_presence_ufficio
+    trigger: state
+  - entity_id:
+    - binary_sensor.presence_sensor_ufficio_desk_presence
+    to: 'on'
+    id: detected_presence_desk
+    trigger: state
+  - entity_id:
+    - binary_sensor.presence_sensor_ufficio_desk_presence
+    to: 'off'
+    id: clear_presence_ufficio_desk
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    trigger: state
+  - entity_id:
+    - binary_sensor.presence_sensor_ufficio_back_presence
+    to: 'on'
+    id: detected_presence_back
+    enabled: true
+    trigger: state
+  - entity_id:
+    - binary_sensor.presence_sensor_ufficio_back_presence
+    to: 'off'
+    id: clear_presence_ufficio_back
+    enabled: true
+    trigger: state
+  conditions:
+  - condition: or
+    conditions:
+    - condition: device
+      type: is_off
+      device_id: d7114f6ddbfde93b256b5050a9b692d8
+      entity_id: de1cf524f7fe1090671be477c36b1335
+      domain: switch
+    - condition: state
+      entity_id: input_boolean.keep_on_office_lights
+      state:
+      - 'on'
+  actions:
+  - alias: Ufficio Presence
+    choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - detected_presence_ufficio
+      - condition: state
+        entity_id: light.luce_tetto_ufficio_light
+        state: 'off'
+      sequence:
+      - data:
+          transition: 3
+          brightness: 200
+          color_temp_kelvin: 3164
+        target:
+          entity_id: light.luce_tetto_ufficio_light
+        action: light.toggle
+    - conditions:
+      - condition: trigger
+        id:
+        - clear_presence_ufficio
+      sequence:
+      - data: {}
+        target:
+          entity_id: light.lights_ufficio_group
+        action: light.turn_off
+  - alias: Desk Presence
+    choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - detected_presence_desk
+      - condition: state
+        state: 'off'
+        entity_id: light.desk_light_ufficio_light
+      sequence:
+      - data:
+          transition: 2
+          brightness: 220
+          color_temp_kelvin: 3831
+        target:
+          entity_id: light.desk_light_ufficio_light
+        action: light.turn_on
+    - conditions:
+      - condition: trigger
+        id:
+        - clear_presence_ufficio_desk
+      sequence:
+      - data:
+          transition: 5
+        target:
+          entity_id: light.desk_light_ufficio_light
+        action: light.turn_off
+  - alias: Back Presence
+    choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - detected_presence_back
+      - condition: state
+        entity_id: light.luce_tetto_ufficio_light
+        state: 'off'
+      sequence:
+      - data:
+          transition: 3
+          brightness: 200
+          color_temp_kelvin: 3790
+        target:
+          entity_id: light.luce_tetto_ufficio_light
+        action: light.toggle
+    - conditions:
+      - condition: trigger
+        id:
+        - clear_presence_ufficio_divano
+      sequence: []
+    enabled: true
+  mode: single
+- id: '1698426364146'
+  alias: Plug 45 on/off
+  description: ''
+  triggers:
+  - entity_id:
+    - switch.plug_45w_divano_switch
+    to: 'on'
+    id: Plug_on
+    trigger: state
+  - entity_id:
+    - timer.plug_45_timer
+    id: Plug_timer_ends
+    to: idle
+    trigger: state
+  - entity_id:
+    - switch.plug_45w_divano_switch
+    to: 'off'
+    id: Plug_off
+    trigger: state
+  conditions:
+  - condition: state
+    entity_id: input_boolean.block_power_45
+    state: 'off'
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Plug_on
+      sequence:
+      - data: {}
+        target:
+          entity_id: timer.plug_45_timer
+        action: timer.start
+    - conditions:
+      - condition: trigger
+        id:
+        - Plug_timer_ends
+      sequence:
+      - data: {}
+        target:
+          entity_id:
+          - switch.plug_45w_divano_switch
+        action: switch.turn_off
+    - conditions:
+      - condition: trigger
+        id:
+        - Plug_off
+      sequence:
+      - data: {}
+        target:
+          entity_id: timer.plug_45_timer
+        action: timer.cancel
+      - action: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.block_power_45
+  mode: single
+- id: '1699214293625'
+  alias: TV player state
+  description: ''
+  triggers:
+  - entity_id:
+    - media_player.sony_tv_2
+    to: 'on'
+    id: tv_player_on
+    trigger: state
+  - entity_id:
+    - media_player.sony_tv_2
+    to: 'off'
+    id: tv_player_off
+    trigger: state
+  - entity_id:
+    - media_player.sony_tv_2
+    to: unavailable
+    id: tv_player_ununav
+    trigger: state
+  - entity_id:
+    - media_player.sony_tv_2
+    to: unknown
+    id: tv_player_unk
+    trigger: state
+  - entity_id:
+    - media_player.sony_tv_2
+    to: idle
+    id: tv_player_idle
+    trigger: state
+  - entity_id:
+    - media_player.sony_tv_2
+    to: standby
+    id: tv_player_stb
+    trigger: state
+  - entity_id:
+    - media_player.sony_tv_2
+    to: paused
+    id: tv_player_pause
+    trigger: state
+  - entity_id:
+    - media_player.sony_tv_2
+    to: playing
+    id: tv_player_play
+    trigger: state
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - tv_player_on
+        - tv_player_play
+        - tv_player_idle
+        - tv_player_pause
+        - tv_player_stb
+      sequence:
+      - data: {}
+        target:
+          entity_id: input_boolean.tv_player_on_going
+        action: input_boolean.turn_on
+      - data: {}
+        target:
+          entity_id: light.lights_spots_group
+        action: light.turn_off
+    - conditions:
+      - condition: trigger
+        id:
+        - tv_player_off
+        - tv_player_ununav
+        - tv_player_unk
+      sequence:
+      - data: {}
+        target:
+          entity_id: input_boolean.tv_player_on_going
+        action: input_boolean.turn_off
+      - if:
+        - condition: numeric_state
+          entity_id: update.sensore_movimento_ingresso_update_available
+          below: 10
+        then:
+        - target:
+            device_id: 3f86f20cedf1bdfc7213a7b37c61da9b
+          data: {}
+          action: switch.turn_on
+        - target:
+            entity_id:
+            - light.lights_spots_group
+            device_id: []
+            area_id: []
+          data: {}
+          action: light.turn_on
+  mode: single
+- id: '1701625160158'
+  alias: Bottone 5 Ufficio White
+  description: ''
+  use_blueprint:
+    path: niro1987/z2m_ikea_tradfri_5button_remote_white.yaml
+    input:
+      remote_entity: sensor.bottone_5_ufficio_action
+      light_entity:
+        entity_id:
+        - light.desk_light_ufficio_light
+        - light.luce_tetto_ufficio_light
+- id: '1701625676897'
+  alias: Bottone 4 Soggiorno MQTT
+  description: ''
+  use_blueprint:
+    path: patpac9/Hue_Dimmer_Switch_Easy_Custom_Buttons.yaml
+    input:
+      controller: Bottone Hue Soggiorno
+      on_press: []
+      up_pressed: []
+      down_pressed: []
+      off_pressed: []
+      up_held:
+      - type: toggle
+        device_id: f03abd08af7fdd093d08eb454041e468
+        entity_id: 449b50105057b06ad24c64792ba4341b
+        domain: switch
+      down_held: []
+      off_held:
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.block_power_45
+      - type: turn_on
+        device_id: ede6ad38906abdf12538a28347a354a9
+        entity_id: 69239ae490e188beae8568757cd23891
+        domain: switch
+      on_released:
+      - if:
+        - condition: or
+          conditions:
+          - condition: state
+            entity_id: light.luce_tetto_corridoio_light
+            state: 'on'
+          - condition: state
+            entity_id: light.luce_tetto_ingresso_light
+            state: 'on'
+        then:
+        - target:
+            entity_id:
+            - light.luce_tetto_corridoio_light
+            - light.luce_tetto_ingresso
+          data: {}
+          action: light.turn_off
+        else:
+        - target:
+            entity_id:
+            - light.luce_tetto_corridoio_light
+            - light.luce_tetto_ingresso
+            device_id: []
+            area_id: []
+          data: {}
+          action: light.turn_on
+      up_released:
+      - type: toggle
+        device_id: 5a71b5944193a9655372ecdf0f406f93
+        entity_id: 1631dcf27c2498b430ca9eba89af7421
+        domain: light
+      - type: toggle
+        device_id: d145fe353c0472a3921197275f769bc3
+        entity_id: 3086c1f3cd793abddd7b05d3da22ce83
+        domain: light
+      down_released:
+      - data: {}
+        target:
+          entity_id: switch.switch_cucina_light_switch
+        action: switch.toggle
+      off_released:
+      - data: {}
+        target:
+          entity_id: switch.plug_45w_divano_switch
+        action: switch.toggle
+      - if:
+        - condition: state
+          entity_id: input_boolean.block_power_45
+          state: 'on'
+          for:
+            hours: 0
+            minutes: 0
+            seconds: 0
+        then:
+        - action: input_boolean.turn_off
+          metadata: {}
+          data: {}
+          target:
+            entity_id: input_boolean.block_power_45
+      on_held: []
+      on_hold_released:
+      - if:
+        - condition: numeric_state
+          entity_id: sensor.little_beast_little_beast_cpuload
+          above: 1
+        then:
+        - action: button.press
+          metadata: {}
+          data: {}
+          target:
+            entity_id: button.little_beast_little_beast_shutdown
+        - delay:
+            hours: 0
+            minutes: 2
+            seconds: 0
+            milliseconds: 0
+        - type: toggle
+          device_id: 0363ec6259e045f90d35249bb64606e9
+          entity_id: aeb8b5ddcf1df9e1a0b0475d4007f65a
+          domain: switch
+        else:
+        - type: toggle
+          device_id: 0363ec6259e045f90d35249bb64606e9
+          entity_id: aeb8b5ddcf1df9e1a0b0475d4007f65a
+          domain: switch
+- id: '1701626064665'
+  alias: Bottone Camera da Letto
+  description: ''
+  use_blueprint:
+    path: Drafted/aqara-buttons-all-in-one-zigbee2mqtt.yaml
+    input:
+      action_sensor: sensor.bottone_camera_da_letto_action
+      single_action:
+      - service: light.toggle
+        data: {}
+        target:
+          entity_id: light.luci_letto_notte_sx
+      double_action:
+      - service: switch.toggle
+        data: {}
+        target:
+          entity_id: switch.wall_switch_camera_letto_switch
+      hold_action:
+      - service: input_boolean.toggle
+        data: {}
+        target:
+          entity_id: input_boolean.keep_on_light_ingresso
+      shake_action: []
+      triple_action: []
+- id: '1701639830270'
+  alias: Bottone Cucina MQTT
+  description: ''
+  use_blueprint:
+    path: Drafted/aqara-buttons-all-in-one-zigbee2mqtt.yaml
+    input:
+      action_sensor: sensor.bottone_cucina_action
+      single_action:
+      - data: {}
+        target:
+          entity_id: switch.switch_cucina_light_switch
+        action: switch.toggle
+      double_action:
+      - data: {}
+        target:
+          device_id: b9e3cae1734680f9b2e4083069e6d949
+        action: light.toggle
+      - data: {}
+        target:
+          entity_id: switch.switch_cucina_light_switch
+        action: switch.toggle
+      hold_action:
+      - data: {}
+        target:
+          entity_id: input_boolean.keep_on_light_ingresso
+        action: input_boolean.toggle
+      release_action: []
+- id: '1702130464459'
+  alias: Switch on/off LITTLE BEAST PC
+  description: ''
+  triggers:
+  - entity_id:
+    - device_tracker.pc_little_beast
+    id: pc offline
+    trigger: state
+    to:
+    - not_home
+    for:
+      hours: 1
+      minutes: 0
+      seconds: 0
+  - entity_id:
+    - switch.plug_sim_racing
+    id: Switch On SimPlug
+    trigger: state
+    to: 'on'
+    enabled: true
+  - entity_id:
+    - switch.plug_sim_racing
+    id: Switch Off SimPlug
+    trigger: state
+    to: 'off'
+    enabled: true
+  - entity_id:
+    - sensor.little_beast_simracing_little_beast_simracing_loggeduser
+    id: Ayrton ON
+    trigger: state
+    to:
+    - Ayrton
+  - entity_id:
+    - sensor.little_beast_simracing_little_beast_simracing_loggeduser
+    id: Ayrton Off
+    trigger: state
+    from:
+    - Ayrton
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Switch On SimPlug
+      sequence:
+      - if:
+        - condition: state
+          entity_id: sensor.laptopbeasthassmqtt_battery_powerline_status
+          state:
+          - 'off'
+        then:
+        - action: switch.turn_on
+          metadata: {}
+          target:
+            device_id: 444adb213ba4fcb3e902f336ad28c0b0
+          data: {}
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 20
+            milliseconds: 0
+      - if:
+        - condition: state
+          entity_id: switch.plug_pc_little_beast_presa_1
+          state:
+          - 'off'
+        then:
+        - action: switch.turn_on
+          metadata: {}
+          target:
+            entity_id:
+            - switch.plug_pc_little_beast_presa_1
+          data: {}
+      - if:
+        - condition: state
+          entity_id: media_player.sony_xr_83a90j_4
+          state: 'off'
+        then:
+        - type: turn_on
+          device_id: a1e7d3601393a6be747a474892a2cb15
+          entity_id: ab0edb3fba5d269e18d2429fac0c9884
+          domain: remote
+    - conditions:
+      - condition: trigger
+        id:
+        - Switch Off SimPlug
+      sequence:
+      - action: button.press
+        metadata: {}
+        target:
+          entity_id: button.little_beast_simracing_little_beast_simracing_logoff
+        data: {}
+    - conditions:
+      - condition: trigger
+        id:
+        - Ayrton ON
+      - condition: state
+        entity_id: sensor.little_beast_simracing_little_beast_simracing_loggeduser
+        state:
+        - Ayrton
+        enabled: false
+      sequence:
+      - if:
+        - condition: state
+          entity_id: switch.plug_sim_racing
+          state:
+          - 'off'
+        then:
+        - type: turn_on
+          device_id: d7114f6ddbfde93b256b5050a9b692d8
+          entity_id: de1cf524f7fe1090671be477c36b1335
+          domain: switch
+      - if:
+        - condition: state
+          entity_id: media_player.sony_xr_83a90j_4
+          state: 'off'
+        then:
+        - type: turn_on
+          device_id: a1e7d3601393a6be747a474892a2cb15
+          entity_id: ab0edb3fba5d269e18d2429fac0c9884
+          domain: remote
+    - conditions:
+      - condition: trigger
+        id:
+        - Ayrton Off
+        enabled: false
+      - condition: state
+        entity_id: sensor.little_beast_simracing_little_beast_simracing_loggeduser
+        state:
+        - Ayrton
+        enabled: false
+      sequence:
+      - type: turn_off
+        device_id: d7114f6ddbfde93b256b5050a9b692d8
+        entity_id: de1cf524f7fe1090671be477c36b1335
+        domain: switch
+        enabled: false
+    - conditions:
+      - condition: and
+        conditions:
+        - condition: trigger
+          id:
+          - pc offline
+        - condition: state
+          entity_id: sensor.little_beast_sbatt_loggeduser
+          state:
+          - unavailable
+        - condition: state
+          entity_id: sensor.little_beast_simracing_little_beast_simracing_loggeduser
+          state:
+          - unavailable
+        enabled: false
+      sequence:
+      - type: turn_off
+        device_id: 0363ec6259e045f90d35249bb64606e9
+        entity_id: aeb8b5ddcf1df9e1a0b0475d4007f65a
+        domain: switch
+  mode: single
+- id: '1702200791082'
+  alias: Move Detection Camera da Letto Day
+  description: ''
+  triggers:
+  - type: occupied
+    device_id: 7dd107de814b90f09bc69099365f5eb6
+    entity_id: 61d88f25096ada213bdc3c523d40be42
+    domain: binary_sensor
+    id: Start detection Back
+    trigger: device
+  - type: not_occupied
+    device_id: 7dd107de814b90f09bc69099365f5eb6
+    entity_id: 44bb0340de2e69060b906af1e74003ab
+    domain: binary_sensor
+    id: Stop detection All
+    trigger: device
+  - type: turned_off
+    device_id: fa8161621e69c000853fdf68dc0d5bf4
+    entity_id: 7c5ed6a3bea3e339c6eaedeb870eb671
+    domain: light
+    id: Switch off bed light
+    trigger: device
+  - type: turned_on
+    device_id: fa8161621e69c000853fdf68dc0d5bf4
+    entity_id: 7c5ed6a3bea3e339c6eaedeb870eb671
+    domain: light
+    trigger: device
+    id: Switch on bed light
+  conditions:
+  - condition: time
+    after: '10:30:00'
+    before: '23:00:00'
+  - condition: state
+    entity_id: input_boolean.keep_on_light_bed
+    state: 'off'
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id:
+        - Start detection Back
+      - type: is_illuminance
+        condition: device
+        device_id: 7dd107de814b90f09bc69099365f5eb6
+        entity_id: 421d53497e74f35678586f4219b40fad
+        domain: sensor
+        below: 10
+      sequence:
+      - data: {}
+        target:
+          entity_id: switch.wall_switch_camera_letto_switch
+        action: switch.turn_on
+    - conditions:
+      - condition: trigger
+        id:
+        - Stop detection All
+      sequence:
+      - data: {}
+        target:
+          entity_id: switch.wall_switch_camera_letto_switch
+        action: switch.turn_off
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          device_id:
+          - fa8161621e69c000853fdf68dc0d5bf4
+          - 1de01d10689df0229a947b42bb003fc1
+    - conditions:
+      - condition: trigger
+        id:
+        - Switch off bed light
+      sequence:
+      - action: switch.turn_off
+        metadata: {}
+        data: {}
+      - action: switch.turn_off
+        metadata: {}
+        data: {}
+        target:
+          device_id: ac6618018658b36ec93b4d81a86257eb
+    - conditions:
+      - condition: trigger
+        id:
+        - Switch on bed light
+      - condition: device
+        type: is_on
+        device_id: ac6618018658b36ec93b4d81a86257eb
+        entity_id: 53fc921b50463852285f469ade8bb491
+        domain: switch
+      sequence:
+      - action: switch.turn_off
+        metadata: {}
+        data: {}
+        target:
+          device_id: ac6618018658b36ec93b4d81a86257eb
+  mode: single
+- id: '1718452822679'
+  alias: Move Detection Bagno
+  description: ''
+  use_blueprint:
+    path: freakshock88/motion_illuminance_activated_entity.yaml
+    input:
+      target_entity: switch.wall_switch_bagno_switch
+      illuminance_sensor: sensor.sensore_movimento_bagno_illuminance
+      turn_off_blocker_entity: input_boolean.keep_on_light_bath
+      no_motion_wait: input_number.delay_bagno
+      illuminance_cutoff: input_number.cut_off_luminance_bagno
+      blocker_entity: input_boolean.keep_on_light_bath
+      motion_sensor: binary_sensor.sensore_movimento_bagno_occupancy
+- id: '1735032456795'
+  alias: 'Accendi termosifoni '
+  description: ''
+  triggers:
+  - trigger: time
+    at: input_datetime.start_heater_datetime
+  conditions: []
+  actions:
+  - action: climate.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id:
+      - d4b482fa797780f891796b89823808d0
+      - ba640f8e5819636f0a391e447270278f
+      - 218d7d7429b52259b6d3fbbac8ecb055
+      - 0a484aee8ecf7e318a71a9564d50492e
+  mode: single
+- id: '1783463294428'
+  alias: 'UPS: Notifica Blackout'
+  description: Invia una notifica quando manca la corrente
+  triggers:
+  - entity_id: sensor.office_ups_ufficio_stato
+    to: onbatt
+    trigger: state
+  actions:
+  - data:
+      title: ⚠️ Blackout in corso!
+      message: La casa è senza corrente. Il NAS e Home Assistant sono alimentati dall'UPS.
+    action: notify.notify
+  mode: single
+- id: '1783463321128'
+  alias: 'UPS: Spegnimento PC di sicurezza'
+  description: Spegne il PC se la batteria dell'UPS è troppo bassa
+  triggers:
+  - entity_id:
+    - sensor.office_ups_ufficio_stato
+    below: 50
+    trigger: numeric_state
+  conditions:
+  - condition: state
+    entity_id: sensor.qnapups_status
+    state: onbatt
+  actions:
+  - action: switch.turn_off
+    metadata: {}
+    target:
+      entity_id: switch.plug_sim_racing
+    data: {}
+  - target:
+      entity_id: button.little_beast_sbatt_little_beast_shutdown
+    action: button.press
+    data: {}
+  mode: single
+- id: '1783463558097'
+  alias: 'UPS: Corrente Ripristinata'
+  description: Avvisa quando torna la corrente elettrica
+  triggers:
+  - entity_id: sensor.office_ups_ufficio_stato
+    to: online
+    trigger: state
+  actions:
+  - data:
+      title: "\U0001F7E2 Corrente Ripristinata"
+      message: L'alimentazione elettrica è tornata. L'UPS è di nuovo in carica.
+    action: notify.notify
+  mode: single
+- id: '1784991096294'
+  alias: 'IA: Report Serale Dinamico Autogestito'
+  description: Genera un report analizzando automaticamente tutte le entità attive
+    della casa
+  triggers:
+  - at: '23:00:00'
+    trigger: time
+  conditions: []
+  actions:
+  - action: conversation.process
+    metadata: {}
+    data:
+      agent_id: conversation.agente_iot_1070
+      text: "Genera un report serale di sicurezza conciso per Sbatta in italiano perfetto.
+        Analizza questa lista di dispositivi attualmente ATTIVI (accesi o aperti)
+        nella casa ed elenca solo le anomalie reali o le cose dimenticate accese.
+        Se tutto è spento e chiuso, dì che la casa è in totale sicurezza.\nEcco i
+        dispositivi attivi adesso: {% set luci = states.light | selectattr('state',
+        'eq', 'on') | rejectattr('entity_id', 'search', 'adaptive_lighting') | map(attribute='entity_id')
+        | list %} {% set interruttori = states.switch | selectattr('state', 'eq',
+        'on') | rejectattr('entity_id', 'search', 'always_on|adaptive_lighting|sleep_mode|adapt_color|power_outage|autofocus|alarm|infrared|cammela')
+        | map(attribute='entity_id') | list %} {% set porte_finestre = states.binary_sensor
+        | selectattr('state', 'eq', 'on') | list %}\n\nLUCI ACCESE: {% if luci | length
+        > 0 %}\n  {% for l in luci %} - {{ state_attr(l, 'friendly_name') or l }}\n
+        \ {% endfor %}\n{% else %}\n  Nessuna luce accesa.\n{% endif %}\nPRESE/INTERRUTTORI
+        ATTIVI: {% if interruttori | length > 0 %}\n  {% for i in interruttori %}
+        - {{ state_attr(i, 'friendly_name') or i }}\n  {% endfor %}\n{% else %}\n
+        \ Nessuna presa attiva.\n{% endif %}\nPORTE E FINESTRE APERTE: {% if porte_finestre
+        | length > 0 %}\n  {% for pf in porte_finestre %} - {{ pf.name }}\n  {% endfor
+        %}\n{% else %}\n  Tutto chiuso.\n{% endif %}\n"
+    response_variable: riscontro_ia
+  - action: notify.persistent_notification
+    data:
+      title: Report Sicurezza (GTX 1070)
+      message: '{{ riscontro_ia.response.speech.plain.speech }}'
+  mode: single
