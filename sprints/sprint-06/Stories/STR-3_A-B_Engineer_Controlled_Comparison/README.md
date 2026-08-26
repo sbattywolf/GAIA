@@ -35,3 +35,6 @@ A/B controlled comparison proposal completed and revised per Architect feedback
 
 ## Next gate
 Architect review of the revised comparison proposal.
+
+## Status
+STR-3: PROPOSAL READY FOR REVIEW

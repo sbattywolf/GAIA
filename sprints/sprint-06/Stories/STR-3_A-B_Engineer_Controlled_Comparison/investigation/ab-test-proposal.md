@@ -94,3 +94,6 @@ HUMAN OWNER / ARCHITECT REVIEW
 The proposal itself does NOT authorize execution of the A/B experiment.
 
 Execution requires the next explicit authorization.
+
+## Final Note
+This proposal defines the framework for a controlled comparison between GAIA Engineer implementations. It is not an execution of the experiment itself, but rather a specification of how such an experiment should be conducted to test the semantic boundaries defined in STR-2.
