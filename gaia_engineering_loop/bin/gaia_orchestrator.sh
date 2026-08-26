@@ -34,8 +34,12 @@ verify_commit_binding() {
     
     log "Verifying commit binding for target $target"
     
+    # Get the repository root directory (path-independent)
+    SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -P)"
+    REPO_ROOT="${SCRIPT_DIR%/gaia_engineering_loop/bin}"  # Remove last path component to get repo root
+    
     # Get the observed commit from the target
-    local observed_commit=$(ssh -o BatchMode=yes -o ConnectTimeout=5 "$target" "cd ~/github_repos/GAIA && git rev-parse HEAD" 2>/dev/null || echo "ERROR")
+    local observed_commit=$(ssh -o BatchMode=yes -o ConnectTimeout=5 "$target" "cd \"$REPO_ROOT\" && git rev-parse HEAD" 2>/dev/null || echo "ERROR")
     
     if [[ "$observed_commit" == "ERROR" ]]; then
         log "Unable to determine observed commit from target $target"
