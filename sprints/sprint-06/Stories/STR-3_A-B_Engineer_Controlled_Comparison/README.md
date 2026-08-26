@@ -18,6 +18,11 @@ ING_3090
 ## Previous Story
 STR-2 — Engineer Semantic Contract
 
+## Prototype Plan
+This story includes the plan for creating an OpenClaw prototype using the existing GAIA framework as a baseline.
+
+See [OPENCLAW_PROTOTYPE_PLAN.md](OPENCLAW_PROTOTYPE_PLAN.md) for detailed implementation approach.
+
 ## Previous Story
 ACCEPTED / CLOSED
 
