@@ -28,10 +28,10 @@ Accepted four-clause STR-2 Engineer semantic contract.
 Conduct the controlled A/B Engineer comparison against the accepted STR-2 semantic baseline.
 
 ## Current phase
-INVESTIGATION
+ACTIVE WORK
 
 ## Implementation
-NOT STARTED
+A/B controlled comparison proposal completed and revised per Architect feedback
 
 ## Next gate
-Architect review of the comparison proposal.
+Architect review of the revised comparison proposal.
