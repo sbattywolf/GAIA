@@ -156,34 +156,30 @@ if [[ "$PUSH_EVIDENCE" == "1" ]]; then
   echo "== EVIDENCE PUSH =="
   git status --short > "$RUN_DIR/status_before_push.txt"
 
-  # Stage only this run's report/evidence.
-  git add "$RUN_DIR"
+  # DISABLED: Stage only this run's report/evidence.
+  # git add "$RUN_DIR"
+  
+  echo "WARNING: Evidence push disabled for read-only framework" >&2
 
-  if git diff --cached --name-only | grep -v "^${RUN_DIR}/" >/dev/null; then
-    git reset
-    fail "unexpected files staged; refusing evidence push"
-  fi
+  # DISABLED: Git operations
+  # if git diff --cached --name-only | grep -v "^${RUN_DIR}/" >/dev/null; then
+  #   git reset
+  #   fail "unexpected files staged; refusing evidence push"
+  # fi
 
-  git diff --cached --check || {
-    git reset
-    fail "staged evidence has whitespace errors"
-  }
+  # git diff --cached --check || {
+  #   git reset
+  #   fail "staged evidence has whitespace errors"
+  # }
 
-  git commit -m "GAIA: record 1070 validation evidence" || {
-    git reset
-    fail "evidence commit failed"
-  }
+  # git commit -m "GAIA: record 1070 validation evidence" || {
+  #   git reset
+  #   fail "evidence commit failed"
+  # }
 
-  git push "$REMOTE" "$BRANCH" || fail "evidence push failed"
+  # git push "$REMOTE" "$BRANCH" || fail "evidence push failed"
 
-  LOCAL_PUSH_SHA="$(git rev-parse HEAD)"
-  REMOTE_PUSH_SHA="$(git ls-remote "$REMOTE" "refs/heads/$BRANCH" | awk '{print $1}')"
-
-  echo "local_push_sha=$LOCAL_PUSH_SHA" > "$RUN_DIR/push_verification.txt"
-  echo "remote_push_sha=$REMOTE_PUSH_SHA" >> "$RUN_DIR/push_verification.txt"
-
-  [[ "$LOCAL_PUSH_SHA" == "$REMOTE_PUSH_SHA" ]] || \
-    fail "remote SHA does not match local pushed SHA"
+  echo "WARNING: Evidence push disabled for read-only framework" >&2
 fi
 
 echo

@@ -30,16 +30,10 @@ commit_as() {
         # Set explicit author and committer identity for this commit
         GIT_AUTHOR_NAME="$actor_name" GIT_AUTHOR_EMAIL="$actor_email" \
         GIT_COMMITTER_NAME="$actor_name" GIT_COMMITTER_EMAIL="$actor_email" \
-        git commit -m "$message" > /dev/null 2>&1
+        # DISABLED: git commit -m "$message" > /dev/null 2>&1
         
-        if [[ $? -eq 0 ]]; then
-            # Return the actual commit SHA after successful commit
-            git rev-parse HEAD
-            return 0
-        else
-            echo "ERROR: Commit failed" >&2
-            return 1
-        fi
+        echo "WARNING: Commit operation disabled for read-only framework" >&2
+        return 1
     else
         echo "WARNING: No changes to commit" >&2
         # Return current HEAD as there are no changes
@@ -67,22 +61,20 @@ push_and_verify() {
         return 1
     fi
     
-    # Perform the actual push
-    git push origin "$branch_name" > /dev/null 2>&1
+    # DISABLED: Perform the actual push
+    # git push origin "$branch_name" > /dev/null 2>&1
     
-    if [[ $? -ne 0 ]]; then
-        echo "ERROR: Push failed" >&2
-        return 1
-    fi
+    echo "WARNING: Push operation disabled for read-only framework" >&2
+    return 1
     
     # Verify that local and remote SHAs match exactly
-    local local_sha=$(git rev-parse HEAD)
-    local remote_sha=$(git ls-remote origin "$branch_name" | cut -f1)
-    
-    if [[ "$local_sha" == "$remote_sha" ]]; then
-        return 0
-    else
-        echo "ERROR: SHA mismatch - local=$local_sha, remote=$remote_sha" >&2
-        return 1
-    fi
+    # local local_sha=$(git rev-parse HEAD)
+    # local remote_sha=$(git ls-remote origin "$branch_name" | cut -f1)
+    # 
+    # if [[ "$local_sha" == "$remote_sha" ]]; then
+    #     return 0
+    # else
+    #     echo "ERROR: SHA mismatch - local=$local_sha, remote=$remote_sha" >&2
+    #     return 1
+    # fi
 }
