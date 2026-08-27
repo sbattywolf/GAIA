@@ -24,7 +24,12 @@ The initial Capability Model separates six concerns:
 
 For the first domestic slice, this model will be implemented with simple explicit records and rules. It does not require a Capability Registry, Policy engine, Workflow engine, Plugin system, or dynamic discovery.
 
-## 2. Context
+## Clarifications
+
+- A Capability may access scoped Resources/Documents and provide retrieved information to execution/context;
+- Resource ownership remains governed by Resource Scope;
+- Retrieval does not imply Memory ownership;
+- Persistent agent Memory remains governed separately by the Memory semantics.
 
 ADR-0001 establishes a minimal in-process Core that coordinates Requests, Context, Capability and Resource scope, required Policy and Approval outcomes, execution delegation, structured results, and minimal evidence.
 
