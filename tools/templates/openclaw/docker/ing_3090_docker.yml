@@ -1,0 +1,42 @@
+# Target profile: ING_3090
+# Compose template. Validate against the installed OpenClaw release
+# before deployment.
+
+services:
+  openclaw:
+    image: ${OPENCLAW_IMAGE}
+    container_name: gaia-openclaw-${GAIA_TARGET_PROFILE:-ING_3090}
+    restart: unless-stopped
+
+    env_file:
+      - ../config/base.env
+      - ../config/target.env
+      - ../config/secrets.env
+
+    environment:
+      OLLAMA_HOST: ${OLLAMA_HOST:-host.docker.internal}
+      OLLAMA_PORT: ${OLLAMA_PORT:-11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-}
+
+    ports:
+      - "${OPENCLAW_GATEWAY_BIND:-127.0.0.1}:${OPENCLAW_GATEWAY_PORT:-18789}:18789"
+
+    volumes:
+      - ${OPENCLAW_STATE_DIR}:/home/node/.openclaw
+      - ${OPENCLAW_WORKSPACE_DIR}:/workspace
+      - ${OPENCLAW_AUTH_DIR}:/home/node/.openclaw/credentials
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+    networks:
+      - openclaw
+
+networks:
+  openclaw:
+    driver: bridge

@@ -29,6 +29,11 @@ The Core will **not** initially contain Domain logic, a general Planner, persist
 
 This decision favours the shortest safe path to useful domestic production while preserving replaceability and clear boundaries.
 
+## Clarifications
+
+- Persistent agent Memory is outside Core boundary;
+- Document/resource retrieval does not make retrieved material part of Core-owned Memory.
+
 ## 2. Context
 
 GAIA is a personal, local-first ecosystem of specialised digital Collaborators. It is maintained by one Human Owner for domestic use.

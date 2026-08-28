@@ -258,24 +258,35 @@ class PreflightChecker:
     def check_workspace(self):
         """Check workspace and filesystem requirements"""
         def _check():
-            # Check if GAIA workspace exists
-            workspace_path = "/home/sbatta/github_repos/GAIA"
-            workspace_exists = os.path.exists(workspace_path)
-            
-            # Check free space (minimum 1GB required for experiments)
+            # Check if GAIA workspace exists - make path relative to script location
             try:
-                statvfs = os.statvfs(workspace_path)
-                free_space = statvfs.f_frsize * statvfs.f_bavail
-                free_gb = free_space / (1024**3)
-                sufficient_space = free_gb >= 1.0
-            except Exception:
+                # Get the directory containing this script
+                script_dir = os.path.dirname(os.path.abspath(__file__))
+                # Navigate up to the repository root (assuming script is in gaia_target_preflight/)
+                repo_root = os.path.dirname(script_dir)
+                workspace_path = repo_root
+                workspace_exists = os.path.exists(workspace_path)
+                
+                # Check free space (minimum 1GB required for experiments)
+                try:
+                    statvfs = os.statvfs(workspace_path)
+                    free_space = statvfs.f_frsize * statvfs.f_bavail
+                    free_gb = free_space / (1024**3)
+                    sufficient_space = free_gb >= 1.0
+                except Exception:
+                    free_gb = 0
+                    sufficient_space = False
+            except Exception as e:
+                workspace_path = "unknown"
+                workspace_exists = False
                 free_gb = 0
                 sufficient_space = False
             
             return {
                 "workspace_exists": workspace_exists,
                 "free_space_gb": round(free_gb, 2),
-                "sufficient_space": sufficient_space
+                "sufficient_space": sufficient_space,
+                "workspace_path": workspace_path
             }, []
         
         self.run_check("filesystem", "workspace", _check)

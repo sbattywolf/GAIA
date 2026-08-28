@@ -52,6 +52,10 @@ Not decided. Do not populate this section until review explicitly accepts an alt
 
 Not yet applicable. Consequences must be recorded only with an accepted decision.
 
+## Clarifications
+
+Document retrieval into agent context must remain distinguishable from persistent agent Memory.
+
 ## Related material
 
 - `../reference/IDENTITY.md`
