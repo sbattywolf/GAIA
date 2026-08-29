@@ -1,0 +1,10 @@
+[
+  {
+    "path": "agents.defaults.sandbox.mode",
+    "value": "all"
+  },
+  {
+    "path": "tools.profile",
+    "value": "restricted"
+  }
+]
