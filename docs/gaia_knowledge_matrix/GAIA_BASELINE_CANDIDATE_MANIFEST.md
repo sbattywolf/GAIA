@@ -23,6 +23,18 @@ This manifest defines the candidate files and directories intended for inclusion
 
 ### CANONICAL-REFERENCE
 - references/
+
+### HISTORICAL-EVIDENCE
+- docs/gaia_knowledge_matrix/KNOWLEDGE_MATRIX_AUDIT.md
+- docs/gaia_knowledge_matrix/RECONCILIATION_STATUS_MODEL.md
+
+### IMPLEMENTATION-EVIDENCE
+- gaia_xxx directories (implementation sources)
+- evidence/ directory
+- gaia_1070_model_runtime/
+- gaia_3090_model_stack/
+
+### SUPERSEDED
 - sprints/sprint-01/
 - sprints/sprint-02/
 - sprints/sprint-03/
@@ -30,18 +42,6 @@ This manifest defines the candidate files and directories intended for inclusion
 - sprints/sprint-05/
 - sprints/sprint-06/
 - sprints/sprint-07/
-
-### HISTORICAL-EVIDENCE
-- docs/gaia_knowledge_matrix/KNOWLEDGE_MATRIX_AUDIT.md
-- docs/gaia_knowledge_matrix/RECONCILIATION_STATUS_MODEL.md
-
-### IMPLEMENTATION
-- gaia_xxx directories (implementation sources)
-- evidence/ directory
-
-### OPERATIONAL
-- gaia_1070_model_runtime/
-- gaia_3090_model_stack/
 
 ### LEGACY-REFERENCE
 - old repository forks and references
@@ -99,7 +99,7 @@ The following items are classified as legacy references and should not be consid
 
 ## 8. Candidate Branches for Later Comparison
 
-### main (Canonical baseline)
+### main (Baseline Candidate)
 - SHA: 208d1735
 - Purpose: Main repository baseline
 - Contains material potentially useful to baseline
