@@ -1,0 +1,1 @@
+- Gateway configured at host 10.16.20.13, port 18789

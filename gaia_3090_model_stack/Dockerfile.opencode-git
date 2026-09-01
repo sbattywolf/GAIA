@@ -1,0 +1,8 @@
+# Minimal Dockerfile to add git to OpenCode 1.18.25 image
+FROM ghcr.io/anomalyco/opencode:1.18.25
+
+# Install git and required dependencies
+RUN apk add --no-cache git
+
+# Preserve the original entrypoint and command
+CMD ["serve", "--hostname", "0.0.0.0", "--port", "4096"]
