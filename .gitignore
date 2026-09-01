@@ -7,6 +7,10 @@ secrets/
 *.secret
 *.secrets
 
+#BUNDLE
+GAIA_RECONCILIATION_BUNDLE/
+GAIA_RECONCILIATION_BUNDLE*.zip
+
 # Python
 __pycache__/
 *.py[cod]
