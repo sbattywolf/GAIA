@@ -1,16 +1,108 @@
-version: '3.8'
-
 services:
-  gaia-ollama:
-    image: ollama/ollama:latest
-    container_name: gaia-ollama-1070
-    ports:
-      - "11435:11434"
-    volumes:
-      - ./ollama-data:/root/.ollama
-    environment:
-      - OLLAMA_HOST=0.0.0.0
-      - OLLAMA_KEEP_ALIVE=5m
 
-volumes:
-  ollama-data:
+  gaia-1070-ollama:
+    image: ollama/ollama:0.33.1@sha256:075246f72d4109385b4a01c3ac8e9cbd26a0bcb21cd7aa30edbccd24e1b3180c
+    container_name: gaia-1070-ollama
+
+    ports:
+      - "127.0.0.1:11435:11434"
+
+    volumes:
+      - /mnt/gaia-storage/gaia/1070/ollama:/root/.ollama
+
+    environment:
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_KEEP_ALIVE: 5m
+
+    restart: unless-stopped
+
+    # GPU configuration preserved from current runtime
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
+
+
+  gaia-1070-openwebui:
+    image: ghcr.io/open-webui/open-webui:v0.11.1
+    container_name: gaia-1070-openwebui
+
+    ports:
+      - "10.16.20.13:3000:8080"
+
+    volumes:
+      - /mnt/gaia-storage/gaia/1070/openwebui:/app/backend/data
+
+    environment:
+      WEBUI_SECRET_KEY: ${WEBUI_SECRET_KEY}
+      ENABLE_SIGNUP: "true"
+      OLLAMA_BASE_URL: http://gaia-1070-ollama:11434
+
+    depends_on:
+      gaia-1070-ollama:
+        condition: service_started
+
+    restart: unless-stopped
+
+
+  gaia-1070-openclaw:
+    image: openclaw/openclaw:2026.7.1@sha256:6a31d44b2944e7adcd2b582bf6fb463111264ebca97a0201795b799135bd102c
+    container_name: gaia-1070-openclaw
+
+    env_file:
+      - path: .env
+        required: false
+
+    environment:
+      HOME: /home/node
+      OPENCLAW_HOME: /home/node
+      OPENCLAW_STATE_DIR: /home/node/.openclaw
+      OPENCLAW_CONFIG_PATH: /home/node/.openclaw/openclaw.json
+      OPENCLAW_CONFIG_DIR: /home/node/.openclaw
+      OPENCLAW_WORKSPACE_DIR: /home/node/.openclaw/workspace
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:?OPENCLAW_GATEWAY_TOKEN is required}
+      TERM: xterm-256color
+
+    volumes:
+      - /mnt/gaia-storage/gaia/1070/openclaw:/home/node/.openclaw
+
+    ports:
+      - "18789:18789"
+
+    command:
+      [
+        "openclaw",
+        "gateway",
+        "run",
+        "--bind",
+        "lan",
+        "--port",
+        "18789"
+      ]
+
+    restart: unless-stopped
+    init: true
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:18789/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+
+networks:
+  gaia-1070-network:
+    driver: bridge
+    # Not internal to allow communication with 3090 Node
+    internal: false

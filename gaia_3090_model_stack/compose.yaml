@@ -1,64 +1,61 @@
 services:
+
   gaia-3090-ollama:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.33.1@sha256:075246f72d4109385b4a01c3ac8e9cbd26a0bcb21cd7aa30edbccd24e1b3180c
     container_name: gaia-3090-ollama
+
+    # Temporary migration port:
+    # host 11435 -> container 11434
+    # Keep host-native Ollama on 11434 for now.
+    ports:
+      - "127.0.0.1:${OLLAMA_HOST_PORT}:11434"
+      - "${GAIA_3090_IP}:${OLLAMA_HOST_PORT}:11434"
+
     volumes:
       - ollama-data:/root/.ollama
+
     environment:
-      - OLLAMA_HOST=0.0.0.0
-      - OLLAMA_KEEP_ALIVE=5m
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_KEEP_ALIVE: 5m
+
     networks:
       - gaia-3090-model-stack
+
     deploy:
       resources:
         reservations:
           devices:
             - driver: nvidia
               count: all
-              capabilities: [gpu]
+              capabilities:
+                - gpu
+
+    restart: unless-stopped
+
     healthcheck:
       test: ["CMD", "ollama", "list"]
       interval: 30s
       timeout: 10s
       retries: 3
 
-  gaia-3090-openwebui:
-    image: ghcr.io/open-webui/open-webui:main
-    container_name: gaia-3090-openwebui
-    ports:
-      - "127.0.0.1:3000:8080"
-    volumes:
-      - openwebui-data:/app/backend/data
-    environment:
-      - OLLAMA_BASE_URL=http://gaia-3090-ollama:11434
-      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
-      - ENABLE_SIGNUP=false
-    networks:
-      - gaia-3090-model-stack
-    depends_on:
-      gaia-3090-ollama:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
   gaia-3090-openclaw:
-    image: openclaw/openclaw:latest
+    image: openclaw/openclaw:2026.7.1@sha256:6a31d44b2944e7adcd2b582bf6fb463111264ebca97a0201795b799135bd102c
     container_name: gaia-3090-openclaw
+
     command:
       [
+        "openclaw",
         "node",
-        "/app/dist/index.js",
-        "gateway",
-        "--bind",
-        "lan",
+        "run",
+        "--host",
+        "${GAIA_GATEWAY_IP}",
         "--port",
-        "18789"
+        "${GAIA_GATEWAY_PORT}",
+        "--display-name",
+        "GAIA-3090"
       ]
-    ports:
-      - "127.0.0.1:18789:18789"
+
     environment:
       HOME: /home/node
       OPENCLAW_HOME: /home/node
@@ -66,33 +63,69 @@ services:
       OPENCLAW_CONFIG_PATH: /home/node/.openclaw/openclaw.json
       OPENCLAW_CONFIG_DIR: /home/node/.openclaw
       OPENCLAW_WORKSPACE_DIR: /home/node/.openclaw/workspace
-      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN}
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:?OPENCLAW_GATEWAY_TOKEN is required}
+
     volumes:
       - openclaw-data:/home/node/.openclaw
+
     networks:
       - gaia-3090-model-stack
-    depends_on:
-      gaia-3090-ollama:
-        condition: service_healthy
+
+    # Node must be independently startable.
+    # No depends_on Ollama.
+
     restart: unless-stopped
+
     init: true
+
     healthcheck:
-      test:
-        [
-          "CMD",
-          "node",
-          "-e",
-          "fetch('http://127.0.0.1:18789/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
-        ]
-      interval: 30s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
+      disable: true
+
+
+  gaia-3090-opencode:
+    build:
+      context: .
+      dockerfile: Dockerfile.opencode-git
+    command:
+      - serve
+      - --hostname
+      - 0.0.0.0
+      - --port
+      - "4096"
+
+    environment:
+      OPENCODE_SERVER_USERNAME: ${OPENCODE_SERVER_USERNAME:-opencode}
+      OPENCODE_SERVER_PASSWORD: ${OPENCODE_SERVER_PASSWORD:?OPENCODE_SERVER_PASSWORD is required}
+
+    # Expose only locally for debugging.
+    # Keep OpenCode off the LAN for now.
+    ports:
+      - "127.0.0.1:${OPENCODE_HOST_PORT}:4096"
+
+    # Prototype workspace only.
+    # We deliberately avoid custom HOME/state/config variables until
+    # the actual OpenCode 1.18.25 runtime paths are verified.
+    volumes:
+      - ${GAIA_REPO}:/workspace/gaia:rw
+
+    working_dir: /workspace/gaia
+
+    networks:
+      - gaia-3090-model-stack
+
+    # OpenCode must be independently startable.
+    # No depends_on Ollama.
+
+    restart: unless-stopped
+
+    healthcheck:
+      disable: true
+
 
 volumes:
   ollama-data:
-  openwebui-data:
   openclaw-data:
+
 
 networks:
   gaia-3090-model-stack:

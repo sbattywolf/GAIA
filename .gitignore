@@ -34,4 +34,12 @@ gaia-bootstrap-poc/benchmark/*.backup.py
 gaia-bootstrap-poc/benchmark/collaborator/results/
 
 # GAIA Engineering Loop runtime state
- gaia_engineering_loop/states/
+gaia_engineering_loop/states/
+
+# Runtime/local patterns to prevent recurrence
+gaia_1070_physical_validation/ollama-data/
+gaia_1070_physical_validation/openclaw-compose/state/
+gaia_1070_physical_validation/openclaw-compose/state-backup-*/
+**/*.sqlite
+**/*.sqlite-shm
+**/*.sqlite-wal
