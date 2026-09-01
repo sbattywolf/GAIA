@@ -1,5 +1,0 @@
-{
-  "profile": "3090",
-  "target_gpu_profile": "RTX 3090",
-  "target_runtime_profile": "auto"
-}

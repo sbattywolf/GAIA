@@ -1,9 +1,0 @@
-{
-  "entity_id": "binary_sensor.example_opening",
-  "state": "on",
-  "last_updated": "2026-08-17T18:30:00+00:00",
-  "attributes": {
-    "device_class": "opening",
-    "friendly_name": "Example Opening"
-  }
-}

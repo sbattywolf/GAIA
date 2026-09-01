@@ -1,2 +1,0 @@
-origin	https://github.com/sbattywolf/GAIA.git (fetch)
-origin	https://github.com/sbattywolf/GAIA.git (push)

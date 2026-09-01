@@ -1,9 +1,0 @@
-{
-  "transport_type": "ssh",
-  "source_endpoint": "3090.local",
-  "target_endpoint": "gaia-1070.local",
-  "ssh_alias": "gaia-1070",
-  "port": 22,
-  "authentication_mode": "key-based",
-  "interactive_required": false
-}

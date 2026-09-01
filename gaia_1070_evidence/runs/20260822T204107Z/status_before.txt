@@ -1,5 +1,0 @@
-?? gaia_1070_evidence/runs/20260822T204107Z/
-?? gaia_1070_physical_validation/forensic_run_1070/
-?? gaia_1070_physical_validation/ollama-data/
-?? gaia_1070_physical_validation/validate_temp.sh
-?? validate_temp.sh

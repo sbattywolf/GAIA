@@ -1,4 +1,0 @@
-arbitrary evidence fixture
-component=example-tool
-status=observed
-semantic_state=UNKNOWN

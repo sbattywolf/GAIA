@@ -1,9 +1,0 @@
-{
-  "event": "TARGET_RESULT",
-  "layer": "target",
-  "result": "",
-  "requested_commit": "7d3f74f20215074aa0e2bdc5b2b22fdc578511dc",
-  "target": "gaia-1070",
-  "timestamp": "20260823T185127Z",
-  "exit_code": 0
-}
